@@ -48,7 +48,7 @@
 	
 	<target name="packaging">
 		<mkdir dir="${download}" />
-		<zip zipfile="${download}/s2-wicket-${version}.zip">
+		<zip zipfile="${download}/s2wicket-${version}.zip">
 			<zipfileset prefix="s2wicket" dir=".">
 				<exclude name="**/target/**" />
 				<exclude name="**/.*" />
@@ -66,7 +66,6 @@
 	</target>
 	
 	<target name="dist" depends="fix-site,packaging,copy-site">
-		
 	</target>
 	
 </project>
