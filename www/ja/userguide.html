@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<meta http-equiv="Content-Language" content="ja" /> 
+<meta http-equiv="Content-Style-Type" content="text/css" /> 
+<title>S2Wicket - Wicket Seasar Integration User Guide Page</title>
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/main.css" media="screen,projection" />
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/print.css" media="print" />
+<link href="./css/maven-base.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/maven-theme.css" type="text/css" rel="stylesheet" media="screen" />
+</head>
+
+<body>
+
+<div id="wrapper">
+
+<div id="header">
+
+<div class="line"><span class="hide">spacer</span></div>
+
+<div id="logo"><h1 id="h01" class="hide">The Seasar Foundation Project Site</h1><img src="http://www.seasar.org/images/seasar_logo_blue.gif" alt="The Seasar Foundation" width="390" height="180" /></div>
+
+<div id="tool">
+
+<h2><a href="http://search.seasar.org/">Site Search</a></h2>
+
+<form id="search" action="http://search.seasar.org/">
+<div>
+	<input id="search_phrase" type="text" name="phrase" size="20" />
+	<input type="hidden" name="perpage" value="30" />
+	<input type="hidden" name="enc" value="UTF-8" />
+	<input id="search_go" type="submit" value="Search" />
+</div>
+</form>
+
+<h2>Seasar Banner</h2>
+
+<p><a href="http://www.seasar.org/images/seasar_banner.gif"><img src="http://www.seasar.org/images/seasar_banner.gif" alt="Seasar Banner" title="Seasar Banner" width="146" height="33" /></a></p>
+
+</div>
+
+<div id="navi">
+<p><a href="../en/">English</a> | <a href="../ja/">Japanese</a></p>
+</div>
+
+</div><!-- header -->
+
+<div id="contents_left">
+           
+  
+
+  
+    
+  
+  
+                   <h2>About</h2>
+        <ul>
+              
+    <li class="none">
+              <a href="index.html">Home</a>
+        </li>
+              
+    <li class="none">
+              <strong>User Guide</strong>
+        </li>
+              
+    <li class="none">
+              <a href="download.html">Download</a>
+        </li>
+              
+    <li class="none">
+              <a href="license.html">License</a>
+        </li>
+          </ul>
+          <h2>プロジェクト文書</h2>
+        <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+              <a href="project-info.html">プロジェクト情報</a>
+              </li>
+              
+                
+              
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+              <a href="project-reports.html">プロジェクトレポート</a>
+              </li>
+          </ul>
+                                       <a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy" name="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png" />
+          </a>
+                       
+  
+
+  
+    
+  
+  
+  </div><!-- contents_left -->
+
+<div id="contents_center">
+
+<div id="article">
+<div class="section"><h2>使用方法</h2><p>S2Wicketを使用して，WicketとSeasar2を連携するための手順について紹介します。</p><div class="section"><h3>0. 前提条件</h3><p>WicketおよびSeasar2 Containerが使用可能な状態にWebアプリケーションがセットアップされていることとします。 また，インジェクションしたいコンポーネントオブジェクトが，Seasar2のDIコンテナに登録されていることとします。</p><p>maven2を使用してS2Wicketを利用する場合は，maven2が利用可能な状態になっていることが必要です。</p></div><div class="section"><h3>1. S2Wicketを入手する</h3><p><a href="download.html">ダウンロードページ</a>から，S2Wicketrの最新バージョンのアーカイブをダウンロードします。その後， 適当なディレクトリで展開します。展開後のトップディレクトリは，以下のようになっているはずです。</p><div class="source"><pre>S2Wicket
+  +- src
+  +- lib
+      +- cglib-nodep-2.1_3.jar
+      +- commons-lang-2.2.jar
+  +- LICENSE.txt
+  +- pom.xml
+  +- build.xml
+  +- s2wicket-1.0.0.jar</pre></div><p>このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。 もう一度ダウンロードし直してください。</p></div><div class="section"><h3>2. ライブラリをWebアプリケーションに組み込む</h3><p>S2Wicketを使用するためには，３つのjarファイルをあなたのWebアプリケーションに配置する必要があります。 配置が必要なjarファイルは，以下のファイルです。</p><div class="source"><pre>s2wicket
+  +- lib
+      +- cglib-nodep-2.1_3.jar
+      +- commons-lang-2.2.jar
+  +- s2wicket-1.0.0.jar</pre></div><p>S2Wicketは，maven2プロジェクトとして構築されています。あなたのWebアプリケーションがmaven2をサポートしている場合は， S2Wicketの組み込みもmaven2の恩恵を受けることができます。</p><div class="section"><h4>maven2を使用しない場合</h4><p>S2Wicketのアーカイブに含まれる３つのjarファイルを，あなたのWebアプリケーションに手でコピーして配置します。 配置先は，あなたのWebアプリケーションに存在する「/WEB-INF/lib」ディレクトリです。</p><div class="source"><pre>[あなたのWebアプリケーション]
+  +- WEB-INF
+      +- lib
+          +- ...
+          +- cglib-nodep-2.1_3.jar
+          +- commons-lang-2.2.jar
+          +- s2wicket-1.0.0.jar</pre></div><p>S2Wicketは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には， wicket-1.2.4.jarファイルやs2-framework-2.4.8.jarファイルが存在するはずです。</p></div><div class="section"><h4>maven2を使用する場合</h4><p>S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.0.0.jarファイルをビルドし， maven2のローカルリポジトリにインストールすることができます。インストールされれば，あなたのWebアプリケーション から，maven2を使用して必要なライブラリを自動的に組み込むことが可能となります。</p><div class="section"><h5>1. s2wicket-1.0.0.jarをビルド＆インストールする</h5><p>s2wicket-1.0.0.jarをビルドし，maven2のローカルリポジトリにインストールします。 コマンドプロンプトやシェルを開き，以下のコマンドを実行します。</p><div class="source"><pre>% cd [S2Wicketアーカイブの展開先ディレクトリ]
+% mvn install</pre></div><p>「BUILD SUCCESSFUL」と表示されれば，インストールは成功です。</p></div><div class="section"><h5>2. pom.xmlファイルにS2Wicketの依存を記述する</h5><p>あなたのWebアプリケーションのpom.xmlファイルに，S2Wicketへの依存関係を追記します。 pom.xmlファイル中の<i>dependencies</i>タグ内に記述します。</p><div class="source"><pre>&lt;project ...&gt;
+    ...
+    &lt;dependencies&gt;
+        ...
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.seasar.wicket&lt;/groupId&gt;
+            &lt;artifactId&gt;s2wicket&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    ...
+&lt;/project&gt;</pre></div></div><div class="section"><h5>3. ビルドやEclipseプロジェクトの生成を行う</h5><p>pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが 利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの Eclipseプロジェクトのクラスパスに，s2wicket-1.0.0.jarファイルやその他必要なライブラリが追加されます。 また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.0.0.jar ファイルや必要なライブラリが含まれるようになります。</p></div></div></div><div class="section"><h3>3. SeasarComponentInjectionListenerを登録する</h3><p>S2Wicketにより，@SeasarComponentアノテーションが付与されたフィールドに対して， Seasar2が管理するコンポーネントオブジェクトがインジェクションされます。@SeasarComponent アノテーションを使用することができるのは，Wicketによって実行時に管理されるwicket.Component クラスのサブクラスです。各種Componentクラスのオブジェクトは，Wicketアプリケーションの実行時に Wicketフレームワークに登録され，コンポーネントツリーを形成します。</p><p>WicketにComponentクラスのオブジェクトが登録された際のコールバックを受けるために， wicket.application.IComponentInstantiationListenerインタフェースが提供されています。 S2Wicketは，このIComponentInstantiationListenerインタフェースの実装クラスとして， SeasarComponentInjectionListenerクラスを提供します。SeasarComponentInjectionListener クラスのインスタンスを生成し，wicket.Application#addComponentInstantiationListener()メソッドを 使用して，Wicketに登録します。 これにより，SeasarComponentInjectionListenerクラスのインスタンスによって，S2Wicketの機能が有効になります。</p><p>SeasarComponentInjectionListenerクラスは，S2Containerオブジェクトを明示的に指定してインスタンスを生成するコンストラクタと， 内部で自動的にS2Containerオブジェクトを取得するコンストラクタの2種類を用意しています。</p><div class="section"><h4>S2Containerオブジェクトを自動取得するコンストラクタ</h4><p>S2Containerオブジェクトを自動的に取得するコンストラクタでは，引数にWebApplicationオブジェクトのみを指定します。</p><div class="source"><pre>import org.seasar.wicket.injection.SeasarComponentInjectionListener;
+
+public class OrderApplication extends WebApplication {
+
+    public OrderApplication() {
+       ...
+       addComponentInstantiationListener(
+           new SeasarComponentInjectionListener(this));
+       ...
+   }
+
+}</pre></div><p>上記の例では，コンストラクタ内でSingletonS2ContainerFactory.getContainer()を呼び出すことにより， S2Containerのインスタンスを取得します。つまり，事前にS2ContainerServletなどでS2Containerオブジェクトが準備され， SingletonS2ContainerFactory.getContainer()によってS2Containerオブジェクトが得られる環境となっている必要があります。</p></div><div class="section"><h4>S2Containerオブジェクトを明示的に指定するコンストラクタ</h4><p>既に獲得しているS2Containerオブジェクトを使用してSeasarComponentInjectionListenerオブジェクトを生成する場合は， WebApplicationオブジェクトとS2Containerオブジェクトを引数に取るコンストラクタを使用します。</p><div class="source"><pre>import org.seasar.wicket.injection.SeasarComponentInjectionListener;
+
+public class OrderApplication extends WebApplication {
+
+    public OrderApplication() {
+       ...
+       S2Container container = ...;
+       addComponentInstantiationListener(
+           new SeasarComponentInjectionListener(this, container));
+       ...
+   }
+
+}</pre></div><p>S2Containerオブジェクトをアプリケーション側で管理している場合は，こちらのコンストラクタを使用してください。</p></div></div><div class="section"><h3>4. @SeasarComponentアノテーションを使用する</h3><p>Seasar2で管理されたコンポーネントオブジェクトを，WicketのComponentクラス(のサブクラス)から利用するためには， @SeasarComponentアノテーションを使用します。Seasar2からコンポーネントオブジェクトをルックアップする際に， 名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が違います。</p><div class="section"><h4>型でルックアップする場合</h4><p>Seasar2から型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。</p><div class="source"><pre>import org.seasar.wicket.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent
+    private OrderService orderService;
+
+}</pre></div><p>@SeasarComponentアノテーションを属性なしで記述した場合，@SeasarComponentアノテーションを付与した フィールドの型に一致するコンポーネントオブジェクトが，Seasar2からルックアップされます。 つまり上記の例では，S2Container#getComponent()メソッドの引数にOrderService.classオブジェクトを渡して ルックアップが行われます。フィールドの型は，インタフェースとクラスのどちらでも構いません。</p></div><div class="section"><h4>名前でルックアップする場合</h4><p>Seasar2から名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。</p><div class="source"><pre>import org.seasar.wicket.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent(name=&quot;orderService&quot;)
+    private OrderService orderService;
+
+}</pre></div><p>@SeasarComponentアノテーションにname属性を記述した場合，name属性の値を名前とするコンポーネントオブジェクトが， Seasar2からルックアップされます。つまり上記の例では，S2Container#getComponent()メソッドの引数に&quot;orderService&quot;という 文字列を渡してルックアップが行われます。この場合も，フィールドの型はインタフェースとクラスのどちらでも構いません。</p></div></div><div class="section"><h3>5. インジェクションされたオブジェクトを使用する</h3><p>@SeasarComponentアノテーションが付与されたフィールドは，任意のタイミングで利用することが可能となります。 wicket.Componentクラスのデフォルトコンストラクタ内でIComponentInstantiatinoListenerリスナオブジェクトへの 通知が行われるため，そのクラスがインスタンス化された時には既にインジェクションされた状態です。 例えば，フォームのサブミット時にインジェクションされたオブジェクトを使用する場合は，以下のように記述します。</p><div class="source"><pre>import org.seasar.wicket.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent
+    private OrderService orderService;
+    
+    public InputPage() {
+        ...
+        Form form = new Form(&quot;form1&quot;) {
+            public void onSubmit() {
+                orderService.order();
+            }
+        };
+    }
+
+}</pre></div><p>form1フォームがサブミットされると，onSubmit()メソッドが呼び出されます。 上記では，orderServiceフィールドにインジェクションされたOrderSerice型のコンポーネントオブジェクトが持つorder()メソッドを呼び出しています。</p></div></div>
+</div><!-- article -->
+
+</div><!-- contents_center -->
+
+<div id="footer">
+<address>  &copy; Copyright
+  
+          2007,
+    
+          The Seasar Foundation and the others and the others. All rights reserved.
+      </address>
+<div class="line"><span class="hide">spacer</span></div>
+</div><!-- footer -->
+
+</div><!-- wrapper -->
+
+</body>
+</html>
