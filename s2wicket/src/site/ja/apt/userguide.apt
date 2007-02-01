@@ -1,0 +1,256 @@
+ ------
+Wicket Seasar Integration User Guide Page
+ ------
+Yoichiro Tanaka
+ ------
+2007/02/01
+
+使用方法
+
+  S2Wicketを使用して，WicketとSeasar2を連携するための手順について紹介します。
+  
+* 0. 前提条件
+
+  WicketおよびSeasar2 Containerが使用可能な状態にWebアプリケーションがセットアップされていることとします。
+  また，インジェクションしたいコンポーネントオブジェクトが，Seasar2のDIコンテナに登録されていることとします。
+  
+  maven2を使用してS2Wicketを利用する場合は，maven2が利用可能な状態になっていることが必要です。
+  
+* 1. S2Wicketを入手する
+
+  {{{download.html}ダウンロードページ}}から，wicket-seasarの最新バージョンのアーカイブをダウンロードします。その後，
+  適当なディレクトリで展開します。展開後のトップディレクトリは，以下のようになっているはずです。
+  
++------------------------------------------------------+
+wicket-seasar
+  +- src
+  +- lib
+      +- cglib-nodep-2.1_3.jar
+      +- commons-lang-2.2.jar
+  +- LICENSE.txt
+  +- pom.xml
+  +- wicket-seasar-1.0.jar
++------------------------------------------------------+
+
+  このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
+  もう一度ダウンロードし直してください。
+
+* 2. ライブラリをWebアプリケーションに組み込む
+
+  wicket-seasarを使用するためには，３つのjarファイルをあなたのWebアプリケーションに配置する必要があります。
+  配置が必要なjarファイルは，以下のファイルです。
+  
++------------------------------------------------------+
+wicket-seasar
+  +- lib
+      +- cglib-nodep-2.1_3.jar
+      +- commons-lang-2.2.jar
+  +- wicket-seasar-1.0.jar
++------------------------------------------------------+
+
+  wicket-seasarは，maven2プロジェクトとして構築されています。あなたのWebアプリケーションがmaven2をサポートしている場合は，
+  wicket-seasarの組み込みもmaven2の恩恵を受けることができます。
+  
+** maven2を使用しない場合
+
+  wicket-seasarのアーカイブに含まれる３つのjarファイルを，あなたのWebアプリケーションに手でコピーして配置します。
+  配置先は，あなたのWebアプリケーションに存在する「/WEB-INF/lib」ディレクトリです。
+  
++------------------------------------------------------+
+[あなたのWebアプリケーション]
+  +- WEB-INF
+      +- lib
+          +- ...
+          +- cglib-nodep-2.1_3.jar
+          +- commons-lang-2.2.jar
+          +- wicket-seasar-1.0.jar
++------------------------------------------------------+
+
+  wicket-seasarは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には，
+  wicket-1.2.4.jarファイルやs2-framework-2.4.8.jarファイルが存在するはずです。
+
+** maven2を使用する場合
+
+  wicket-seasarのアーカイブに含まれるソースファイルを使用してwicket-seasar-1.0.jarファイルをビルドし，
+  maven2のローカルリポジトリにインストールすることができます。インストールされれば，あなたのWebアプリケーション
+  から，maven2を使用して必要なライブラリを自動的に組み込むことが可能となります。
+
+*** 1. wicket-seasar-1.0.jarをビルド＆インストールする
+
+  wicket-seasar-1.0.jarをビルドし，maven2のローカルリポジトリにインストールします。
+  コマンドプロンプトやシェルを開き，以下のコマンドを実行します。
+
++------------------------------------------------------+
+% cd [wicket-seasarアーカイブの展開先ディレクトリ]
+% mvn install
++------------------------------------------------------+
+
+  「BUILD SUCCESSFUL」と表示されれば，インストールは成功です。
+
+*** 2. pom.xmlファイルにwicket-seasarの依存を記述する
+
+  あなたのWebアプリケーションのpom.xmlファイルに，wicket-seasarへの依存関係を追記します。
+  pom.xmlファイル中の<dependencies>タグ内に記述します。
+  
++------------------------------------------------------+
+<project ...>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>jp.eisbahn.wicket.seasar</groupId>
+            <artifactId>wicket-seasar</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+    ...
+</project>
++------------------------------------------------------+
+
+*** 3. ビルドやEclipseプロジェクトの生成を行う
+
+  pom.xmlファイルにwicket-seasarへの依存関係が記述されたことにより，maven2の各種ゴールでwicket-seasarが
+  利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
+  Eclipseプロジェクトのクラスパスに，wicket-seasar.1.0.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，wicket-seasar.1.0.jar
+  ファイルや必要なライブラリが含まれるようになります。
+
+* 3. SeasarComponentInjectionListenerを登録する
+
+  wicket-seasarにより，@SeasarComponentアノテーションが付与されたフィールドに対して，
+  seasar2が管理するコンポーネントオブジェクトがインジェクションされます。@SeasarComponent
+  アノテーションを使用することができるのは，Wicketによって実行時に管理されるwicket.Component
+  クラスのサブクラスです。各種Componentクラスのオブジェクトは，Wicketアプリケーションの実行時に
+  Wicketフレームワークに登録され，コンポーネントツリーを形成します。
+  
+  WicketにComponentクラスのオブジェクトが登録された際のコールバックを受けるために，
+  wicket.application.IComponentInstantiationListenerインタフェースが提供されています。
+  wicket-seasarは，このIComponentInstantiationListenerインタフェースの実装クラスとして，
+  SeasarComponentInjectionListenerクラスを提供します。SeasarComponentInjectionListener
+  クラスのインスタンスを生成し，wicket.Application#addComponentInstantiationListener()メソッドを
+  使用して，Wicketに登録します。
+  これにより，SeasarComponentInjectionListenerクラスのインスタンスによって，wicket-seasarの機能が有効になります。
+  
+  SeasarComponentInjectionListenerクラスは，S2Containerオブジェクトを明示的に指定してインスタンスを生成するコンストラクタと，
+  内部で自動的にS2Containerオブジェクトを取得するコンストラクタの2種類を用意しています。
+
+** S2Containerオブジェクトを自動取得するコンストラクタ
+
+  S2Containerオブジェクトを自動的に取得するコンストラクタでは，引数にWebApplicationオブジェクトのみを指定します。
+
++------------------------------------------------------+
+import jp.eisbahn.wicket.seasar.injection.SeasarComponentInjectionListener;
+
+public class OrderApplication extends WebApplication {
+
+    public OrderApplication() {
+       ...
+       addComponentInstantiationListener(
+           new SeasarComponentInjectionListener(this));
+       ...
+   }
+
+}
++------------------------------------------------------+
+
+  上記の例では，コンストラクタ内でSingletonS2ContainerFactory.getContainer()を呼び出すことにより，
+  S2Containerのインスタンスを取得します。つまり，事前にS2ContainerServletなどでS2Containerオブジェクトが準備され，
+  SingletonS2ContainerFactory.getContainer()によってS2Containerオブジェクトが得られる環境となっている必要があります。
+
+** S2Containerオブジェクトを明示的に指定するコンストラクタ
+
+  既に獲得しているS2Containerオブジェクトを使用してSeasarComponentInjectionListenerオブジェクトを生成する場合は，
+  WebApplicationオブジェクトとS2Containerオブジェクトを引数に取るコンストラクタを使用します。
+  
++------------------------------------------------------+
+import jp.eisbahn.wicket.seasar.injection.SeasarComponentInjectionListener;
+
+public class OrderApplication extends WebApplication {
+
+    public OrderApplication() {
+       ...
+       S2Container container = ...;
+       addComponentInstantiationListener(
+           new SeasarComponentInjectionListener(this, container));
+       ...
+   }
+
+}
++------------------------------------------------------+
+
+  S2Containerオブジェクトをアプリケーション側で管理している場合は，こちらのコンストラクタを使用してください。
+
+* 4. @SeasarComponentアノテーションを使用する
+
+  seasar2で管理されたコンポーネントオブジェクトを，WicketのComponentクラス(のサブクラス)から利用するためには，
+  @SeasarComponentアノテーションを使用します。Seasar2からコンポーネントオブジェクトをルックアップする際に，
+  名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が違います。
+  
+** 型でルックアップする場合
+  
+  Seasar2から型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
+  
++------------------------------------------------------+
+import jp.eisbahn.wicket.seasar.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent
+    private OrderService orderService;
+
+}
++------------------------------------------------------+
+
+  @SeasarComponentアノテーションを属性なしで記述した場合，@SeasarComponentアノテーションを付与した
+  フィールドの型に一致するコンポーネントオブジェクトが，Seasar2からルックアップされます。
+  つまり上記の例では，S2Container#getComponent()メソッドの引数にOrderService.classオブジェクトを渡して
+  ルックアップが行われます。フィールドの型は，インタフェースとクラスのどちらでも構いません。
+  
+** 名前でルックアップする場合
+
+  Seasar2から名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
+
++------------------------------------------------------+
+import jp.eisbahn.wicket.seasar.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent(name="orderService")
+    private OrderService orderService;
+
+}
++------------------------------------------------------+
+
+  @SeasarComponentアノテーションにname属性を記述した場合，name属性の値を名前とするコンポーネントオブジェクトが，
+  Seasar2からルックアップされます。つまり上記の例では，S2Container#getComponent()メソッドの引数に"orderService"という
+  文字列を渡してルックアップが行われます。この場合も，フィールドの型はインタフェースとクラスのどちらでも構いません。
+
+* 5. インジェクションされたオブジェクトを使用する
+
+  @SeasarComponentアノテーションが付与されたフィールドは，任意のタイミングで利用することが可能となります。
+  wicket.Componentクラスのデフォルトコンストラクタ内でIComponentInstantiatinoListenerリスナオブジェクトへの
+  通知が行われるため，そのクラスがインスタンス化された時には既にインジェクションされた状態です。
+  例えば，フォームのサブミット時にインジェクションされたオブジェクトを使用する場合は，以下のように記述します。
+ 
++------------------------------------------------------+
+import jp.eisbahn.wicket.seasar.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent
+    private OrderService orderService;
+    
+    public InputPage() {
+        ...
+        Form form = new Form("form1") {
+            public void onSubmit() {
+                orderService.order();
+            }
+        };
+    }
+
+}
++------------------------------------------------------+
+
+  form1フォームがサブミットされると，onSubmit()メソッドが呼び出されます。
+  上記では，orderServiceフィールドにインジェクションされたOrderSerice型のコンポーネントオブジェクトが持つorder()メソッドを呼び出しています。
