@@ -18,18 +18,19 @@ Yoichiro Tanaka
   
 * 1. S2Wicketを入手する
 
-  {{{download.html}ダウンロードページ}}から，wicket-seasarの最新バージョンのアーカイブをダウンロードします。その後，
+  {{{download.html}ダウンロードページ}}から，S2Wicketrの最新バージョンのアーカイブをダウンロードします。その後，
   適当なディレクトリで展開します。展開後のトップディレクトリは，以下のようになっているはずです。
   
 +------------------------------------------------------+
-wicket-seasar
+S2Wicket
   +- src
   +- lib
       +- cglib-nodep-2.1_3.jar
       +- commons-lang-2.2.jar
   +- LICENSE.txt
   +- pom.xml
-  +- wicket-seasar-1.0.jar
+  +- build.xml
+  +- s2wicket-1.0.0.jar
 +------------------------------------------------------+
 
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
@@ -37,23 +38,23 @@ wicket-seasar
 
 * 2. ライブラリをWebアプリケーションに組み込む
 
-  wicket-seasarを使用するためには，３つのjarファイルをあなたのWebアプリケーションに配置する必要があります。
+  S2Wicketを使用するためには，３つのjarファイルをあなたのWebアプリケーションに配置する必要があります。
   配置が必要なjarファイルは，以下のファイルです。
   
 +------------------------------------------------------+
-wicket-seasar
+s2wicket
   +- lib
       +- cglib-nodep-2.1_3.jar
       +- commons-lang-2.2.jar
-  +- wicket-seasar-1.0.jar
+  +- s2wicket-1.0.0.jar
 +------------------------------------------------------+
 
-  wicket-seasarは，maven2プロジェクトとして構築されています。あなたのWebアプリケーションがmaven2をサポートしている場合は，
-  wicket-seasarの組み込みもmaven2の恩恵を受けることができます。
+  S2Wicketは，maven2プロジェクトとして構築されています。あなたのWebアプリケーションがmaven2をサポートしている場合は，
+  S2Wicketの組み込みもmaven2の恩恵を受けることができます。
   
 ** maven2を使用しない場合
 
-  wicket-seasarのアーカイブに含まれる３つのjarファイルを，あなたのWebアプリケーションに手でコピーして配置します。
+  S2Wicketのアーカイブに含まれる３つのjarファイルを，あなたのWebアプリケーションに手でコピーして配置します。
   配置先は，あなたのWebアプリケーションに存在する「/WEB-INF/lib」ディレクトリです。
   
 +------------------------------------------------------+
@@ -63,33 +64,33 @@ wicket-seasar
           +- ...
           +- cglib-nodep-2.1_3.jar
           +- commons-lang-2.2.jar
-          +- wicket-seasar-1.0.jar
+          +- s2wicket-1.0.0.jar
 +------------------------------------------------------+
 
-  wicket-seasarは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には，
+  S2Wicketは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には，
   wicket-1.2.4.jarファイルやs2-framework-2.4.8.jarファイルが存在するはずです。
 
 ** maven2を使用する場合
 
-  wicket-seasarのアーカイブに含まれるソースファイルを使用してwicket-seasar-1.0.jarファイルをビルドし，
+  S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.0.0.jarファイルをビルドし，
   maven2のローカルリポジトリにインストールすることができます。インストールされれば，あなたのWebアプリケーション
   から，maven2を使用して必要なライブラリを自動的に組み込むことが可能となります。
 
-*** 1. wicket-seasar-1.0.jarをビルド＆インストールする
+*** 1. s2wicket-1.0.0.jarをビルド＆インストールする
 
-  wicket-seasar-1.0.jarをビルドし，maven2のローカルリポジトリにインストールします。
+  s2wicket-1.0.0.jarをビルドし，maven2のローカルリポジトリにインストールします。
   コマンドプロンプトやシェルを開き，以下のコマンドを実行します。
 
 +------------------------------------------------------+
-% cd [wicket-seasarアーカイブの展開先ディレクトリ]
+% cd [S2Wicketアーカイブの展開先ディレクトリ]
 % mvn install
 +------------------------------------------------------+
 
   「BUILD SUCCESSFUL」と表示されれば，インストールは成功です。
 
-*** 2. pom.xmlファイルにwicket-seasarの依存を記述する
+*** 2. pom.xmlファイルにS2Wicketの依存を記述する
 
-  あなたのWebアプリケーションのpom.xmlファイルに，wicket-seasarへの依存関係を追記します。
+  あなたのWebアプリケーションのpom.xmlファイルに，S2Wicketへの依存関係を追記します。
   pom.xmlファイル中の<dependencies>タグ内に記述します。
   
 +------------------------------------------------------+
@@ -98,9 +99,9 @@ wicket-seasar
     <dependencies>
         ...
         <dependency>
-            <groupId>jp.eisbahn.wicket.seasar</groupId>
-            <artifactId>wicket-seasar</artifactId>
-            <version>1.0</version>
+            <groupId>org.seasar.wicket</groupId>
+            <artifactId>s2wicket</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     ...
@@ -109,27 +110,27 @@ wicket-seasar
 
 *** 3. ビルドやEclipseプロジェクトの生成を行う
 
-  pom.xmlファイルにwicket-seasarへの依存関係が記述されたことにより，maven2の各種ゴールでwicket-seasarが
+  pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
   利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
-  Eclipseプロジェクトのクラスパスに，wicket-seasar.1.0.jarファイルやその他必要なライブラリが追加されます。
-  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，wicket-seasar.1.0.jar
+  Eclipseプロジェクトのクラスパスに，s2wicket-1.0.0.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.0.0.jar
   ファイルや必要なライブラリが含まれるようになります。
 
 * 3. SeasarComponentInjectionListenerを登録する
 
-  wicket-seasarにより，@SeasarComponentアノテーションが付与されたフィールドに対して，
-  seasar2が管理するコンポーネントオブジェクトがインジェクションされます。@SeasarComponent
+  S2Wicketにより，@SeasarComponentアノテーションが付与されたフィールドに対して，
+  Seasar2が管理するコンポーネントオブジェクトがインジェクションされます。@SeasarComponent
   アノテーションを使用することができるのは，Wicketによって実行時に管理されるwicket.Component
   クラスのサブクラスです。各種Componentクラスのオブジェクトは，Wicketアプリケーションの実行時に
   Wicketフレームワークに登録され，コンポーネントツリーを形成します。
   
   WicketにComponentクラスのオブジェクトが登録された際のコールバックを受けるために，
   wicket.application.IComponentInstantiationListenerインタフェースが提供されています。
-  wicket-seasarは，このIComponentInstantiationListenerインタフェースの実装クラスとして，
+  S2Wicketは，このIComponentInstantiationListenerインタフェースの実装クラスとして，
   SeasarComponentInjectionListenerクラスを提供します。SeasarComponentInjectionListener
   クラスのインスタンスを生成し，wicket.Application#addComponentInstantiationListener()メソッドを
   使用して，Wicketに登録します。
-  これにより，SeasarComponentInjectionListenerクラスのインスタンスによって，wicket-seasarの機能が有効になります。
+  これにより，SeasarComponentInjectionListenerクラスのインスタンスによって，S2Wicketの機能が有効になります。
   
   SeasarComponentInjectionListenerクラスは，S2Containerオブジェクトを明示的に指定してインスタンスを生成するコンストラクタと，
   内部で自動的にS2Containerオブジェクトを取得するコンストラクタの2種類を用意しています。
@@ -139,7 +140,7 @@ wicket-seasar
   S2Containerオブジェクトを自動的に取得するコンストラクタでは，引数にWebApplicationオブジェクトのみを指定します。
 
 +------------------------------------------------------+
-import jp.eisbahn.wicket.seasar.injection.SeasarComponentInjectionListener;
+import org.seasar.wicket.injection.SeasarComponentInjectionListener;
 
 public class OrderApplication extends WebApplication {
 
@@ -163,7 +164,7 @@ public class OrderApplication extends WebApplication {
   WebApplicationオブジェクトとS2Containerオブジェクトを引数に取るコンストラクタを使用します。
   
 +------------------------------------------------------+
-import jp.eisbahn.wicket.seasar.injection.SeasarComponentInjectionListener;
+import org.seasar.wicket.injection.SeasarComponentInjectionListener;
 
 public class OrderApplication extends WebApplication {
 
@@ -182,7 +183,7 @@ public class OrderApplication extends WebApplication {
 
 * 4. @SeasarComponentアノテーションを使用する
 
-  seasar2で管理されたコンポーネントオブジェクトを，WicketのComponentクラス(のサブクラス)から利用するためには，
+  Seasar2で管理されたコンポーネントオブジェクトを，WicketのComponentクラス(のサブクラス)から利用するためには，
   @SeasarComponentアノテーションを使用します。Seasar2からコンポーネントオブジェクトをルックアップする際に，
   名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が違います。
   
@@ -191,7 +192,7 @@ public class OrderApplication extends WebApplication {
   Seasar2から型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
   
 +------------------------------------------------------+
-import jp.eisbahn.wicket.seasar.injection.SeasarComponent;
+import org.seasar.wicket.injection.SeasarComponent;
 
 public class InputPage extends WebPage {
 
@@ -211,7 +212,7 @@ public class InputPage extends WebPage {
   Seasar2から名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
 
 +------------------------------------------------------+
-import jp.eisbahn.wicket.seasar.injection.SeasarComponent;
+import org.seasar.wicket.injection.SeasarComponent;
 
 public class InputPage extends WebPage {
 
@@ -233,7 +234,7 @@ public class InputPage extends WebPage {
   例えば，フォームのサブミット時にインジェクションされたオブジェクトを使用する場合は，以下のように記述します。
  
 +------------------------------------------------------+
-import jp.eisbahn.wicket.seasar.injection.SeasarComponent;
+import org.seasar.wicket.injection.SeasarComponent;
 
 public class InputPage extends WebPage {
 
