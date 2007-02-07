@@ -22,7 +22,27 @@ import java.lang.reflect.Field;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * SeasarComponentアノテーションが付与されたフィールドをインジェクション対象とする処理を持つフィルタ実装クラスです。
+ * {@link SeasarComponent}アノテーションが付与されたフィールドをインジェクション対象とする処理を持つフィルタ実装クラスです。<br />
+ * <p>このフィールドフィルタは，{@link SeasarComponent}アノテーションをマーカーとして，
+ * それが付与されたフィールドについて，Seasarコンテナ管理下のコンポーネントオブジェクトをインジェクション対象と判断します。</p>
+ * <p>{@link SeasarComponentInjectionListener}クラスのインスタンスを生成する際に，コンストラクタに
+ * {@link FieldFilter}インタフェースの実装オブジェクトのコレクションを指定しなかった場合は，
+ * このクラスの実装オブジェクトが自動的に使用されるようになります。また，独自に{@link FieldFilter}インタフェースの
+ * 実装クラスを作成して，このクラスと併用したい場合は，以下のように{@link SeasarComponentInjectionListener}オブジェクト
+ * に登録します。</p>
+ * <pre>
+ * MyFieldFilter myFieldFilter = ...;
+ * AnnotationFieldFilter annotFieldFilter = new AnnotationFieldFilter();
+ * List<FieldFilter> filters = new ArrayList<FieldFilter>(2);
+ * filters.add(myFieldFilter);
+ * filters.add(annotFieldFilter);
+ * addComponentInstantiationListener(
+ *     new SeasarComponentInjectionListener(this, filters));
+ * </pre>
+ * <p>このフィールドフィルタ実装では，{@link SeasarComponent}アノテーションの{@link SeasarComponent#name()}プロパティで
+ * 指定された名前が，Seasarコンテナからのルックアップ時のコンポーネント名として採用します。もし{@link SeasarComponent#name()}
+ * プロパティが記述されていなかった場合は，対象フィールドの型がルックアップ時のキーになります。</p>
+ * 
  * @author Yoichiro Tanaka
  * @since 1.1.0
  */
