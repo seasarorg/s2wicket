@@ -17,7 +17,12 @@
 
 package org.seasar.wicket.injection;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import wicket.Component;
 import wicket.markup.MarkupStream;
@@ -30,15 +35,24 @@ import static org.easymock.EasyMock.*;
 /**
  * {@link SeasarComponentInjectionListener}のテストケースクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class SeasarComponentInjectionListenerTest extends TestCase {
 
 	/**
 	 * {@link SeasarComponentInjectionListener#SeasarComponentInjectionListener(wicket.protocol.http.WebApplication, S2Container)}
-	 * の引数にnullを渡したときのテストを行います。
+	 * の引数に不正な値を渡したときのテストを行います。
 	 * @throws Exception 何らかの例外が発生したとき
 	 */
-	public void testConstructorNull() throws Exception {
+	public void testConstructorInvalidArg() throws Exception {
+		try {
+			S2Container container = createMock(S2Container.class);
+			SingletonS2ContainerFactory.setContainer(container);
+			new SeasarComponentInjectionListener(null);
+			fail("IllegalArgumentException not thrown.");
+		} catch(IllegalArgumentException expected) {
+			// N/A
+		}
 		try {
 			S2Container container = createMock(S2Container.class);
 			new SeasarComponentInjectionListener(null, container);
@@ -47,7 +61,38 @@ public class SeasarComponentInjectionListenerTest extends TestCase {
 			// N/A
 		}
 		try {
-			new SeasarComponentInjectionListener(new MockWebApplication(null), null);
+			new SeasarComponentInjectionListener(null, new ArrayList<FieldFilter>());
+			fail("IllegalArgumentException not thrown.");
+		} catch(IllegalArgumentException expected) {
+			// N/A
+		}
+		try {
+			new SeasarComponentInjectionListener(new MockWebApplication(null), (S2Container)null);
+			fail("IllegalArgumentException not thrown.");
+		} catch(IllegalArgumentException expected) {
+			// N/A
+		}
+		try {
+			new SeasarComponentInjectionListener(new MockWebApplication(null), new ArrayList<FieldFilter>());
+			fail("IllegalArgumentException not thrown.");
+		} catch(IllegalArgumentException expected) {
+			// N/A
+		}
+		try {
+			new SeasarComponentInjectionListener(null, null, null);
+			fail("IllegalArgumentException not thrown.");
+		} catch(IllegalArgumentException expected) {
+			// N/A
+		}
+		try {
+			new SeasarComponentInjectionListener(new MockWebApplication(null), null, null);
+			fail("IllegalArgumentException not thrown.");
+		} catch(IllegalArgumentException expected) {
+			// N/A
+		}
+		try {
+			S2Container container = createMock(S2Container.class);
+			new SeasarComponentInjectionListener(new MockWebApplication(null), container, new ArrayList<FieldFilter>());
 			fail("IllegalArgumentException not thrown.");
 		} catch(IllegalArgumentException expected) {
 			// N/A
@@ -62,6 +107,7 @@ public class SeasarComponentInjectionListenerTest extends TestCase {
 		Service service = createMock(Service.class);
 		service.foo();
 		S2Container container = createMock(S2Container.class);
+		expect(container.findComponents(FieldFilter.class)).andReturn(null);
 		expect(container.getComponent(Service.class)).andReturn(service);
 		replay(service);
 		replay(container);
@@ -72,6 +118,35 @@ public class SeasarComponentInjectionListenerTest extends TestCase {
 		component.service.foo();
 		verify(service);
 		verify(container);
+	}
+	
+	/**
+	 * {@link SeasarComponentInjectionListener#onInstantiation(Component)}のテストを行います。
+	 * フィールドフィルタをセットした場合の動作をテストします。
+	 * @throws Exception 何らかの例外が発生したとき
+	 */
+	public void testOnInstantiationUseFieldFilter() throws Exception {
+		Service service = createMock(Service.class);
+		service.foo();
+		S2Container container = createMock(S2Container.class);
+		expect(container.getComponent(Service.class)).andReturn(service);
+		FieldFilter fieldFilter = createMock(FieldFilter.class);
+		Field field = TestComponent.class.getDeclaredField("service");
+		expect(fieldFilter.isSupported(field)).andReturn(true);
+		expect(fieldFilter.getLookupComponentName(field)).andReturn(null);
+		replay(service);
+		replay(container);
+		replay(fieldFilter);
+		List<FieldFilter> filters = new ArrayList<FieldFilter>();
+		filters.add(fieldFilter);
+		SeasarComponentInjectionListener target =
+			new SeasarComponentInjectionListener(new MockWebApplication(null), container, filters);
+		TestComponent component = new TestComponent();
+		target.onInstantiation(component);
+		component.service.foo();
+		verify(service);
+		verify(container);
+		verify(fieldFilter);
 	}
 	
 	/**

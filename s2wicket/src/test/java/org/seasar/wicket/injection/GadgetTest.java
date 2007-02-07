@@ -29,6 +29,7 @@ import static org.easymock.EasyMock.*;
 /**
  * {@link Gadget}のテストケースクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class GadgetTest extends TestCase {
 	

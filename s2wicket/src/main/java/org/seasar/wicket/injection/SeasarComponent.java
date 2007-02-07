@@ -53,6 +53,7 @@ import java.lang.annotation.Target;
  * これを解決するために，Seasarコンポーネントを呼び出す処理を持つ動的プロキシオブジェクトがフィールドにインジェクションされます。
  * 
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

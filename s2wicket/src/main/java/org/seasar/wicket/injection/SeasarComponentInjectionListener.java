@@ -17,6 +17,8 @@
 
 package org.seasar.wicket.injection;
 
+import java.util.List;
+
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -48,6 +50,7 @@ import wicket.protocol.http.WebApplication;
  * なっている必要があります。
  * 
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class SeasarComponentInjectionListener implements IComponentInstantiationListener {
 	
@@ -61,7 +64,7 @@ public class SeasarComponentInjectionListener implements IComponentInstantiation
 	 * @param application アプリケーションオブジェクト
 	 */
 	public SeasarComponentInjectionListener(WebApplication application) {
-		this(application, SingletonS2ContainerFactory.getContainer());
+		this(application, SingletonS2ContainerFactory.getContainer(), null);
 	}
 	
 	/**
@@ -70,16 +73,44 @@ public class SeasarComponentInjectionListener implements IComponentInstantiation
 	 * @param container Seasarコンテナオブジェクト
 	 */
 	public SeasarComponentInjectionListener(WebApplication application, S2Container container) {
+		this(application, container, null);
+	}
+	
+	/**
+	 * このオブジェクトが生成されるときに呼び出されます。<br />
+	 * このコンストラクタでは，SingletonS2ContainerFactory.getContainer()メソッドによってSeasarコンテナが取得できる状態に
+	 * なっている必要があります。
+	 * @param application アプリケーションオブジェクト
+	 * @param fieldFilters フィールドフィルタが格納されたコレクション
+	 */
+	public SeasarComponentInjectionListener(WebApplication application, List<FieldFilter> fieldFilters) {
+		this(application, SingletonS2ContainerFactory.getContainer(), fieldFilters);
+	}
+	
+	/**
+	 * このオブジェクトが生成されるときに呼び出されます。
+	 * @param application アプリケーションオブジェクト
+	 * @param container Seasarコンテナオブジェクト
+	 * @param fieldFilters フィールドフィルタが格納されたコレクション
+	 */
+	public SeasarComponentInjectionListener(
+			WebApplication application, S2Container container, List<FieldFilter> fieldFilters) {
 		super();
 		// 引数チェック
 		if (application == null)
 			throw new IllegalArgumentException("application is null.");
 		if (container == null)
 			throw new IllegalArgumentException("container is null.");
+		if ((fieldFilters != null) && (fieldFilters.size() == 0))
+			throw new IllegalArgumentException("fieldFilters is empty.");
 		// SeasarコンテナオブジェクトをWicketメタデータとして格納
 		S2ContainerHolder.store(application, container);
-		// インジェクションプロセッサを生成 */
-		injectionProcessor = new InjectionProcessor(new S2ContainerLocator());
+		// インジェクションプロセッサを生成
+		if (fieldFilters == null) {
+			injectionProcessor = new InjectionProcessor(new S2ContainerLocator());
+		} else {
+			injectionProcessor = new InjectionProcessor(new S2ContainerLocator(), fieldFilters);
+		}
 	}
 
 	/**

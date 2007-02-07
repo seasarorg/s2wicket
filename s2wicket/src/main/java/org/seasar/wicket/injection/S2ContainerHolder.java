@@ -27,6 +27,7 @@ import wicket.MetaDataKey;
 /**
  * Seasarコンテナオブジェクトを保持するクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 class S2ContainerHolder implements Serializable {
 	

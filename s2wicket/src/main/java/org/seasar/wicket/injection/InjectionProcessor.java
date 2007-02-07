@@ -18,8 +18,12 @@
 package org.seasar.wicket.injection;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.seasar.framework.container.S2Container;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -34,18 +38,51 @@ import wicket.markup.html.panel.Panel;
  */
 class InjectionProcessor {
 	
-	/** Seasarコンテナロケータ */
-	private IS2ContainerLocator containerLocator;
+	/** フィールド値提供オブジェクト */
+	private FieldValueProducer fieldValueProducer;
+	
+	/**
+	 * フィールド値提供オブジェクトを返します。
+	 * @return フィールド値提供オブジェクト
+	 */
+	FieldValueProducer getFieldValueProducer() {
+		return fieldValueProducer;
+	}
 	
 	/**
 	 * このオブジェクトが生成されるときに呼び出されます。
+	 * このコンストラクタでは，フィールドフィルタとして{@link AnnotationFieldFilter}オブジェクトが適用されます。
+	 * さらに，Seasarコンテナに{@link FieldFilter}インタフェースの実装オブジェクトが登録されている場合は，
+	 * そのオブジェクトも適用されます。
 	 * @param containerLocator Seasarコンテナロケータ
 	 */
 	InjectionProcessor(IS2ContainerLocator containerLocator) {
 		super();
+		// 引数チェック
 		if (containerLocator == null)
 			throw new IllegalArgumentException("containerLocator is null.");
-		this.containerLocator = containerLocator;
+		// デフォルトのフィールドフィルタ実装を生成
+		List<FieldFilter> fieldFilters = createDefaultFieldFilters(containerLocator);
+		// フィールド値供給オブジェクトを生成
+		fieldValueProducer = new FieldValueProducer(containerLocator, fieldFilters);
+	}
+	
+	/**
+	 * このオブジェクトが生成されるときに呼び出されます。
+	 * @param containerLocator Seasarコンテナロケータ
+	 * @param fieldFilters フィールドフィルタが格納されたコレクション
+	 */
+	InjectionProcessor(IS2ContainerLocator containerLocator, List<FieldFilter> fieldFilters) {
+		super();
+		// 引数チェック
+		if (containerLocator == null)
+			throw new IllegalArgumentException("containerLocator is null.");
+		if (fieldFilters == null)
+			throw new IllegalArgumentException("fieldFilters is null.");
+		if (fieldFilters.isEmpty())
+			throw new IllegalArgumentException("fieldFilters is empty.");
+		// フィールド値供給オブジェクトを生成
+		fieldValueProducer = new FieldValueProducer(containerLocator, fieldFilters);
 	}
 	
 	/**
@@ -53,8 +90,6 @@ class InjectionProcessor {
 	 * @param target 処理対象のオブジェクト
 	 */
 	void inject(Object target) {
-		// フィールド値供給オブジェクトを生成
-		FieldValueProducer fieldValueProducer = new FieldValueProducer(containerLocator);
 		// インジェクションを実行
 		inject(target, fieldValueProducer);
 	}
@@ -85,8 +120,6 @@ class InjectionProcessor {
 					// フィールドにインジェクト
 					targetFields[i].set(target, fieldValue);
 				}
-			} catch(AnnotationNotPresentsException e) {
-				// N/A
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("Field injection failed.", e);
 			} catch (IllegalAccessException e) {
@@ -134,6 +167,29 @@ class InjectionProcessor {
 			|| (clazz.equals(Panel.class))
 			|| (clazz.equals(MarkupContainer.class))
 			|| (clazz.equals(Component.class));
+	}
+	
+	/**
+	 * デフォルトのフィールドフィルタが格納されたコレクションを返します。
+	 * このメソッドでは，{@link AnnotationFieldFilter}オブジェクトと，
+	 * Seasarコンテナに登録された{@link FieldFilter}インタフェースを実装したSeasarコンポーネントを
+	 * コレクションに格納して返します。
+	 * @param containerLocator Seasarコンテナロケータ
+	 * @return {@link AnnotationFieldFilter}オブジェクトおよび{@link FieldFilter}インタフェースを実装し且つSeasarコンテナに登録されたオブジェクトを持つコレクション
+	 */
+	private List<FieldFilter> createDefaultFieldFilters(IS2ContainerLocator containerLocator) {
+		List<FieldFilter> fieldFilters = new ArrayList<FieldFilter>();
+		fieldFilters.add(new AnnotationFieldFilter());
+		S2Container container = containerLocator.get();
+		FieldFilter[] filters = (FieldFilter[])container.findComponents(FieldFilter.class);
+		List<FieldFilter> filterList;
+		if (filters != null) {
+			filterList = Arrays.asList(filters);
+			fieldFilters.addAll(filterList);
+		} else {
+			filterList = new ArrayList<FieldFilter>();
+		}
+		return fieldFilters;
 	}
 
 }

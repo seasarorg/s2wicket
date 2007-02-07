@@ -40,6 +40,7 @@ import wicket.util.io.IOUtils;
 /**
  * {@link ProxyFactory}のテストケースクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class ProxyFactoryTest extends TestCase {
 

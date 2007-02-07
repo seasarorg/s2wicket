@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 /**
  * {@link S2ContainerLocator}のテストケースクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class S2ContainerLocatorTest extends TestCase {
 

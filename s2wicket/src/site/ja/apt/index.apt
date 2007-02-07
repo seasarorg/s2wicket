@@ -14,13 +14,13 @@ Yoichiro Tanaka
   フィールドに，@SeasarComponentアノテーションを書くだけでいいのです。
   
   特別な設定ファイルなどは必要ありません。自分でDIコンテナからルックアップする必要もありません。
-  wicket-seasarを使うことで，@SeasarComponentアノテーションが付与されたフィールドのインスタンスが使用されるときに，
+  S2Wicketを使うことで，@SeasarComponentアノテーションが付与されたフィールドのインスタンスが使用されるときに，
   自動的にDIコンテナからコンポーネントオブジェクトをルックアップし，処理を呼び出してくれます。
   そこから先はSeasarの世界です。AOPやS2Daoなどの優れた機構を，思う存分使用することが可能となります。
   
 * 謝辞
 
-  wicket-seasarを開発するにあたり，{{{http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182494}wicket-springやwicket-spring-annot}}を参考にさせていただきました。
+  S2Wicketを開発するにあたり，{{{http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182494}wicket-springやwicket-spring-annot}}を参考にさせていただきました。
   {{{http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182494}wicket-springやwicket-spring-annot}}の作者であるIgor Vaynberg氏に感謝いたします。
   
 * Wicketとは

@@ -29,6 +29,7 @@ import junit.framework.TestCase;
 /**
  * {@link S2ContainerHolder}のテストケースクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class S2ContainerHolderTest extends TestCase {
 

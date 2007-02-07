@@ -37,6 +37,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 /**
  * Seasarコンポーネントのメソッド呼び出しを代理するプロキシオブジェクトを生成する処理を持つクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 class ProxyFactory {
 	

@@ -26,6 +26,7 @@ import wicket.Application;
 /**
  * Seasarコンテナオブジェクトを取得するための処理を持つクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 class S2ContainerLocator implements Serializable, IS2ContainerLocator {
 	

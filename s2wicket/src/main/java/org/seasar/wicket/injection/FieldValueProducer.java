@@ -18,6 +18,9 @@
 package org.seasar.wicket.injection;
 
 import java.lang.reflect.Field;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * SeasarComponentアノテーションが付与されたフィールドにセットする値を供給するクラスです。
@@ -30,41 +33,52 @@ class FieldValueProducer {
 	/** Seasarコンテナロケータ */
 	private IS2ContainerLocator containerLocator;
 	
+	/** フィールドフィルタのコレクション */
+	private List<FieldFilter> fieldFilterList;
+	
 	/**
 	 * このオブジェクトが生成されるときに呼び出されます。
 	 * @param containerLocator コンテナロケータ
+	 * @param fieldFilterList フィールドフィルタが格納されたコレクション
 	 */
-	FieldValueProducer(IS2ContainerLocator containerLocator) {
+	FieldValueProducer(IS2ContainerLocator containerLocator, List<FieldFilter> fieldFilterList) {
 		super();
+		// 引数チェック
 		if (containerLocator == null)
 			throw new IllegalArgumentException("containerLocator is null.");
+		if (fieldFilterList == null)
+			throw new IllegalArgumentException("fieldFilterList is null.");
+		if (fieldFilterList.isEmpty())
+			throw new IllegalArgumentException("fieldFilterList is empty.");
 		this.containerLocator = containerLocator;
+		this.fieldFilterList = fieldFilterList;
 	}
 	
 	/**
 	 * 指定されたフィールドに対応するプロキシオブジェクトを生成して返します。
+	 * このメソッドに渡されるフィールドは，{{@link #isSupported(Field)}メソッド呼び出しの結果がtrueのもののみです。
 	 * @param field フィールドオブジェクト
 	 * @return プロキシオブジェクト
 	 */
-	Object getValue(Field field) throws AnnotationNotPresentsException {
+	Object getValue(Field field) {
 		// 引数チェック
 		if (field == null)
 			throw new IllegalArgumentException("field is null.");
-		// フィールドにアノテーションが付与されているかチェック
-		if (field.isAnnotationPresent(SeasarComponent.class)) {
-			// アノテーションオブジェクトを取得
-			SeasarComponent annotation = field.getAnnotation(SeasarComponent.class);
-			// コンポーネント名を取得
-			String componentName = annotation.name();
-			// Seasarコンポーネントリゾルバを生成
-			ComponentResolver resolver = new ComponentResolver(componentName, field.getType(), containerLocator);
-			// プロキシを生成
-			Object proxy = ProxyFactory.create(field.getType(), resolver);
-			// プロキシを返却
-			return proxy;
-		} else {
-			throw new AnnotationNotPresentsException();
+		// コンポーネント名を取得
+		String componentName = null;
+		for (FieldFilter filter : fieldFilterList) {
+			String filterResult = filter.getLookupComponentName(field);
+			if (!StringUtils.isEmpty(filterResult)) {
+				componentName = filterResult;
+				break;
+			}
 		}
+		// Seasarコンポーネントリゾルバを生成
+		ComponentResolver resolver = new ComponentResolver(componentName, field.getType(), containerLocator);
+		// プロキシを生成
+		Object proxy = ProxyFactory.create(field.getType(), resolver);
+		// プロキシを返却
+		return proxy;
 	}
 	
 	/**
@@ -73,7 +87,20 @@ class FieldValueProducer {
 	 * @return サポートされていれば true
 	 */
 	boolean isSupported(Field field) {
-		return field.isAnnotationPresent(SeasarComponent.class);
+		for (FieldFilter filter : fieldFilterList) {
+			if (filter.isSupported(field)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
+	/**
+	 * 適用されているフィールドフィルタのコレクションを返します。
+	 * @return フィールドフィルタのコレクション
+	 */
+	List<FieldFilter> getFieldFilters() {
+		return fieldFilterList;
+	}
+	
 }

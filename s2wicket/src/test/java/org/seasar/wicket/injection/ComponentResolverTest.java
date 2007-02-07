@@ -26,6 +26,7 @@ import static org.easymock.EasyMock.*;
 /**
  * {@link ComponentResolver}のテストケースクラスです。
  * @author Yoichiro Tanaka
+ * @since 1.0.0
  */
 public class ComponentResolverTest extends TestCase {
 

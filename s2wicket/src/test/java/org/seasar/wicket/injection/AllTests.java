@@ -26,13 +26,14 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for jp.eisbahn.wicket.seasar");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ProxyFactoryTest.class);
-		suite.addTestSuite(S2ContainerHolderTest.class);
-		suite.addTestSuite(GadgetTest.class);
-		suite.addTestSuite(FieldValueProducerTest.class);
-		suite.addTestSuite(S2ContainerLocatorTest.class);
-		suite.addTestSuite(InjectionProcessorTest.class);
 		suite.addTestSuite(ComponentResolverTest.class);
 		suite.addTestSuite(SeasarComponentInjectionListenerTest.class);
+		suite.addTestSuite(AnnotationFieldFilterTest.class);
+		suite.addTestSuite(GadgetTest.class);
+		suite.addTestSuite(InjectionProcessorTest.class);
+		suite.addTestSuite(FieldValueProducerTest.class);
+		suite.addTestSuite(S2ContainerHolderTest.class);
+		suite.addTestSuite(S2ContainerLocatorTest.class);
 		//$JUnit-END$
 		return suite;
 	}
