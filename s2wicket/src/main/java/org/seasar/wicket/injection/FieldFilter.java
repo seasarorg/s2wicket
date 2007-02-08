@@ -61,7 +61,18 @@ import java.util.List;
  * addComponentInstantiationListener(
  *     new SeasarComponentInjectionListener(this, filters));
  * </pre>
- * <p>
+ * <p>S2Wicketは{@link FieldFilter}インタフェースの実装オブジェクトをSeasarコンテナに
+ * 登録されたコンポーネントオブジェクトから検索して，自動的にそれらを適用します。それが２番目の方法です。</p>
+ * <pre>
+ * &lt;components&gt;
+ *     &lt;component name="myFilter"
+ *         class="ServiceFieldFilter" /&gt;
+ * &lt;/components&gt;
+ * </pre>
+ * <p>{@link SeasarComponentInjectionListener}クラスのコンストラクタには，{@link FieldFilter}
+ * オブジェクトのコレクションを引数に持たないものがありますので，この方法ではそれを使用します。
+ * 明示的に指定する最初の方法に比べて，Seasarコンテナ内からの{@link FieldFilter}インタフェースの実装オブジェクトの検索に加えて，
+ * {@link AnnotationFieldFilter}オブジェクトが暗黙的に適用されることに注意する必要があります。</p>
  * 
  * @see AnnotationFieldFilter
  * @author Yoichiro Tanaka

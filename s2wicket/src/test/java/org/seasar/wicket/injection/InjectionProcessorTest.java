@@ -86,8 +86,8 @@ public class InjectionProcessorTest extends TestCase {
 		assertNotNull(fieldValueProducer);
 		List<FieldFilter> fieldFilters = fieldValueProducer.getFieldFilters();
 		assertEquals(2, fieldFilters.size());
-		assertTrue(fieldFilters.get(0) instanceof AnnotationFieldFilter);
-		assertSame(fieldFilter, fieldFilters.get(1));
+		assertSame(fieldFilter, fieldFilters.get(0));
+		assertTrue(fieldFilters.get(1) instanceof AnnotationFieldFilter);
 	}
 	
 	/**

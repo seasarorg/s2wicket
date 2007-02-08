@@ -8,15 +8,91 @@ Yoichiro Tanaka
 使用方法
 
   S2Wicketを使用して，WicketとSeasar2を連携するための手順について紹介します。
+
+* 目次
   
-* 0. 前提条件
+  * {{{#前提条件}前提条件}}
+  
+  * {{{#S2Wicketをセットアップする}S2Wicketをセットアップする}}
+  
+* 0. {前提条件}
 
   WicketおよびSeasar2 Containerが使用可能な状態にWebアプリケーションがセットアップされていることとします。
   また，インジェクションしたいコンポーネントオブジェクトが，Seasar2のDIコンテナに登録されていることとします。
   
   maven2を使用してS2Wicketを利用する場合は，maven2が利用可能な状態になっていることが必要です。
   
-* 1. S2Wicketを入手する
+* 1. {S2Wicketをセットアップする}
+
+  S2Wicketをセットアップする形態として，以下の３つの方法があります。
+  
+  * seasar.orgのmaven2リポジトリに登録されているjarファイルを利用する。
+
+  * 配布パッケージに含まれるjarファイルを利用する。
+  
+  * 配布パッケージのソースコードをビルドし，jarファイルを作成する。
+    
+  以下にそれぞれの手順を示します。
+  
+** seasar.orgのmaven2リポジトリに登録されているjarファイルを利用する。
+
+  S2Wicketは，seasar.orgが提供するmaven2リポジトリに各種jarを登録しています。
+  あなたのWebアプリケーションがmaven2でプロジェクト管理されている場合は，
+  pom.xmlファイルにseasar.orgのmaven2リポジトリの場所とS2Wicketの依存関係を記述するだけで，
+  すぐにS2Wicketを使用可能な状態にすることができます。
+  
+  まず，pom.xmlファイルにseasar.orgが提供するmaven2リポジトリの場所を以下のように記述します。
+  
++------------------------------------------------------+
+<project ...>
+    ...
+    <repositories>
+        ...
+        <repository>
+            <id>maven.seasar.org</id>
+            <name>The Seasar Foundation Maven2 Repository</name>
+            <url>http://maven.seasar.org/maven2</url>
+        </repository>
+        <repository>
+            <id>local</id>
+            <name>The Seasar Foundation Maven2 local Repository</name>
+            <url>file:repo</url>
+        </repository>
+    </repositories>
+    ...
+</project>
++------------------------------------------------------+
+
+  さらに，S2Wicketへの依存関係を以下のように記述します。
+  
++------------------------------------------------------+
+<project ...>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>org.seasar.wicket</groupId>
+            <artifactId>s2wicket</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+    ...
+</project>
++------------------------------------------------------+
+
+  pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
+  利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
+  Eclipseプロジェクトのクラスパスに，s2wicket-1.0.0.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.0.0.jar
+  ファイルや必要なライブラリが含まれるようになります。
+  
+** 配布パッケージに含まれるjarファイルを利用する。
+
+  S2Wicketは，ダウンロード可能な配布パッケージに，ビルド済みのjarファイルとS2Wicketに必要な依存jarファイル
+  を含めて提供しています。配布パッケージに含まれるjarを使用することで，maven2がない場合でもS2Wicketを
+  使用することができます。
+
+*** S2Wicket配布パッケージを入手する
 
   {{{download.html}ダウンロードページ}}から，S2Wicketrの最新バージョンのアーカイブをダウンロードします。その後，
   適当なディレクトリで展開します。展開後のトップディレクトリは，以下のようになっているはずです。
@@ -36,7 +112,7 @@ S2Wicket
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
   もう一度ダウンロードし直してください。
 
-* 2. ライブラリをWebアプリケーションに組み込む
+*** ライブラリをWebアプリケーションに組み込む
 
   S2Wicketを使用するためには，３つのjarファイルをあなたのWebアプリケーションに配置する必要があります。
   配置が必要なjarファイルは，以下のファイルです。
@@ -49,12 +125,7 @@ s2wicket
   +- s2wicket-1.0.0.jar
 +------------------------------------------------------+
 
-  S2Wicketは，maven2プロジェクトとして構築されています。あなたのWebアプリケーションがmaven2をサポートしている場合は，
-  S2Wicketの組み込みもmaven2の恩恵を受けることができます。
-  
-** maven2を使用しない場合
-
-  S2Wicketのアーカイブに含まれる３つのjarファイルを，あなたのWebアプリケーションに手でコピーして配置します。
+  S2Wicketのアーカイブに含まれる上記３つのjarファイルを，あなたのWebアプリケーションにコピーして配置します。
   配置先は，あなたのWebアプリケーションに存在する「/WEB-INF/lib」ディレクトリです。
   
 +------------------------------------------------------+
@@ -70,6 +141,15 @@ s2wicket
   S2Wicketは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には，
   wicket-1.2.4.jarファイルやs2-framework-2.4.8.jarファイルが存在するはずです。
 
+  これにより，あなたのWebアプリケーションにS2Wicketが組み込まれたことになります。
+  あなたのWebアプリケーションの開発時には，上記３つのjarファイルについてクラスパスを通した状態で
+  コンパイルなどを行ってください。
+
+** 配布パッケージのソースコードをビルドし，jarファイルを作成する。
+
+  S2Wicketの配布パッケージには，ソースコードが含まれています。さらにmaven2のpom.xmlファイルも提供しています。
+  あなたは
+  
 ** maven2を使用する場合
 
   S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.0.0.jarファイルをビルドし，

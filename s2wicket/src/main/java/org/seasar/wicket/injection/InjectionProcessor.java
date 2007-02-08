@@ -179,16 +179,12 @@ class InjectionProcessor {
 	 */
 	private List<FieldFilter> createDefaultFieldFilters(IS2ContainerLocator containerLocator) {
 		List<FieldFilter> fieldFilters = new ArrayList<FieldFilter>();
-		fieldFilters.add(new AnnotationFieldFilter());
 		S2Container container = containerLocator.get();
 		FieldFilter[] filters = (FieldFilter[])container.findComponents(FieldFilter.class);
-		List<FieldFilter> filterList;
 		if (filters != null) {
-			filterList = Arrays.asList(filters);
-			fieldFilters.addAll(filterList);
-		} else {
-			filterList = new ArrayList<FieldFilter>();
+			fieldFilters.addAll(Arrays.asList(filters));
 		}
+		fieldFilters.add(new AnnotationFieldFilter());
 		return fieldFilters;
 	}
 
