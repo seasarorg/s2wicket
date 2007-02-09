@@ -27,6 +27,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ProxyFactoryTest.class);
 		suite.addTestSuite(ComponentResolverTest.class);
+		suite.addTestSuite(SupportedFieldTest.class);
 		suite.addTestSuite(SeasarComponentInjectionListenerTest.class);
 		suite.addTestSuite(AnnotationFieldFilterTest.class);
 		suite.addTestSuite(GadgetTest.class);

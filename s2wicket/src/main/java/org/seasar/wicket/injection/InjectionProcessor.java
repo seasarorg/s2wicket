@@ -20,7 +20,6 @@ package org.seasar.wicket.injection;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.seasar.framework.container.S2Container;
@@ -105,20 +104,21 @@ class InjectionProcessor {
 		// 対象オブジェクトのクラスオブジェクトを取得
 		Class<? extends Object> clazz = target.getClass();
 		// インジェクション処理対象のフィールドを取得
-		Field[] targetFields = getTargetFields(clazz, fieldValueProducer);
+		SupportedField[] targetFields = getTargetFields(clazz, fieldValueProducer);
 		// フィールド毎に処理
 		for (int i = 0; i < targetFields.length; i++) {
+			Field targetField = targetFields[i].getField();
 			// フィールドにアクセスできるようにする
-			if (!targetFields[i].isAccessible()) {
-				targetFields[i].setAccessible(true);
+			if (!targetField.isAccessible()) {
+				targetField.setAccessible(true);
 			}
 			try {
 				// 対象オブジェクトのフィールド値がnullかチェック
-				if (targetFields[i].get(target) == null) {
+				if (targetField.get(target) == null) {
 					// フィールド値とするプロキシオブジェクトを取得
 					Object fieldValue = fieldValueProducer.getValue(targetFields[i]);
 					// フィールドにインジェクト
-					targetFields[i].set(target, fieldValue);
+					targetField.set(target, fieldValue);
 				}
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("Field injection failed.", e);
@@ -134,9 +134,9 @@ class InjectionProcessor {
 	 * @param fieldValueProducer フィールド値供給オブジェクト
 	 * @return 処理対象のフィールドの配列
 	 */
-	private Field[] getTargetFields(Class<? extends Object> clazz, FieldValueProducer fieldValueProducer) {
+	private SupportedField[] getTargetFields(Class<? extends Object> clazz, FieldValueProducer fieldValueProducer) {
 		// 結果を格納するコレクションを生成
-		List<Field> resultList = new LinkedList<Field>();
+		List<SupportedField> resultList = new ArrayList<SupportedField>();
 		// 処理対象がなくなるか，Wicket提供クラスになるまで繰り返す
 		while((clazz != null) && (!(isWicketClass(clazz)))) {
 			// 定義されているフィールドを取得
@@ -144,16 +144,17 @@ class InjectionProcessor {
 			// フィールド毎に処理
 			for (int i = 0; i < fields.length; i++) {
 				// サポートされているフィールドかチェック
-				if (fieldValueProducer.isSupported(fields[i])) {
+				FieldFilter fieldFilter = fieldValueProducer.isSupported(fields[i]);
+				if (fieldFilter != null) {
 					// 結果のコレクションに追加
-					resultList.add(fields[i]);
+					resultList.add(new SupportedField(fields[i], fieldFilter));
 				}
 			}
 			// スーパークラスを取得し同様の検査を行う
 			clazz = clazz.getSuperclass();
 		}
 		// 結果を返却
-		return resultList.toArray(new Field[0]);
+		return resultList.toArray(new SupportedField[0]);
 	}
 	
 	/**

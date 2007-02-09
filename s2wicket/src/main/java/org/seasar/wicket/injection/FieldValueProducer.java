@@ -20,8 +20,6 @@ package org.seasar.wicket.injection;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * SeasarComponentアノテーションが付与されたフィールドにセットする値を供給するクラスです。
  * 実際のSeasarコンポーネントのメソッドの呼び出しを代行するプロキシオブジェクトを提供します。
@@ -57,22 +55,17 @@ class FieldValueProducer {
 	/**
 	 * 指定されたフィールドに対応するプロキシオブジェクトを生成して返します。
 	 * このメソッドに渡されるフィールドは，{{@link #isSupported(Field)}メソッド呼び出しの結果がtrueのもののみです。
-	 * @param field フィールドオブジェクト
+	 * @param supportedField サポートされたフィールドオブジェクト
 	 * @return プロキシオブジェクト
 	 */
-	Object getValue(Field field) {
+	Object getValue(SupportedField supportedField) {
 		// 引数チェック
-		if (field == null)
+		if (supportedField == null)
 			throw new IllegalArgumentException("field is null.");
 		// コンポーネント名を取得
-		String componentName = null;
-		for (FieldFilter filter : fieldFilterList) {
-			String filterResult = filter.getLookupComponentName(field);
-			if (!StringUtils.isEmpty(filterResult)) {
-				componentName = filterResult;
-				break;
-			}
-		}
+		String componentName = supportedField.getLookupComponentName();
+		// フィールドオブジェクトを取得
+		Field field = supportedField.getField();
 		// Seasarコンポーネントリゾルバを生成
 		ComponentResolver resolver = new ComponentResolver(componentName, field.getType(), containerLocator);
 		// プロキシを生成
@@ -82,17 +75,19 @@ class FieldValueProducer {
 	}
 	
 	/**
-	 * 指定されたフィールドがインジェクションの対象としてサポートされているかどうかを返します。
+	 * 指定されたフィールドがインジェクションの対象としてサポートされているかどうかをチェックします。
+	 * チェックした結果，サポートするフィールドフィルタが存在した場合は，そのフィールドフィルタを返します。
+	 * もしサポートするフィールドフィルタが存在しなかった場合は，nullを返します。
 	 * @param field フィールド
-	 * @return サポートされていれば true
+	 * @return サポートされていれば，サポートするフィールドフィルタオブジェクト。サポートされない場合は null。
 	 */
-	boolean isSupported(Field field) {
+	FieldFilter isSupported(Field field) {
 		for (FieldFilter filter : fieldFilterList) {
 			if (filter.isSupported(field)) {
-				return true;
+				return filter;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**

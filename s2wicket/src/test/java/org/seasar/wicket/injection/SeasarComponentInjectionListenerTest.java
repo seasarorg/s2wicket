@@ -130,15 +130,19 @@ public class SeasarComponentInjectionListenerTest extends TestCase {
 		service.foo();
 		S2Container container = createMock(S2Container.class);
 		expect(container.getComponent(Service.class)).andReturn(service);
-		FieldFilter fieldFilter = createMock(FieldFilter.class);
+		FieldFilter fieldFilter1 = createMock(FieldFilter.class);
+		FieldFilter fieldFilter2 = createMock(FieldFilter.class);
 		Field field = TestComponent.class.getDeclaredField("service");
-		expect(fieldFilter.isSupported(field)).andReturn(true);
-		expect(fieldFilter.getLookupComponentName(field)).andReturn(null);
+		expect(fieldFilter1.isSupported(field)).andReturn(false);
+		expect(fieldFilter2.isSupported(field)).andReturn(true);
+		expect(fieldFilter2.getLookupComponentName(field)).andReturn(null);
 		replay(service);
 		replay(container);
-		replay(fieldFilter);
+		replay(fieldFilter1);
+		replay(fieldFilter2);
 		List<FieldFilter> filters = new ArrayList<FieldFilter>();
-		filters.add(fieldFilter);
+		filters.add(fieldFilter1);
+		filters.add(fieldFilter2);
 		SeasarComponentInjectionListener target =
 			new SeasarComponentInjectionListener(new MockWebApplication(null), container, filters);
 		TestComponent component = new TestComponent();
@@ -146,7 +150,7 @@ public class SeasarComponentInjectionListenerTest extends TestCase {
 		component.service.foo();
 		verify(service);
 		verify(container);
-		verify(fieldFilter);
+		verify(fieldFilter2);
 	}
 	
 	/**

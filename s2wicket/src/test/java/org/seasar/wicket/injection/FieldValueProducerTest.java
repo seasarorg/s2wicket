@@ -76,7 +76,9 @@ public class FieldValueProducerTest extends TestCase {
 		List<FieldFilter> filters = new ArrayList<FieldFilter>();
 		filters.add(fieldFilter);
 		FieldValueProducer target = new FieldValueProducer(containerLocator, filters);
-		assertTrue(target.isSupported(field));
+		FieldFilter result = target.isSupported(field);
+		assertNotNull(result);
+		assertSame(fieldFilter, result);
 		verify(fieldFilter);
 		reset(fieldFilter);
 		// フィルタがfalseを返す場合
@@ -85,7 +87,8 @@ public class FieldValueProducerTest extends TestCase {
 		filters = new ArrayList<FieldFilter>();
 		filters.add(fieldFilter);
 		target = new FieldValueProducer(containerLocator, filters);
-		assertFalse(target.isSupported(field));
+		result = target.isSupported(field);
+		assertNull(result);
 		verify(fieldFilter);
 	}
 	
@@ -109,7 +112,7 @@ public class FieldValueProducerTest extends TestCase {
 	}
 	
 	/**
-	 * {@link FieldValueProducer#getValue(Field)}のテストを行います。
+	 * {@link FieldValueProducer#getValue(SupportedField)}のテストを行います。
 	 * 型でルックアップするケースをテストします。
 	 * @throws Exception 何らかの例外が発生したとき
 	 */
@@ -130,7 +133,8 @@ public class FieldValueProducerTest extends TestCase {
 		List<FieldFilter> filters = new ArrayList<FieldFilter>();
 		filters.add(fieldFilter);
 		FieldValueProducer target = new FieldValueProducer(containerLocator, filters);
-		Object result = target.getValue(field);
+		SupportedField supportedField = new SupportedField(field, fieldFilter);
+		Object result = target.getValue(supportedField);
 		assertNotNull(result);
 		((Service)result).foo();
 		verify(containerLocator);
@@ -161,7 +165,8 @@ public class FieldValueProducerTest extends TestCase {
 		List<FieldFilter> filters = new ArrayList<FieldFilter>();
 		filters.add(fieldFilter);
 		FieldValueProducer target = new FieldValueProducer(containerLocator, filters);
-		Object result = target.getValue(field);
+		SupportedField supportedField = new SupportedField(field, fieldFilter);
+		Object result = target.getValue(supportedField);
 		assertNotNull(result);
 		((Service)result).foo();
 		verify(containerLocator);
