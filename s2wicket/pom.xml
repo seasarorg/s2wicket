@@ -273,15 +273,19 @@
 			<id>maven.seasar.org</id>
 			<name>The Seasar Foundation Maven2 Repository</name>
 			<url>
-				scp://www.seasar.org/home/groups/s2wicket/maven/maven2
+				scp://maven.seasar.org/home/groups/sandbox/s2wicket/maven/maven2
 			</url>
 		</repository>
-		<site>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
 			<id>maven.seasar.org</id>
+			<name>
+				The Seasar Foundation Maven2 Snapshot Repository
+			</name>
 			<url>
-				scp://www.seasar.org/home/groups/s2wicket/public_html
+				scp://maven.seasar.org/home/groups/sandbox/s2wicket/maven/maven2-snapshot
 			</url>
-		</site>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<reporting>
