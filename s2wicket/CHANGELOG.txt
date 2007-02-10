@@ -1,0 +1,23 @@
+Release Notes - S2Wicket - Version 1.1.0
+
+** Release Date
+    02/11/2007
+
+** Bug
+    * [WICKET-1] - wicket-seasarと書かれている部分がある
+    * [WICKET-4] - SVNリポジトリへのリンクが間違っている
+    * [WICKET-7] - isSupported()がfalseを返すフィールドフィルタに対してgetLookupComponentName()が呼び出されてしまう
+
+
+** New Feature
+    * [WICKET-2] - インジェクション対象のフィールドを判断するロジックを自作できるようにする
+
+** Task
+    * [WICKET-3] - 変更履歴の追加
+    * [WICKET-5] - maven2リポジトリへ配布パッケージをアップするようにする
+    * [WICKET-6] - フィールドフィルタ(WICKET2)の実装に伴うサイトの修正
+
+Release Notes - S2Wicket - Version 1.0.0
+
+** Release Date
+    02/02/2007
