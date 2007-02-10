@@ -3,22 +3,24 @@ Wicket Seasar Integration Index Page
  ------
 Yoichiro Tanaka
  ------
-2007/02/01
+2007/02/10
 
 Welcome!
 
-  This project offers a function convenient to combine Wicket and Seasar2 and to construct the application. 
-  The component object under the Seasar2 management is worn to the object of the WebPage class and
-  various component classes treated with Wicket in using Wicket Seasar Interation(S2Wicket)
-  and the injection can be done easily. 
+  This project offers a function convenient to combine Wicket and Seasar2 and to construct the application.
+  The component object under the Seasar2 management is worn to the object of the WebPage class and various
+  component classes treated with Wicket in using Wicket Seasar Interation(S2Wicket) and the injection can
+  be done easily. 
   
-  It is good for the field ..only writing the @SeasarComponent annotation... 
+  It is good for the field for instance ..only writing the @SeasarComponent annotation...
+  In addition, if the field filter is used, the injection comes to be done according to
+  the rule not writing the @SeasarComponent annotation. 
   
-  There are no special configuration file etc. needing. Look should not improve from the DI container for myself. 
-  The component object improves automatically from the DI container in look when the instance of the field
-  where the @SeasarComponent annotation was given is used by using wicket-seasar, and processing is called. 
-  From there to the world of Seasar aheadUsing the mechanism that AOP and S2Dao, etc.
-  are excellent to one's heart's content becomes possible. 
+  There are no special configuration file etc. needing. Look should not improve from the DI container
+  for myself. The component object improves automatically from the Seasar container in look when the
+  instance of the field in the injection is used by using S2Wicket, and processing is called. From there
+  to the world of Seasar aheadUsing the mechanism that AOP and S2Dao, etc. are excellent to one's heart's
+  content becomes possible. 
   
 * Thanks
 

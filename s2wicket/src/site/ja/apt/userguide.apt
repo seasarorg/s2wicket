@@ -3,7 +3,7 @@ Wicket Seasar Integration User Guide Page
  ------
 Yoichiro Tanaka
  ------
-2007/02/01
+2007/02/10
 
 使用方法
 
@@ -14,6 +14,14 @@ Yoichiro Tanaka
   * {{{#前提条件}前提条件}}
   
   * {{{#S2Wicketをセットアップする}S2Wicketをセットアップする}}
+  
+  * {{{#フィールドフィルタ}フィールドフィルタ}}
+  
+  * {{{#SeasarComponentInjectionListenerを登録する}SeasarComponentInjectionListenerを登録する}}
+  
+  * {{{#インジェクション対象のフィールドを作成する}インジェクション対象のフィールドを作成する}}
+  
+  * {{{#インジェクションされたオブジェクトを使用する}インジェクションされたオブジェクトを使用する}}
   
 * 0. {前提条件}
 
@@ -31,6 +39,8 @@ Yoichiro Tanaka
   * 配布パッケージに含まれるjarファイルを利用する。
   
   * 配布パッケージのソースコードをビルドし，jarファイルを作成する。
+  
+  []
     
   以下にそれぞれの手順を示します。
   
@@ -92,7 +102,7 @@ Yoichiro Tanaka
   を含めて提供しています。配布パッケージに含まれるjarを使用することで，maven2がない場合でもS2Wicketを
   使用することができます。
 
-*** S2Wicket配布パッケージを入手する
+*** 1. S2Wicket配布パッケージを入手する
 
   {{{download.html}ダウンロードページ}}から，S2Wicketrの最新バージョンのアーカイブをダウンロードします。その後，
   適当なディレクトリで展開します。展開後のトップディレクトリは，以下のようになっているはずです。
@@ -112,7 +122,7 @@ S2Wicket
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
   もう一度ダウンロードし直してください。
 
-*** ライブラリをWebアプリケーションに組み込む
+*** 2. ライブラリをWebアプリケーションに組み込む
 
   S2Wicketを使用するためには，３つのjarファイルをあなたのWebアプリケーションに配置する必要があります。
   配置が必要なjarファイルは，以下のファイルです。
@@ -148,15 +158,33 @@ s2wicket
 ** 配布パッケージのソースコードをビルドし，jarファイルを作成する。
 
   S2Wicketの配布パッケージには，ソースコードが含まれています。さらにmaven2のpom.xmlファイルも提供しています。
-  あなたは
+  あなたはmaven2を使用して，配布パッケージに含まれるソースコードからS2Wicketのjarファイルをビルドすることができます。
   
-** maven2を使用する場合
-
   S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.0.0.jarファイルをビルドし，
   maven2のローカルリポジトリにインストールすることができます。インストールされれば，あなたのWebアプリケーション
   から，maven2を使用して必要なライブラリを自動的に組み込むことが可能となります。
 
-*** 1. s2wicket-1.0.0.jarをビルド＆インストールする
+*** 1. S2Wicket配布パッケージを入手する
+
+  {{{download.html}ダウンロードページ}}から，S2Wicketrの最新バージョンのアーカイブをダウンロードします。その後，
+  適当なディレクトリで展開します。展開後のトップディレクトリは，以下のようになっているはずです。
+  
++------------------------------------------------------+
+S2Wicket
+  +- src
+  +- lib
+      +- cglib-nodep-2.1_3.jar
+      +- commons-lang-2.2.jar
+  +- LICENSE.txt
+  +- pom.xml
+  +- build.xml
+  +- s2wicket-1.0.0.jar
++------------------------------------------------------+
+
+  このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
+  もう一度ダウンロードし直してください。
+
+*** 2. s2wicket-1.0.0.jarをビルド＆インストールする
 
   s2wicket-1.0.0.jarをビルドし，maven2のローカルリポジトリにインストールします。
   コマンドプロンプトやシェルを開き，以下のコマンドを実行します。
@@ -168,7 +196,7 @@ s2wicket
 
   「BUILD SUCCESSFUL」と表示されれば，インストールは成功です。
 
-*** 2. pom.xmlファイルにS2Wicketの依存を記述する
+*** 3. pom.xmlファイルにS2Wicketの依存を記述する
 
   あなたのWebアプリケーションのpom.xmlファイルに，S2Wicketへの依存関係を追記します。
   pom.xmlファイル中の<dependencies>タグ内に記述します。
@@ -188,36 +216,135 @@ s2wicket
 </project>
 +------------------------------------------------------+
 
-*** 3. ビルドやEclipseプロジェクトの生成を行う
+*** 4. ビルドやEclipseプロジェクトの生成を行う
 
   pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
   利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
   Eclipseプロジェクトのクラスパスに，s2wicket-1.0.0.jarファイルやその他必要なライブラリが追加されます。
   また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.0.0.jar
   ファイルや必要なライブラリが含まれるようになります。
-
-* 3. SeasarComponentInjectionListenerを登録する
-
-  S2Wicketにより，@SeasarComponentアノテーションが付与されたフィールドに対して，
-  Seasar2が管理するコンポーネントオブジェクトがインジェクションされます。@SeasarComponent
-  アノテーションを使用することができるのは，Wicketによって実行時に管理されるwicket.Component
-  クラスのサブクラスです。各種Componentクラスのオブジェクトは，Wicketアプリケーションの実行時に
-  Wicketフレームワークに登録され，コンポーネントツリーを形成します。
   
-  WicketにComponentクラスのオブジェクトが登録された際のコールバックを受けるために，
+* 3. {フィールドフィルタ}
+
+  インジェクション対象となるフィールドの判断基準として，S2Wicketは標準で@SeasarComponentアノテーションを
+  提供しています。しかし，いちいち@SeasarComponentアノテーションを記述していくのは手間がかかりますし，
+  多くの3層アプリケーションでは，下層のオブジェクトには特定の命名規則（〜Serviceなど）が存在します。つまり，
+  明示的に@SeasarComponentアノテーションなどでマーキングせずとも，インジェクション対象とするフィールドかどうかを
+  判断することは，ほとんどのWebアプリケーションでは可能なのです。
+  
+  S2Wicketでは，フィールドフィルタという判断機構があります。フィールドフィルタを適切にS2Wicketに登録することにより，
+  インジェクション対象のフィールドかどうかを柔軟に判断することができるようになり，さらに独自の規約を作り込むことで
+  最小限のコードでインジェクションを行うことができるようになります。
+  
+** フィールドフィルタを自作する
+  
+  インジェクション対象のフィールドかどうかを判断するためのフィールドフィルタを自作することで，
+  あなたが独自の判断基準をS2Wicketに登録することができます。フィールドフィルタの処理は，FieldFilterインタフェースで
+  規定されています。あなたは，このインタフェースの実装クラスを作成することで，
+  独自にインジェクション対象とするフィールドの判断基準をS2Wicketに登録することができます。
+  また，インジェクション対象と判断したフィールドについて，
+  そのフィールドにインジェクションするSeasarコンテナ管理下のコンポーネントオブジェクトを，
+  どのようなコンポーネント名でルックアップするかについても決定します。
+  
+  FieldFilterインタフェースでは，以下の２つの処理を規定しています。
+  
+  * isSupported(Field) - 指定されたフィールドがインジェクション対象かどうかを判断し，その結果を返す。
+  
+  * getLookupComponentName(Field) - 指定されたフィールドに対してインジェクションするオブジェクトのコンポーネント名を返す。
+  
+  []
+  
+  isSupported()メソッドで，指定されたフィールドをインジェクション対象とするかどうかを判断し，その結果をboolean値で返します。
+  isSupported()メソッドでtrueが返されたフィールドに関しては，次にgetLookupComponentName()メソッドに渡されて，
+  Seasarコンテナからどのコンポーネント名のコンポーネントオブジェクトをルックアップするかを文字列で返します。もし，
+  コンポーネント名ではなく，フィールドの型を使ってルックアップを行いたい場合は，getLookupComponentName()メソッドの戻り値として
+  nullを返します。
+  
+  例えば「〜Service」という名前のフィールドだった場合にインジェクション対象として，ルックアップ時にフィールド名を
+  コンポーネント名として使用する，という判断ロジックのフィールドフィルタのコードを，以下に示します。
+  
++------------------------------------------------------+
+public class ServiceFieldFilter implements FieldFilter {
+    public boolean isSupported(Field field) {
+        String fieldName = field.getName();
+        return fieldName.endsWith("Service");
+    }
+    public String getLookupComponentName(Field field) {
+        return field.getName();
+    }
+}
++------------------------------------------------------+
+
+  もしフィールド名ではなく，フィールドの型でルックアップしたい場合は，「return field.getName();」
+  を「return null;」に変更します。
+  
+** 標準のフィールドフィルタを利用する
+
+  S2Wicketでは，@SeasarComponentアノテーションをインジェクション対象のマーカーとするフィールドフィルタが
+  標準で提供されています。SeasarComponentInjectionListenerオブジェクトの生成時に，明示的にフィールドフィルタを
+  指定しなかった場合は，@SeasarComponentアノテーションをインジェクション対象とするAnnotationFieldFilterクラス
+  が暗黙的に適用されます。
+  
+** フィールドフィルタを登録する
+
+  フィールドフィルタは，S2Wicketに登録することで適用されます。フィールドフィルタの登録は，２つの方法があります。
+  
+  * SeasarComponentInjectionListenerクラスのコンストラクタの引数で明示的に指定する。
+  
+  * Seasarコンテナに自作したフィールドフィルタを登録する。
+
+  []
+  
+  SeasarComponentInjectionListenerクラスのコンストラクタには，引数にList\<FieldFilter\>コレクションを受け取るものが２つあります。
+  適用したいフィールドフィルタのインスタンスを生成し，それらをListコレクションに追加して，
+  SeasarComponentInjectionListenerクラスのコンストラクタに明示的に渡すことで，コレクションに含まれるフィールドフィルタが
+  使用されるようになります。この場合，インジェクション対象とする判断は，Listコレクション内でのフィールドフィルタの順番となります。
+  
+  SeasarComponentInjectionListenerクラスのコンストラクタには，引数にList\<FieldFilter\>コレクションを受け取らないものもあります。
+  これを使用した場合，@SeasarComponentアノテーションが付与されたフィールドをインジェクション対象とする
+  AnnotationFieldFilterクラスが暗黙的に適用されます。さらに，自作したフィールドフィルタを，Seasarコンテナにコンポーネント登録
+  しておくことで，S2Wicketは自動的にそれをルックアップし，暗黙的に適用します。例えば，FieldFilterインタフェースを実装した
+  MyFieldFilterクラスを作成し，それを登録したい場合は，
+  
++------------------------------------------------------+
+<components>
+    <component name="myFilter"
+        class="MyFieldFilter" />
+</components>
++------------------------------------------------------+
+
+  というようにdiconファイルに記述するなどしてSeasarコンテナからルックアップ可能なようにしておけば，自動的に適用されます。
+  この場合，インジェクション対象とする判断は，Seasarコンテナからフィールドフィルタをルックアップした結果の順序(
+  S2Container#findComponents()メソッドの結果得られる配列の順序)に依存します。ただし，自動的に適用される
+  AnnotationFieldFilterクラスに関しては，必ず最後の評価順となります。
+  
+* 4. {SeasarComponentInjectionListenerを登録する}
+
+  S2Wicketがインジェクション対象とするフィールドは，Wicketによって実行時に管理されるwicket.Component
+  クラスの派生クラスに定義されたフィールドです。各種Componentクラスのオブジェクトは，Wicketアプリケーションの実行時に
+  Wicketフレームワークに登録され，コンポーネントツリーを形成します。
+  ComponentクラスのオブジェクトがWicketに登録された際のコールバックをアプリケーションが受けるために，
   wicket.application.IComponentInstantiationListenerインタフェースが提供されています。
   S2Wicketは，このIComponentInstantiationListenerインタフェースの実装クラスとして，
   SeasarComponentInjectionListenerクラスを提供します。SeasarComponentInjectionListener
   クラスのインスタンスを生成し，wicket.Application#addComponentInstantiationListener()メソッドを
-  使用して，Wicketに登録します。
-  これにより，SeasarComponentInjectionListenerクラスのインスタンスによって，S2Wicketの機能が有効になります。
+  使用してWicketに登録することで，S2Wicketの機能が有効になります。
   
-  SeasarComponentInjectionListenerクラスは，S2Containerオブジェクトを明示的に指定してインスタンスを生成するコンストラクタと，
-  内部で自動的にS2Containerオブジェクトを取得するコンストラクタの2種類を用意しています。
+  S2Wicketは，インジェクションするオブジェクトを取得するために，SeasarコンテナであるS2Containerオブジェクトを必要とします。
+  SeasarComponentInjectionListenerクラスでは，S2Containerオブジェクトを明示的に指定してインスタンスを生成するコンストラクタと，
+  内部で自動的にS2Containerオブジェクトを取得するコンストラクタの両方を用意しています。
+  
+  また，フィールドフィルタを明示的に指定するために，SeasarComponentInjectionListenerクラスのコンストラクタには，
+  List\<FieldFilter\>オブジェクトを引数に持つものが用意されています。暗黙的にフィールドフィルタを適用する場合は，
+  List\<FieldFilter\>オブジェクトを指定しないコンストラクタを使用します。
+  
+  つまり，Seasarコンテナを明示的に指定するかしないか，そしてフィールドフィルタを明示的に指定するかしないかで，
+  SeasarComponentInjectionListenerクラスのコンストラクタを使い分けることができます。
+  
+** Seasarコンテナ，フィールドフィルタを自動取得するコンストラクタ
 
-** S2Containerオブジェクトを自動取得するコンストラクタ
-
-  S2Containerオブジェクトを自動的に取得するコンストラクタでは，引数にWebApplicationオブジェクトのみを指定します。
+  S2Containerオブジェクトおよびフィールドフィルタを自動的に取得するコンストラクタでは，
+  引数にWebApplicationオブジェクトのみを指定します。
 
 +------------------------------------------------------+
 import org.seasar.wicket.injection.SeasarComponentInjectionListener;
@@ -237,11 +364,16 @@ public class OrderApplication extends WebApplication {
   上記の例では，コンストラクタ内でSingletonS2ContainerFactory.getContainer()を呼び出すことにより，
   S2Containerのインスタンスを取得します。つまり，事前にS2ContainerServletなどでS2Containerオブジェクトが準備され，
   SingletonS2ContainerFactory.getContainer()によってS2Containerオブジェクトが得られる環境となっている必要があります。
+  
+  フィールドフィルタは，渡されたS2ContainerオブジェクトからfindComponents(FieldFilter.class)メソッドを呼び出して
+  フィールドフィルタオブジェクトを検索し，さらに@SeasarComponentアノテーションをインジェクション対象とするための
+  AnnotationFieldFilterオブジェクトも登録されます。
 
-** S2Containerオブジェクトを明示的に指定するコンストラクタ
+** Seasarコンテナ，フィールドフィルタを明示的に指定するコンストラクタ
 
-  既に獲得しているS2Containerオブジェクトを使用してSeasarComponentInjectionListenerオブジェクトを生成する場合は，
-  WebApplicationオブジェクトとS2Containerオブジェクトを引数に取るコンストラクタを使用します。
+  既に獲得しているS2Containerオブジェクトを使用してSeasarComponentInjectionListenerオブジェクトを生成する場合や，
+  自作したフィールドフィルタを決まった評価順で使用したい場合は，
+  WebApplicationオブジェクトとS2Containerオブジェクト，フィールドフィルタのコレクションを引数に取るコンストラクタを使用します。
   
 +------------------------------------------------------+
 import org.seasar.wicket.injection.SeasarComponentInjectionListener;
@@ -251,25 +383,40 @@ public class OrderApplication extends WebApplication {
     public OrderApplication() {
        ...
        S2Container container = ...;
+       List<FieldFilter> fieldFilters = ...;
        addComponentInstantiationListener(
-           new SeasarComponentInjectionListener(this, container));
+           new SeasarComponentInjectionListener(this, container, fieldFilters));
        ...
    }
 
 }
 +------------------------------------------------------+
 
-  S2Containerオブジェクトをアプリケーション側で管理している場合は，こちらのコンストラクタを使用してください。
+  S2Containerオブジェクトをアプリケーション側で管理している場合は，このコンストラクタにより
+  S2Wicketで使用されるようになります。また，自作したフィールドフィルタを引数に渡すことで，List\<FieldFilter\>コレクションに
+  格納されている順番で自作したフィールドフィルタが適用されるようになります。このコンストラクタの場合は，
+  AnnotationFieldFilterオブジェクトやSeasarコンテナに登録されている自作したフィールドフィルタオブジェクトは
+  適用されません。
 
-* 4. @SeasarComponentアノテーションを使用する
+* 5. {インジェクション対象のフィールドを作成する}
 
-  Seasar2で管理されたコンポーネントオブジェクトを，WicketのComponentクラス(のサブクラス)から利用するためには，
-  @SeasarComponentアノテーションを使用します。Seasar2からコンポーネントオブジェクトをルックアップする際に，
-  名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が違います。
+  SeasarComponentInjectionListenerオブジェクトのWicketへの登録が完了すれば，あとは適用されている
+  フィールドフィルタの規約に従って，インジェクション対象のフィールドを作成していきます。
+  例えば，フィールドフィルタを自作していない場合は，AnnotationFieldFilterクラスの規約に従って，
+  @SeasarComponentアノテーションを付与したフィールドを作成します。また，例えば前述した
+  ServiceFieldFilterクラスを適用していた場合は，「〜Service」という名前のフィールドを作成すれば，
+  インジェクション対象となります。
+
+** AnnotationFieldFilterによる@SeasarComponentアノテーションの利用
+
+  AnnotationFieldFilterクラスが適用されている場合は，@SeasarComponentアノテーションを使用することで，
+  S2Wicketでサポートされるフィールドとすることができます。
+  Seasarコンテナからコンポーネントオブジェクトをルックアップする際に，
+  名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が異なってきます。
   
-** 型でルックアップする場合
+*** 型でルックアップする場合
   
-  Seasar2から型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
+  Seasarコンテナから型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
   
 +------------------------------------------------------+
 import org.seasar.wicket.injection.SeasarComponent;
@@ -283,13 +430,13 @@ public class InputPage extends WebPage {
 +------------------------------------------------------+
 
   @SeasarComponentアノテーションを属性なしで記述した場合，@SeasarComponentアノテーションを付与した
-  フィールドの型に一致するコンポーネントオブジェクトが，Seasar2からルックアップされます。
+  フィールドの型に一致するコンポーネントオブジェクトが，Seasarコンテナからルックアップされます。
   つまり上記の例では，S2Container#getComponent()メソッドの引数にOrderService.classオブジェクトを渡して
   ルックアップが行われます。フィールドの型は，インタフェースとクラスのどちらでも構いません。
   
-** 名前でルックアップする場合
+*** 名前でルックアップする場合
 
-  Seasar2から名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
+  Seasarコンテナから名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
 
 +------------------------------------------------------+
 import org.seasar.wicket.injection.SeasarComponent;
@@ -303,15 +450,16 @@ public class InputPage extends WebPage {
 +------------------------------------------------------+
 
   @SeasarComponentアノテーションにname属性を記述した場合，name属性の値を名前とするコンポーネントオブジェクトが，
-  Seasar2からルックアップされます。つまり上記の例では，S2Container#getComponent()メソッドの引数に"orderService"という
+  Seasarコンテナからルックアップされます。つまり上記の例では，S2Container#getComponent()メソッドの引数に"orderService"という
   文字列を渡してルックアップが行われます。この場合も，フィールドの型はインタフェースとクラスのどちらでも構いません。
 
-* 5. インジェクションされたオブジェクトを使用する
+* 6. {インジェクションされたオブジェクトを使用する}
 
-  @SeasarComponentアノテーションが付与されたフィールドは，任意のタイミングで利用することが可能となります。
+  フィールドフィルタの規約に従って定義されたフィールドは，任意のタイミングで利用することが可能となります。
   wicket.Componentクラスのデフォルトコンストラクタ内でIComponentInstantiatinoListenerリスナオブジェクトへの
   通知が行われるため，そのクラスがインスタンス化された時には既にインジェクションされた状態です。
-  例えば，フォームのサブミット時にインジェクションされたオブジェクトを使用する場合は，以下のように記述します。
+  例えば，AnnotationFieldFilterフィールドフィルタの適用下で，
+  フォームのサブミット時にインジェクションされたオブジェクトを使用する場合は，以下のように記述します。
  
 +------------------------------------------------------+
 import org.seasar.wicket.injection.SeasarComponent;
