@@ -3,7 +3,39 @@ Wicket Seasar Integration Change Log Page
  ------
 Yoichiro Tanaka
  ------
-2007/02/08
+2007/02/10
 
-S2Wicket Change Log
+Release Notes - S2Wicket - Version 1.1.0
 
+* Release Date
+
+  02/11/2007
+
+* Change Log
+
+** Bug
+
+    * [WICKET-1] - There is a part being written wicket-seasar. 
+
+    * [WICKET-4] - The link to the SVN repository is wrong. 
+
+    * [WICKET-7] - GetLookupComponentName() is called for the field filter to which isSupported() returns false. 
+
+** New Feature
+
+    * [WICKET-2] - Logic that judges the field of the injection object can be made by oneself. 
+
+** Task
+
+    * [WICKET-3] - Addition of change history.
+
+    * [WICKET-5] - The distribution package is improved to the maven2 repository. 
+
+    * [WICKET-6] - Correction of site according to mounting field filter.
+
+Release Notes - S2Wicket - Version 1.0.0
+
+* Release Date
+
+  02/02/2007
+    
