@@ -12,7 +12,7 @@
 	<property name="apidocs-en" location="${site-en}/apidocs" />
 	<property name="s2wicket-www-top" location="../s2wicket-www" />
 	<property name="download" location="${site-top}/download" />
-	<property name="version" value="1.0.0" />
+	<property name="version" value="1.1.0" />
 	
 	<target name="fix-site">
 		<copy todir="${cobertura-ja}" overwrite="true">
