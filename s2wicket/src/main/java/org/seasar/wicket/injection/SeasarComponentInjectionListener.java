@@ -36,6 +36,12 @@ import wicket.protocol.http.WebApplication;
  * 
  *     public OrderApplication() {
  *         ...
+ *     }
+ *     
+ *     &#064;Override
+ *     protected void init() {
+ *         super.init();
+ *         ...
  *         addComponentInstantiationListener(
  *             new SeasarComponentInjectionListener(this));
  *         ...
@@ -49,6 +55,10 @@ import wicket.protocol.http.WebApplication;
  * なっている必要があります。</p>
  * <p>インジェクション対象とするフィールドの判断基準を自作したい場合は，{@link FieldFilter}インタフェースの実装クラスを
  * 作成して，S2Wicketに登録する必要があります。この方法については，{@link FieldFilter}インタフェースの説明をご覧ください。</p>
+ * <p>{@link SeasarComponentInjectionListener}オブジェクトのWicketへの登録は，Applicationクラス（のサブクラス）
+ * のコンストラクタ内では記述しないでください。Applicationクラスのコンストラクタ内で登録を行うと，スレッドにApplicationオブジェクトが
+ * アタッチされていないため，S2Wicket内で例外が発生します。init()メソッドをオーバーライドして，
+ * その中で登録処理を記述してください。</p>
  * 
  * @see FieldFilter
  * @author Yoichiro Tanaka
