@@ -3,7 +3,7 @@ Wicket Seasar Integration User Guide Page
  ------
 Yoichiro Tanaka
  ------
-2007/02/10
+2007/02/13
 
 使用方法
 
@@ -83,7 +83,7 @@ Yoichiro Tanaka
         <dependency>
             <groupId>org.seasar.wicket</groupId>
             <artifactId>s2wicket</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
     ...
@@ -92,8 +92,8 @@ Yoichiro Tanaka
 
   pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
   利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
-  Eclipseプロジェクトのクラスパスに，s2wicket-1.0.0.jarファイルやその他必要なライブラリが追加されます。
-  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.0.0.jar
+  Eclipseプロジェクトのクラスパスに，s2wicket-1.1.1.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.1.1.jar
   ファイルや必要なライブラリが含まれるようになります。
   
 ** 配布パッケージに含まれるjarファイルを利用する。
@@ -116,7 +116,7 @@ S2Wicket
   +- LICENSE.txt
   +- pom.xml
   +- build.xml
-  +- s2wicket-1.0.0.jar
+  +- s2wicket-1.1.1.jar
 +------------------------------------------------------+
 
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
@@ -132,7 +132,7 @@ s2wicket
   +- lib
       +- cglib-nodep-2.1_3.jar
       +- commons-lang-2.2.jar
-  +- s2wicket-1.0.0.jar
+  +- s2wicket-1.1.1.jar
 +------------------------------------------------------+
 
   S2Wicketのアーカイブに含まれる上記３つのjarファイルを，あなたのWebアプリケーションにコピーして配置します。
@@ -145,7 +145,7 @@ s2wicket
           +- ...
           +- cglib-nodep-2.1_3.jar
           +- commons-lang-2.2.jar
-          +- s2wicket-1.0.0.jar
+          +- s2wicket-1.1.1.jar
 +------------------------------------------------------+
 
   S2Wicketは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には，
@@ -160,7 +160,7 @@ s2wicket
   S2Wicketの配布パッケージには，ソースコードが含まれています。さらにmaven2のpom.xmlファイルも提供しています。
   あなたはmaven2を使用して，配布パッケージに含まれるソースコードからS2Wicketのjarファイルをビルドすることができます。
   
-  S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.0.0.jarファイルをビルドし，
+  S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.1.1.jarファイルをビルドし，
   maven2のローカルリポジトリにインストールすることができます。インストールされれば，あなたのWebアプリケーション
   から，maven2を使用して必要なライブラリを自動的に組み込むことが可能となります。
 
@@ -178,15 +178,15 @@ S2Wicket
   +- LICENSE.txt
   +- pom.xml
   +- build.xml
-  +- s2wicket-1.0.0.jar
+  +- s2wicket-1.1.1.jar
 +------------------------------------------------------+
 
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
   もう一度ダウンロードし直してください。
 
-*** 2. s2wicket-1.0.0.jarをビルド＆インストールする
+*** 2. s2wicket-1.1.1.jarをビルド＆インストールする
 
-  s2wicket-1.0.0.jarをビルドし，maven2のローカルリポジトリにインストールします。
+  s2wicket-1.1.1.jarをビルドし，maven2のローカルリポジトリにインストールします。
   コマンドプロンプトやシェルを開き，以下のコマンドを実行します。
 
 +------------------------------------------------------+
@@ -209,7 +209,7 @@ S2Wicket
         <dependency>
             <groupId>org.seasar.wicket</groupId>
             <artifactId>s2wicket</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
     ...
@@ -220,8 +220,8 @@ S2Wicket
 
   pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
   利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
-  Eclipseプロジェクトのクラスパスに，s2wicket-1.0.0.jarファイルやその他必要なライブラリが追加されます。
-  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.0.0.jar
+  Eclipseプロジェクトのクラスパスに，s2wicket-1.1.1.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.1.1.jar
   ファイルや必要なライブラリが含まれるようになります。
   
 * 3. {フィールドフィルタ}
@@ -341,6 +341,11 @@ public class ServiceFieldFilter implements FieldFilter {
   つまり，Seasarコンテナを明示的に指定するかしないか，そしてフィールドフィルタを明示的に指定するかしないかで，
   SeasarComponentInjectionListenerクラスのコンストラクタを使い分けることができます。
   
+  SeasarComponentInjectionListenerオブジェクトのWicketへの登録は，Applicationクラス（のサブクラス）
+  のコンストラクタ内では記述しないでください。Applicationクラスのコンストラクタ内は，スレッドにApplicationオブジェクトが
+  アタッチされていないため，S2Wicket内で例外が発生します。init()メソッドをオーバーライドして，その中で記述するのが
+  良いでしょう。
+  
 ** Seasarコンテナ，フィールドフィルタを自動取得するコンストラクタ
 
   S2Containerオブジェクトおよびフィールドフィルタを自動的に取得するコンストラクタでは，
@@ -352,6 +357,12 @@ import org.seasar.wicket.injection.SeasarComponentInjectionListener;
 public class OrderApplication extends WebApplication {
 
     public OrderApplication() {
+       ...
+    }
+    
+    @Override
+    protected void init() {
+       super.init();
        ...
        addComponentInstantiationListener(
            new SeasarComponentInjectionListener(this));
@@ -381,6 +392,12 @@ import org.seasar.wicket.injection.SeasarComponentInjectionListener;
 public class OrderApplication extends WebApplication {
 
     public OrderApplication() {
+       ...
+    }
+    
+    @Override
+    protected void init() {
+       super.init();
        ...
        S2Container container = ...;
        List<FieldFilter> fieldFilters = ...;
