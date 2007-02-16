@@ -42,7 +42,9 @@ import org.apache.commons.lang.StringUtils;
  * <p>このフィールドフィルタ実装では，{@link SeasarComponent}アノテーションの{@link SeasarComponent#name()}プロパティで
  * 指定された名前が，Seasarコンテナからのルックアップ時のコンポーネント名として採用します。もし{@link SeasarComponent#name()}
  * プロパティが記述されていなかった場合は，対象フィールドの型がルックアップ時のキーになります。</p>
- * 
+ *
+ * @deprecated このクラスは，org.seasar.wicket.injection.fieldfiltersパッケージに移動しました。今後このクラスは削除されます。
+ *
  * @author Yoichiro Tanaka
  * @since 1.1.0
  */

@@ -52,6 +52,8 @@ import java.lang.annotation.Target;
  * そのため，直接Seasarコンポーネントオブジェクトをフィールドに代入してしまうと，永続化対象となってしまいます。
  * これを解決するために，Seasarコンポーネントを呼び出す処理を持つ動的プロキシオブジェクトがフィールドにインジェクションされます。</p>
  * 
+ * @deprecated このアノテーションは，org.seasar.wicket.injection.fieldfiltersパッケージに移動しました。今後このアノテーションは削除されます。
+ *
  * @see AnnotationFieldFilter
  * @see FieldFilter
  * @author Yoichiro Tanaka

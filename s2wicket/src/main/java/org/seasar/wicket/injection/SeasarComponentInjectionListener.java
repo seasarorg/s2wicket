@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.wicket.injection.fieldfilters.AnnotationFieldFilter;
 
 import wicket.Component;
 import wicket.application.IComponentInstantiationListener;

@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.seasar.wicket.injection.fieldfilters.AnnotationFieldFilter;
+
 /**
  * 指定されたフィールドについて，それがインジェクション対象かどうかを判断し，
  * インジェクション対象だった場合は，ルックアップするためのSeasarコンポーネント名を提供する

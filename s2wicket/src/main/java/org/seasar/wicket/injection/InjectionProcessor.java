@@ -85,7 +85,7 @@ class InjectionProcessor {
 	}
 	
 	/**
-	 * 指定されたオブジェクトが持つSeasarComponentアノテーションに対して，インジェクションを行います。
+	 * 指定されたオブジェクトが持つフィールドに対して，インジェクションを行います。
 	 * @param target 処理対象のオブジェクト
 	 */
 	void inject(Object target) {
@@ -94,7 +94,7 @@ class InjectionProcessor {
 	}
 	
 	/**
-	 * 指定されたオブジェクトが持つSeasarComponentアノテーションに対して，指定された
+	 * 指定されたオブジェクトが持つフィールドに対して，指定された
 	 * フィールド値供給オブジェクトからSeasarコンポーネントを取得して，それを呼び出す動的プロキシを
 	 * インジェクションします。
 	 * @param target 対象オブジェクト
