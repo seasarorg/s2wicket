@@ -226,15 +226,137 @@ S2Wicket
   
 * 3. {フィールドフィルタ}
 
-  インジェクション対象となるフィールドの判断基準として，S2Wicketは標準で@SeasarComponentアノテーションを
-  提供しています。しかし，いちいち@SeasarComponentアノテーションを記述していくのは手間がかかりますし，
+  インジェクション対象となるフィールドの判断基準として，S2Wicketは標準で@SeasarComponentアノテーションが
+  利用可能となっています。しかし，いちいち@SeasarComponentアノテーションを記述していくのは手間がかかりますし，
   多くの3層アプリケーションでは，下層のオブジェクトには特定の命名規則（〜Serviceなど）が存在します。つまり，
   明示的に@SeasarComponentアノテーションなどでマーキングせずとも，インジェクション対象とするフィールドかどうかを
   判断することは，ほとんどのWebアプリケーションでは可能なのです。
   
   S2Wicketでは，フィールドフィルタという判断機構があります。フィールドフィルタを適切にS2Wicketに登録することにより，
-  インジェクション対象のフィールドかどうかを柔軟に判断することができるようになり，さらに独自の規約を作り込むことで
-  最小限のコードでインジェクションを行うことができるようになります。
+  インジェクション対象のフィールドかどうかを柔軟に判断することができるようになります。
+  いくつかのフィールドフィルタが標準で提供されていますが，独自の規約をフィールドフィルタの実装クラスとして作り込むことで，
+  ドメイン依存のインジェクション規約をあなたのWebアプリケーションに適用することができるようになります。
+  
+** @SeasarComponentアノテーションフィールドフィルタを使用する
+
+  S2Wicketでは，@SeasarComponentアノテーションをインジェクション対象のマーカーとするフィールドフィルタが
+  標準で提供されています。このフィールドフィルタの実装クラスは，AnnotationFieldFilterクラスです。
+  SeasarComponentInjectionListenerオブジェクトの生成時に，明示的にフィールドフィルタを
+  指定しなかった場合は，@SeasarComponentアノテーションをインジェクション対象とするAnnotationFieldFilterクラス
+  が暗黙的に適用されます。
+  
+  Seasarコンテナからコンポーネントオブジェクトをルックアップする際に，
+  名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が異なってきます。
+  
+*** 型でルックアップする場合
+  
+  Seasarコンテナから型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
+  
++------------------------------------------------------+
+import org.seasar.wicket.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent
+    private OrderService orderService;
+
+}
++------------------------------------------------------+
+
+  @SeasarComponentアノテーションを属性なしで記述した場合，@SeasarComponentアノテーションを付与した
+  フィールドの型に一致するコンポーネントオブジェクトが，Seasarコンテナからルックアップされます。
+  つまり上記の例では，S2Container#getComponent()メソッドの引数にOrderService.classオブジェクトを渡して
+  ルックアップが行われます。フィールドの型は，インタフェースとクラスのどちらでも構いません。
+  
+*** 名前でルックアップする場合
+
+  Seasarコンテナから名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
+
++------------------------------------------------------+
+import org.seasar.wicket.injection.SeasarComponent;
+
+public class InputPage extends WebPage {
+
+    @SeasarComponent(name="orderService")
+    private OrderService orderService;
+
+}
++------------------------------------------------------+
+
+  @SeasarComponentアノテーションにname属性を記述した場合，name属性の値を名前とするコンポーネントオブジェクトが，
+  Seasarコンテナからルックアップされます。つまり上記の例では，S2Container#getComponent()メソッドの引数に"orderService"という
+  文字列を渡してルックアップが行われます。この場合も，フィールドの型はインタフェースとクラスのどちらでも構いません。
+  
+** フィールド名パターンフィールドフィルタ
+
+  パッケージ名，クラス名，フィールド名について，それぞれ正規表現でパターンを与えることにより，
+  そのパターンに一致するフィールドをインジェクション対象とするフィールドフィルタを，
+  S2Wicketは標準で提供しています。このフィールドフィルタの実装クラスは，FieldNamePatternFieldFilterクラスです。
+  
+  フィールド名パターンフィールドフィルタは，@SeasarComponentアノテーションフィルタと違い，
+  暗黙的に適用されることはありません。フィールド名パターンフィールドフィルタを使用したい場合は，
+  SeasarComponentInjectionListenerクラスのコンストラクタの引数で明示的に指定するか，
+  Seasarコンテナに登録するかのどちらかの方法を使用して，使用可能な状態にする必要があります。
+  
+  フィールド名パターンフィールドフィルタは，パッケージ名，クラス名，そしてフィールド名について，
+  それぞれ正規表現によるパターンマッチングを行います。パターンマッチングの結果，パターンに一致した
+  場合に，そのフィールドがインジェクション対象として判断されます。この際，Seasarコンテナから
+  ルックアップする際のコンポーネント名は，フィールド名がそのまま使用されます。
+  
+  FieldNamePatternFieldFilterクラスは，パッケージ名，クラス名，フィールド名の正規表現文字列を
+  持つためのプロパティが定義されています。
+  
+*-----------------+-----------------------+
+|パッケージ名のパターン|packageNamePatternRegex|
+*-----------------+-----------------------+
+|クラス名のパターン   |classNamePatternRegex  |
+*-----------------+-----------------------+
+|フィールド名のパターン|fieldNamePatternRegex  |
+*-----------------+-----------------------+
+
+  例えば「〜.exampleパッケージの〜Pageクラスの〜Serviceフィールドをインジェクション対象とする」
+  という規約を適用したい場合は，以下のような正規表現を各プロパティに与えます。
+  
+*-----------------------+-----------+
+|packageNamePatternRegex|.*\.example|
+*-----------------------+-----------+
+|classNamePatternRegex  |.*Page     |
+*-----------------------+-----------+
+|fieldNamePatternRegex  |.*Service  |
+*-----------------------+-----------+
+
+  もし複数のパターンを同時に適用したい場合は，FieldNamePatternFieldFilterオブジェクトを複数個登録してください。
+
+  フィールド名パターンフィールドフィルタを適用する場合は，FieldNamePatternFieldFilterオブジェクトに対して，
+  上記のプロパティ値として正規表現の文字列を適切にセットする必要があります。
+  
+*** 明示的にインスタンスを生成する場合
+
+  FieldNamePatternFieldFilterクラスのインスタンスを明示的に指定する場合は，
+  以下のようにコーディングします。
+  
++------------------------------------------------------+
+FieldNamePatternFieldFilter filter = new FieldNamePatternFieldFilter();
+filter.setPackageNamePatternRegex("パッケージ名の正規表現");
+filter.setClassNamePatternRegex("クラス名の正規表現");
+filter.setFieldNamePatternRegex("フィールド名の正規表現");
++------------------------------------------------------+
+
+*** Seasarコンテナに登録する場合
+
+  FieldNamePatternFieldFilterクラスのインスタンスをSeasarコンテナに登録する場合は，
+  diconファイルに以下のように記述します。
+  
++------------------------------------------------------+
+<component name="filter1"
+        class="org.seasar.wicket.injection.filters.FieldNamePatternFieldFilter">
+    <property name="packageNamePatternRegex">"パッケージ名の正規表現"</property>
+    <property name="classNamePatternRegex">"クラス名の正規表現"</property>
+    <property name="fieldNamePatternRegex">"フィールド名の正規表現"</property>
+</component>
++------------------------------------------------------+
+
+  上記のコンポーネント名"field1"は例であり，任意の名前をつけることができます。
   
 ** フィールドフィルタを自作する
   
@@ -277,13 +399,6 @@ public class ServiceFieldFilter implements FieldFilter {
 
   もしフィールド名ではなく，フィールドの型でルックアップしたい場合は，「return field.getName();」
   を「return null;」に変更します。
-  
-** 標準のフィールドフィルタを利用する
-
-  S2Wicketでは，@SeasarComponentアノテーションをインジェクション対象のマーカーとするフィールドフィルタが
-  標準で提供されています。SeasarComponentInjectionListenerオブジェクトの生成時に，明示的にフィールドフィルタを
-  指定しなかった場合は，@SeasarComponentアノテーションをインジェクション対象とするAnnotationFieldFilterクラス
-  が暗黙的に適用されます。
   
 ** フィールドフィルタを登録する
 
@@ -423,52 +538,6 @@ public class OrderApplication extends WebApplication {
   @SeasarComponentアノテーションを付与したフィールドを作成します。また，例えば前述した
   ServiceFieldFilterクラスを適用していた場合は，「〜Service」という名前のフィールドを作成すれば，
   インジェクション対象となります。
-
-** AnnotationFieldFilterによる@SeasarComponentアノテーションの利用
-
-  AnnotationFieldFilterクラスが適用されている場合は，@SeasarComponentアノテーションを使用することで，
-  S2Wicketでサポートされるフィールドとすることができます。
-  Seasarコンテナからコンポーネントオブジェクトをルックアップする際に，
-  名前でルックアップするか型でルックアップするかで，@SeasarComponentアノテーションの使い方が異なってきます。
-  
-*** 型でルックアップする場合
-  
-  Seasarコンテナから型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
-  
-+------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponent;
-
-public class InputPage extends WebPage {
-
-    @SeasarComponent
-    private OrderService orderService;
-
-}
-+------------------------------------------------------+
-
-  @SeasarComponentアノテーションを属性なしで記述した場合，@SeasarComponentアノテーションを付与した
-  フィールドの型に一致するコンポーネントオブジェクトが，Seasarコンテナからルックアップされます。
-  つまり上記の例では，S2Container#getComponent()メソッドの引数にOrderService.classオブジェクトを渡して
-  ルックアップが行われます。フィールドの型は，インタフェースとクラスのどちらでも構いません。
-  
-*** 名前でルックアップする場合
-
-  Seasarコンテナから名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
-
-+------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponent;
-
-public class InputPage extends WebPage {
-
-    @SeasarComponent(name="orderService")
-    private OrderService orderService;
-
-}
-+------------------------------------------------------+
-
-  @SeasarComponentアノテーションにname属性を記述した場合，name属性の値を名前とするコンポーネントオブジェクトが，
-  Seasarコンテナからルックアップされます。つまり上記の例では，S2Container#getComponent()メソッドの引数に"orderService"という
-  文字列を渡してルックアップが行われます。この場合も，フィールドの型はインタフェースとクラスのどちらでも構いません。
 
 * 6. {インジェクションされたオブジェクトを使用する}
 
