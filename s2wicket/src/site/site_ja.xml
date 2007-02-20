@@ -37,6 +37,7 @@
 			<item name="Download" href="download.html" />
 			<item name="Change Log" href="changelog.html" />
 			<item name="License" href="license.html" />
+			<item name="Version" href="version.html" />
 		</menu>
 		
 		${reports}
