@@ -53,6 +53,7 @@
 				<exclude name="**/target/**" />
 				<exclude name="**/.*" />
 				<exclude name="**/.settings/**" />
+				<exclude name="**/*.ser" />
 			</zipfileset>
 			<zipfileset prefix="s2wicket" dir="target">
 				<include name="s2wicket-${version}.jar" />
