@@ -3,7 +3,34 @@ Wicket Seasar Integration Change Log Page
  ------
 Yoichiro Tanaka
  ------
-2007/02/13
+2007/02/21
+
+Release Notes - S2Wicket - Version 1.2.0
+
+* Release Date
+    02/21/2007
+
+* Change Log
+
+** Bug
+
+    * [WICKET-10] - The file of JCoverage is included in the distribution package. 
+
+** Improvement
+
+    * [WICKET-11] - The implementation class related to the field filter is moved to the fieldfilters package. 
+
+** New Feature
+
+    * [WICKET-13] - Making of field filter that judges injection object by field name.
+
+** Task
+
+    * [WICKET-14] - Addition of explanation page of rule of version number.
+    
+    * [WICKET-15] - Reflection in site to WICKET-13.
+    
+    * [WICKET-16] - Making of Javadoc that explains package.
 
 Release Notes - S2Wicket - Version 1.1.1
 

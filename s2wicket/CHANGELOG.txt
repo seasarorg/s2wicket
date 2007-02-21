@@ -1,3 +1,22 @@
+Release Notes - S2Wicket - Version 1.2.0
+
+** Release Date
+    02/21/2007
+
+** Bug
+    * [WICKET-10] - JCoverageのファイルが配布パッケージに含まれてしまう
+
+** Improvement
+    * [WICKET-11] - フィールドフィルタ関連の実装クラスをfieldfiltersパッケージに移動する
+
+** New Feature
+    * [WICKET-13] - フィールド名でインジェクション対象を判断するフィールドフィルタの作成
+
+** Task
+    * [WICKET-14] - バージョン番号の規約の説明ページの追加
+    * [WICKET-15] - WICKET-13に対するサイトへの反映
+    * [WICKET-16] - パッケージを説明するJavadocの作成
+
 Release Notes - S2Wicket - Version 1.1.1
 
 ** Release Date
@@ -16,7 +35,6 @@ Release Notes - S2Wicket - Version 1.1.0
     * [WICKET-1] - wicket-seasarと書かれている部分がある
     * [WICKET-4] - SVNリポジトリへのリンクが間違っている
     * [WICKET-7] - isSupported()がfalseを返すフィールドフィルタに対してgetLookupComponentName()が呼び出されてしまう
-
 
 ** New Feature
     * [WICKET-2] - インジェクション対象のフィールドを判断するロジックを自作できるようにする
