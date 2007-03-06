@@ -8,7 +8,7 @@ Yoichiro Tanaka
 はじめに
 
   このプロジェクトは，WicketとSeasar2を組み合わせてアプリケーションを構築するために便利な機能を提供します。
-  Wicket Seasar Interation(S2Wicket)を利用することで，Wicketで扱われるWebPageクラスや各種コンポーネント
+  Wicket Seasar Integration(S2Wicket)を利用することで，Wicketで扱われるWebPageクラスや各種コンポーネント
   クラスのオブジェクトに対して，Seasar2管理下にあるコンポーネントオブジェクトを簡単にインジェクションすることができます。
   
   例えばフィールドに，@SeasarComponentアノテーションを書くだけでいいのです。さらに，フィールドフィルタを使用すれば，

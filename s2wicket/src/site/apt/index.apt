@@ -9,7 +9,7 @@ Welcome!
 
   This project offers a function convenient to combine Wicket and Seasar2 and to construct the application.
   The component object under the Seasar2 management is worn to the object of the WebPage class and various
-  component classes treated with Wicket in using Wicket Seasar Interation(S2Wicket) and the injection can
+  component classes treated with Wicket in using Wicket Seasar Integration(S2Wicket) and the injection can
   be done easily. 
   
   It is good for the field for instance ..only writing the @SeasarComponent annotation...
