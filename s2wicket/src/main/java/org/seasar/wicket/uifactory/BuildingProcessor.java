@@ -2,29 +2,18 @@ package org.seasar.wicket.uifactory;
 
 import static org.seasar.wicket.utils.Gadget.isWicketClass;
 
-import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-
 import org.apache.commons.lang.StringUtils;
 
 import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.model.IModel;
-import wicket.model.PropertyModel;
 
 /**
  * 
@@ -181,7 +170,7 @@ class BuildingProcessor {
 		// コンポーネントのクラスオブジェクトを取得
 		Class<? extends Object> clazz = target.getClass();
 		// 結果を格納するコレクションを生成
-		List<Field> resultList = new ArrayList<Field>();
+		Map<String, SortableField> fieldMap = new HashMap<String, SortableField>();
 		// 処理対象がなくなるか，Wicket提供クラスになるまで繰り返す
 		while((clazz != null) && (!(isWicketClass(clazz)))) {
 			// 定義されているフィールドを取得
@@ -195,224 +184,93 @@ class BuildingProcessor {
 				}
 				// サポートされているフィールドかチェック
 				if (componentBuilder.isSupported(fields[i])) {
-					// 結果のコレクションに追加
-					resultList.add(fields[i]);
+					// 既に同名のフィールドが追加されたかチェック
+					//（具象クラスのコンポーネントフィールドを優先し，同名の親クラスにあるフィールドはコンポーネントフィールドとしない）
+					if (!fieldMap.containsKey(fields[i].getName())) {
+						// 結果のコレクションに追加
+						fieldMap.put(fields[i].getName(), new SortableField(fields[i]));
+					}
 				}
 			}
 			// スーパークラスを取得し同様の検査を行う
 			clazz = clazz.getSuperclass();
 		}
+		// ソートを行う
+		Field[] fields = sortFields(fieldMap);
 		// 結果を返却
-		return resultList.toArray(new Field[0]);
+		return fields;
 	}
-	
-	
-//	--- 検証用メソッド
 	
 	/**
-	 * 指定されたコンポーネントが持つフィールドに対して，インジェクションを行います。
-	 * @param target 処理対象のコンポーネントオブジェクト
+	 * 指定されたフィールドの一覧について，親子関係に従ってソートを行い，その結果を返します。
+	 * @param sortableFieldMap フィールドが格納されたコレクション
+	 * @return ソート結果のフィールドの配列
 	 */
-	void inject(Component target) {
-		// 対象オブジェクトのクラスオブジェクトを取得
-		Class<? extends Object> clazz = target.getClass();
-		// インジェクション処理対象のフィールドを取得
-		Field[] targetFields = getTargetFields(clazz);
-		try {
-			// モデルのコレクション
-			Map<String, Object> modelMap = new HashMap<String, Object>();
-			// フィールド毎に処理
-			for (int i = 0; i < targetFields.length; i++) {
-				Field targetField = targetFields[i];
-				// フィールドにアクセスできるようにする
-				if (!targetField.isAccessible()) {
-					targetField.setAccessible(true);
-				}
-				// WicketModelアノテーションのフィールドかチェック
-				if (targetField.isAnnotationPresent(WicketModel.class)) {
-					// 対象オブジェクトのフィールド値がnullかチェック
-					if (targetField.get(target) == null) {
-						// FIXME ここは試験実装
-						String methodName = "create" + StringUtils.capitalize(targetField.getName());
-						try {
-							// create[ModelName]メソッドが存在した場合
-							// createメソッドにコンポーネント生成をお願いする
-							Method method = clazz.getMethod(methodName, new Class[0]);
-							Object model = method.invoke(target, new Object[0]);
-							targetField.set(target, model);
-							// モデルのコレクションに追加
-							modelMap.put(targetField.getName(), model);
-						} catch(NoSuchMethodException e) {
-							// モデルオブジェクトを生成
-							// フィールドの型を取得
-							Class<?> targetFieldClazz = targetField.getType();
-							// インスタンスを生成
-							Object model = targetFieldClazz.newInstance();
-							// フィールドにセット
-							targetField.set(target, model);
-							// モデルのコレクションに追加
-							modelMap.put(targetField.getName(), model);
-						}
-					}
-				}
-			}
-			// フィールド毎に処理
-			for (int i = 0; i < targetFields.length; i++) {
-				Field targetField = targetFields[i];
-				// フィールドにアクセスできるようにする
-				if (!targetField.isAccessible()) {
-					targetField.setAccessible(true);
-				}
-				// WicketComponentアノテーションのフィールドかチェック
-				if (targetField.isAnnotationPresent(WicketComponent.class)) {
-					// 対象オブジェクトのフィールド値がnullかチェック
-					if (targetField.get(target) == null) {
-						// FIXME ここは試験実装
-						// アノテーションを取得
-						WicketComponent annotation = targetField.getAnnotation(WicketComponent.class);
-						// 親コンポーネントを決定
-						String parentAttr = annotation.parent();
-						MarkupContainer parent;
-						if (StringUtils.isEmpty(parentAttr) || parentAttr.equals("this")) {
-							parent = (MarkupContainer)target;
-						} else {
-							Field parentField = clazz.getDeclaredField(parentAttr);
-							if (!parentField.isAccessible()) {
-								parentField.setAccessible(true);
-							}
-							parent = (MarkupContainer)(parentField.get(target));
-						}
-						// メソッド名を決定
-						String methodName = "create" + StringUtils.capitalize(targetField.getName()) + "Component";
-						try {
-							// create[FieldName]Component()メソッドが存在した場合
-							// createメソッドにコンポーネント生成をお願いする
-							Method method = clazz.getMethod(methodName, MarkupContainer.class);
-							Object component = method.invoke(target, parent);
-							targetField.set(target, component);
-						} catch(NoSuchMethodException e) {
-							// アノテーションの属性を取得
-							String modelAttr = annotation.model();
-							String propertyAttr = annotation.property();
-							String wicketIdAttr = annotation.wicketId();
-							String fieldName = targetField.getName();
-							if (StringUtils.isEmpty(propertyAttr)) {
-								propertyAttr = fieldName;
-							}
-							if (StringUtils.isEmpty(wicketIdAttr)) {
-								wicketIdAttr = fieldName;
-							}
-							// モデルオブジェクトを取得
-							Object model;
-							if (StringUtils.isNotEmpty(modelAttr)) {
-								Field modelField = clazz.getDeclaredField(modelAttr);
-								if (!modelField.isAccessible()) {
-									modelField.setAccessible(true);
-								}
-								model = modelField.get(target);
-							} else {
-								if (modelMap.size() == 1) {
-									model = modelMap.values().iterator().next();
-								} else {
-									throw new IllegalStateException("Attribute[model] not found. Field name is " + targetField.getName() + ".");
-								}
-							}
-							// プロパティモデルを生成
-							PropertyModel propertyModel = new PropertyModel(model, propertyAttr);
-							// フィールドの型を取得
-							Class<?> targetFieldClazz = targetField.getType();
-							// 生成したコンポーネントの変数
-							Component component;
-							// 抽象クラスかチェック
-							if (Modifier.isAbstract(targetFieldClazz.getModifiers())) {
-								// 抽象クラスなので，動的プロキシ生成
-								Enhancer enhancer = new Enhancer();
-								enhancer.setInterfaces(new Class[] {Serializable.class});
-								enhancer.setSuperclass(targetFieldClazz);
-								enhancer.setCallback(new WicketComponentMethodInterceptor(target, fieldName));
-								component = (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketIdAttr, propertyModel});
-							} else {
-								// 具象クラスなので，素直にインスタンス生成
-								Constructor<?> constructor = targetFieldClazz.getConstructor(String.class, IModel.class);
-								component = (Component)constructor.newInstance(wicketIdAttr, propertyModel);
-							}
-							// 親コンテナに登録
-							parent.add(component);
-							// フィールドにインスタンスをセット
-							targetField.set(target, component);
-						}
-					}
-				}
-			}
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Field injection failed.", e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalStateException("Field injection failed.", e);
-		} catch (SecurityException e) {
-			throw new IllegalStateException("Field injection failed.", e);
-		} catch (NoSuchMethodException e) {
-			throw new IllegalStateException("Field injection failed.", e);
-		} catch (InvocationTargetException e) {
-			throw new IllegalStateException("Field injection failed.", e);
-		} catch (NoSuchFieldException e) {
-			throw new IllegalStateException("Field injection failed.", e);
-		} catch (InstantiationException e) {
-			throw new IllegalStateException("Field injection failed.", e);
-		}
-	}
-	
-	private static class WicketComponentMethodInterceptor implements MethodInterceptor, Serializable {
-		private Object target;
-		private String fieldName;
-		public WicketComponentMethodInterceptor(Object target, String fieldName) {
-			super();
-			this.target = target;
-			this.fieldName = fieldName;
-		}
-		public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-			if (Modifier.isAbstract(method.getModifiers())) {
-				String methodName = method.getName();
-				if (methodName.startsWith("on")) {
-					Class<? extends Object> clazz = target.getClass();
-					Method targetMethod = clazz.getDeclaredMethod(methodName + StringUtils.capitalize(fieldName));
-					targetMethod.invoke(target);
-					return null;
-				} else {
-					throw new UnsupportedOperationException("Method[" + methodName + "()] not supported.");
-				}
+	private Field[] sortFields(Map<String, SortableField> sortableFieldMap) {
+		List<SortableField> rootList = new LinkedList<SortableField>();
+		for (SortableField field : sortableFieldMap.values()) {
+			String parentName = field.getParentName();
+			if (StringUtils.isEmpty(parentName) || parentName.equals("this")) {
+				rootList.add(field);
 			} else {
-				return proxy.invokeSuper(obj, args);
+				SortableField parentField = sortableFieldMap.get(parentName);
+				parentField.addKid(field);
 			}
 		}
+		List<Field> fieldList = new LinkedList<Field>();
+		for (SortableField field : rootList) {
+			field.accept(fieldList);
+		}
+		return fieldList.toArray(new Field[0]);
 	}
-
+	
 	/**
-	 * 処理対象のフィールドを返します。
-	 * @param clazz 対象クラスオブジェクト
-	 * @param fieldValueProducer フィールド値供給オブジェクト
-	 * @return 処理対象のフィールドの配列
+	 * ソートのための機能を持つフィールドのラッパークラスです。
 	 */
-	private Field[] getTargetFields(Class<? extends Object> clazz) {
-		// 結果を格納するコレクションを生成
-		List<Field> resultList = new ArrayList<Field>();
-		// 処理対象がなくなるか，Wicket提供クラスになるまで繰り返す
-		while((clazz != null) && (!(isWicketClass(clazz)))) {
-			// 定義されているフィールドを取得
-			Field[] fields = clazz.getDeclaredFields();
-			// フィールド毎に処理
-			for (int i = 0; i < fields.length; i++) {
-				// サポートされているフィールドかチェック
-				if (fields[i].isAnnotationPresent(WicketComponent.class)
-						|| fields[i].isAnnotationPresent(WicketModel.class)) {
-					// 結果のコレクションに追加
-					resultList.add(fields[i]);
-				}
-			}
-			// スーパークラスを取得し同様の検査を行う
-			clazz = clazz.getSuperclass();
+	private static class SortableField {
+		
+		/** フィールドオブジェクト */
+		private Field field;
+		
+		/** このフィールドの子となるフィールドのコレクション */
+		private List<SortableField> kids = new LinkedList<SortableField>();
+		
+		/**
+		 * このオブジェクトが生成されるときに呼び出されます。
+		 * @param field フィールドオブジェクト
+		 */
+		private SortableField(Field field) {
+			this.field = field;
 		}
-		// 結果を返却
-		return resultList.toArray(new Field[0]);
+		
+		/**
+		 * このフィールドの親となるフィールドの名前を返します。
+		 * @return 親のフィールドの名前
+		 */
+		private String getParentName() {
+			WicketComponent annotation = field.getAnnotation(WicketComponent.class);
+			return annotation.parent();
+		}
+		
+		/**
+		 * このフィールドの子となるフィールドを追加します。
+		 * @param kid 子となるフィールド
+		 */
+		private void addKid(SortableField kid) {
+			kids.add(kid);
+		}
+		
+		/**
+		 * 指定されたコレクションに，自身が持つフィールドを追加します。
+		 * さらに，子のフィールドについても再帰的に呼び出します。
+		 * @param fieldList フィールドを格納する対象となるコレクション
+		 */
+		private void accept(List<Field> fieldList) {
+			fieldList.add(field);
+			for (SortableField kid : kids) {
+				kid.accept(fieldList);
+			}
+		}
 	}
-
+	
 }
