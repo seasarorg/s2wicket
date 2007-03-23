@@ -15,7 +15,7 @@
  * the License.
  */
 
-package org.seasar.wicket.injection;
+package org.seasar.wicket.utils;
 
 import java.io.ObjectStreamException;
 import java.lang.reflect.Method;

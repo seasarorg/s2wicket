@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.framework.container.S2Container;
+import org.seasar.wicket.injection.fieldfilters.AnnotationFieldFilter;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponent;
 
 import junit.framework.TestCase;
 

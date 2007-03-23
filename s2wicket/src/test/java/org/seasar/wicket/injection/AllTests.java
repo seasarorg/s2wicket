@@ -17,6 +17,8 @@
 
 package org.seasar.wicket.injection;
 
+import org.seasar.wicket.utils.GadgetTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -29,8 +31,6 @@ public class AllTests {
 		suite.addTestSuite(ComponentResolverTest.class);
 		suite.addTestSuite(SupportedFieldTest.class);
 		suite.addTestSuite(SeasarComponentInjectionListenerTest.class);
-		suite.addTestSuite(AnnotationFieldFilterTest.class);
-		suite.addTestSuite(GadgetTest.class);
 		suite.addTestSuite(InjectionProcessorTest.class);
 		suite.addTestSuite(FieldValueProducerTest.class);
 		suite.addTestSuite(S2ContainerHolderTest.class);

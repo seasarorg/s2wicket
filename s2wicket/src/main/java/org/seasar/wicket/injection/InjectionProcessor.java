@@ -17,18 +17,15 @@
 
 package org.seasar.wicket.injection;
 
+import static org.seasar.wicket.utils.Gadget.isWicketClass;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.seasar.framework.container.S2Container;
-
-import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.Page;
-import wicket.markup.html.WebPage;
-import wicket.markup.html.panel.Panel;
+import org.seasar.wicket.injection.fieldfilters.AnnotationFieldFilter;
 
 /**
  * SeasarComponentアノテーションを持つフィールドにインジェクションを行う処理を持つクラスです。
@@ -155,19 +152,6 @@ class InjectionProcessor {
 		}
 		// 結果を返却
 		return resultList.toArray(new SupportedField[0]);
-	}
-	
-	/**
-	 * 指定されたクラスがWicketで提供されたクラスかどうかを返します。
-	 * @param clazz クラスオブジェクト
-	 * @return WebPage, Page, Panel, MarkupContainer, Component クラスだった場合は true
-	 */
-	private boolean isWicketClass(Class clazz) {
-		return (clazz.equals(WebPage.class))
-			|| (clazz.equals(Page.class))
-			|| (clazz.equals(Panel.class))
-			|| (clazz.equals(MarkupContainer.class))
-			|| (clazz.equals(Component.class));
 	}
 	
 	/**

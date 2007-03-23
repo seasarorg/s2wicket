@@ -17,12 +17,12 @@
 
 package org.seasar.wicket.injection;
 
-import static org.seasar.wicket.injection.Gadget.isEquals;
-import static org.seasar.wicket.injection.Gadget.isFinalize;
-import static org.seasar.wicket.injection.Gadget.isGetMethodInterceptor;
-import static org.seasar.wicket.injection.Gadget.isHashCode;
-import static org.seasar.wicket.injection.Gadget.isToString;
-import static org.seasar.wicket.injection.Gadget.isWriteReplace;
+import static org.seasar.wicket.utils.Gadget.isEquals;
+import static org.seasar.wicket.utils.Gadget.isFinalize;
+import static org.seasar.wicket.utils.Gadget.isGetMethodInterceptor;
+import static org.seasar.wicket.utils.Gadget.isHashCode;
+import static org.seasar.wicket.utils.Gadget.isToString;
+import static org.seasar.wicket.utils.Gadget.isWriteReplace;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
