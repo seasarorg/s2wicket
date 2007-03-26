@@ -1,17 +1,25 @@
 package org.seasar.wicket.uifactory;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
 
 /**
@@ -39,7 +47,7 @@ class ComponentBuilder {
 	 * @param modelMap モデルオブジェクトが格納されたコレクション
 	 * @return 生成されたコンポーネントオブジェクト
 	 */
-	Object build(Field field, Component target, Map<String, Object> modelMap) {
+	Object build(Field field, Component target, Map<Field, Object> modelMap) {
 		// 生成したコンポーネントの変数
 		Component result;
 		// 親コンポーネントを取得
@@ -67,15 +75,28 @@ class ComponentBuilder {
 	 * @param modelMap モデルオブジェクトが格納されたコレクション
 	 * @return 生成されたコンポーネントオブジェクト
 	 */
-	private Component createComponentByFieldType(Field field, Component target, Map<String, Object> modelMap) {
+	private Component createComponentByFieldType(Field field, Component target, Map<Field, Object> modelMap) {
 		// 生成したコンポーネントオブジェクトの変数
 		Component result;
-		// モデルオブジェクトを取得
-		Object model = getModel(field, modelMap);
-		// モデルのプロパティ名を決定
-		String propertyName = getPropertyName(field);
-		// プロパティモデルを生成
-		PropertyModel propertyModel = new PropertyModel(model, propertyName);
+		// モデルを取得
+		IModel model;
+		IModel parentModel = null;
+		try {
+			model = createIModel(field, target, modelMap);
+		} catch(NecessaryToBindException e) {
+			// 親のコンポーネントのモデルとバインドする必要あり
+			model = null;
+			try {
+				Component parentComponent = (Component)field.get(target);
+				parentModel = parentComponent.getModel();
+			} catch (IllegalArgumentException e1) {
+				// TODO 例外処理
+				throw new IllegalStateException(e1);
+			} catch (IllegalAccessException e1) {
+				// TODO 例外処理
+				throw new IllegalStateException(e1);
+			}
+		}
 		// wicket:idを決定
 		String wicketId = getWicketId(field);
 		// フィールドの型を取得
@@ -83,29 +104,216 @@ class ComponentBuilder {
 		// フィールドの型が抽象クラスかチェック
 		if (Modifier.isAbstract(clazz.getModifiers())) {
 			// 動的プロキシを生成
-			result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, propertyModel);
+			result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, model);
 		} else {
 			// 素直にインスタンス生成
-			result = createNewComponentInstance(field, wicketId, propertyModel);
+			result = createNewComponentInstance(field, target, wicketId, model);
+		}
+		// 親のコンポーネントのモデルとバインドする必要性をチェック
+		if (parentModel != null) {
+			// プロパティ名を取得
+			String propertyName = getPropertyName(field);
+			// モデルとバインド
+			((BoundCompoundPropertyModel)parentModel).bind(result, propertyName);
 		}
 		// 生成したコンポーネントオブジェクトを返却
 		return result;
 	}
 	
+	private IModel createIModel(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
+		// WicketComponentアノテーションを取得
+		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
+		// モデル名属性を取得
+		String modelName = targetAnnotation.modelName();
+		// モデル名が指定されていたかチェック
+		if (StringUtils.isNotEmpty(modelName)) {
+			// モデル名が指定された場合の処理をコール
+			return createIModelForSpecifiedModelName(field, modelMap, modelName);
+		} else {
+			// モデル名が指定されなかった場合の処理をコール
+			return createIModelForNotSpecifiedModelName(field, target, modelMap);
+		}
+	}
+	
+	private IModel createIModelForNotSpecifiedModelName(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
+		// WicketComponentアノテーションを取得
+		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
+		// 親のコンテナのフィールド名を取得
+		String parentName = targetAnnotation.parent();
+		// 親のコンテナが指定されていたかチェック
+		if (StringUtils.isNotEmpty(parentName)) {
+			try {
+				// 親のコンテナのフィールドを取得
+				Class<? extends Component> clazz = target.getClass();
+				Field parentField = clazz.getDeclaredField(parentName);
+				// 親のコンテナのWicketComponentアノテーションを取得
+				WicketComponent parentAnnotation = parentField.getAnnotation(WicketComponent.class);
+				// 親のコンテナのWicketComponentアノテーションのモデル名属性を取得
+				String parentModelName = parentAnnotation.modelName();
+				// モデル名属性が指定されていたかチェック
+				if (StringUtils.isNotEmpty(parentModelName)) {
+					// モデルオブジェクトのフィールドを取得
+					Entry<Field, Object> modelMapEntry = getModelMapEntry(parentModelName, modelMap);
+					Field modelField = modelMapEntry.getKey();
+					// モデルフィールドのWicketModelアノテーションを取得
+					WicketModel modelAnnotation = modelField.getAnnotation(WicketModel.class);
+					// モデルフィールドのモデル種別属性を取得
+					ModelType modelType = modelAnnotation.type();
+					// モデル種別毎に処理
+					if (modelType.equals(ModelType.BASIC)) { // Model
+						// 未対応
+						throw new UnsupportedOperationException("ModelType.MODEL for parent container not supported.");
+					} else if (modelType.equals(ModelType.PROPERTY)) { // PropertyModel
+						// 未対応
+						throw new UnsupportedOperationException("ModelType.PROPERTY for parent container not supported.");
+					} else if (modelType.equals(ModelType.COMPOUND_PROPERTY)) { // CompoundPropertyModel
+						// コンポーネントにモデルは必要ない
+						return null;
+					} else if (modelType.equals(ModelType.BOUND_COMPOUND_PROPERTY)) { // BoundCompoundPropertyModel
+						// バインドする必要があることを例外をスローすることで返却
+						throw new NecessaryToBindException(parentField);
+					} else {
+						// モデル種別未指定はあり得ない
+						throw new IllegalStateException("Unknown ModelType.(2)");
+					}
+				} else {
+					// デフォルトのプロパティモデルを生成し返却
+					return createDefaultPropertyModel(field, modelMap);
+				}
+			} catch(NoSuchFieldException e) {
+				// TODO 例外処理
+				throw new IllegalStateException("Parent component field[" + parentName + "] not found.", e);
+			}
+		} else {
+			// デフォルトのプロパティモデルを生成し返却
+			return createDefaultPropertyModel(field, modelMap);				
+		}
+	}
+	
+	private IModel createIModelForSpecifiedModelName(Field field, Map<Field, Object> modelMap, String modelName) {
+		// モデルオブジェクトのフィールドとオブジェクトを取得
+		Entry<Field, Object> modelMapEntry = getModelMapEntry(modelName, modelMap);
+		Field modelField = modelMapEntry.getKey();
+		Object modelObj = modelMapEntry.getValue();
+		// モデルフィールドのWicketModelアノテーションを取得
+		WicketModel modelAnnotation = modelField.getAnnotation(WicketModel.class);
+		// モデルフィールドのモデル種別属性を取得
+		ModelType modelType = modelAnnotation.type();
+		// モデル種別毎に処理
+		if (modelType.equals(ModelType.BASIC)) { // Model
+			// 基本モデルを生成
+			Model model = new Model((Serializable)modelObj);
+			// 基本モデルを返却
+			return model;
+		} else if (modelType.equals(ModelType.PROPERTY)) { // PropertyModel
+			// 関連付けるモデルのプロパティ名を取得
+			String propertyName = getPropertyName(field);
+			// プロパティモデルを生成
+			PropertyModel propertyModel = new PropertyModel(modelObj, propertyName);
+			// プロパティモデルを返却
+			return propertyModel;
+		} else if (modelType.equals(ModelType.COMPOUND_PROPERTY)) { // CompoundPropertyModel
+			// 複合プロパティモデルを生成
+			CompoundPropertyModel compoundPropertyModel = new CompoundPropertyModel(modelObj);
+			// 複合プロパティモデルを返却
+			return compoundPropertyModel;
+		} else if (modelType.equals(ModelType.BOUND_COMPOUND_PROPERTY)) { // BoundCompoundPropertyModel
+			// 複合バインドプロパティモデルを生成
+			BoundCompoundPropertyModel boundCompoundPropertyModel = new BoundCompoundPropertyModel(modelObj);
+			// 複合バインドプロパティモデルを返却
+			return boundCompoundPropertyModel;
+		} else {
+			// モデル種別未指定はあり得ない
+			throw new IllegalStateException("Unknown ModelType.(1)");
+		}
+	}
+	
+	private IModel createDefaultPropertyModel(Field field, Map<Field, Object> modelMap) {
+		// モデルの個数をチェック
+		if (modelMap.size() == 1) {
+			// モデルオブジェクトのフィールドとオブジェクトを取得
+			Entry<Field, Object> modelMapEntry = modelMap.entrySet().iterator().next();
+			Field modelField = modelMapEntry.getKey();
+			Object modelObj = modelMapEntry.getValue();
+			// モデルフィールドのWicketModelアノテーションを取得
+			WicketModel modelAnnotation = modelField.getAnnotation(WicketModel.class);
+			// モデルフィールドのモデル種別属性を取得
+			ModelType modelType = modelAnnotation.type();
+			// モデル種別毎に処理
+			if (modelType.equals(ModelType.BASIC)) { // Model
+				// モデルと関連付けを行わない
+				return null;
+			} else if (modelType.equals(ModelType.PROPERTY)) { // PropertyModel
+				// 関連付けるモデルのプロパティ名を取得
+				String propertyName = getPropertyName(field);
+				// プロパティモデルを生成
+				PropertyModel propertyModel = new PropertyModel(modelObj, propertyName);
+				// プロパティモデルを返却
+				return propertyModel;
+			} else if (modelType.equals(ModelType.COMPOUND_PROPERTY)) { // CompoundPropertyModel
+				// 未対応
+				throw new UnsupportedOperationException("ModelType.COMPOUND_PROPERTY for parent container not supported.");
+			} else if (modelType.equals(ModelType.BOUND_COMPOUND_PROPERTY)) { // BoundCompoundPropertyModel
+				// 未対応
+				throw new UnsupportedOperationException("ModelType.BOUND_COMPOUND_PROPERTY for parent container not supported.");
+			} else {
+				// モデル種別未指定はあり得ない
+				throw new IllegalStateException("Unknown ModelType.(3)");
+			} 
+		} else {
+			// 関連付けるモデルを特定できない
+			return null;
+		}
+	}
+	
+	/**
+	 * 指定されたフィールド名に一致するモデルオブジェクトのマップエントリを返します。
+	 * @param fieldName フィールド名
+	 * @param modelMap モデルフィールドとモデルオブジェクトが格納されたコレクション
+	 * @return モデルオブジェクトのマップエントリ
+	 */
+	private Map.Entry<Field, Object> getModelMapEntry(String fieldName, Map<Field, Object> modelMap) {
+		for(Map.Entry<Field, Object> entry : modelMap.entrySet()) {
+			if (entry.getKey().getName().equals(fieldName)) {
+				return entry;
+			}
+		}
+		throw new IllegalArgumentException("Model object entry not found. fieldName = " + fieldName);
+	}
+
 	/**
 	 * 指定されたフィールドに対応するコンポーネントオブジェクトを生成して返します。
 	 * @param field 処理対象のフィールドオブジェクト
+	 * @param component 処理対象のコンポーネントオブジェクト
 	 * @param wicketId wicket:id
 	 * @param model モデルオブジェクト
 	 * @return 生成されたコンポーネントオブジェクト
 	 */
-	private Component createNewComponentInstance(Field field, String wicketId, IModel model) {
+	private Component createNewComponentInstance(Field field, Component target, String wicketId, IModel model) {
 		try {
-			// コンストラクタを取得
+			// フィールドの型を取得
 			Class<?> clazz = field.getType();
-			Constructor<?> constructor = clazz.getConstructor(String.class, IModel.class);
-			// インスタンスを生成
-			Component component = (Component)constructor.newInstance(wicketId, model);
+			// コンストラクタの引数の型のコレクションと，引数のオブジェクトのコレクションを生成
+			List<Class> argTypes = new ArrayList<Class>();
+			List<Object> argObjs = new ArrayList<Object>();
+			// フィールドの型がインナークラスかチェック
+			if (clazz.isMemberClass()) {
+				// コンストラクタの第１引数にコンポーネントオブジェクトをセット
+				argTypes.add(target.getClass());
+				argObjs.add(target);
+			}
+			// wicket:idを第２引数としてセット
+			argTypes.add(String.class);
+			argObjs.add(wicketId);
+			// モデルが存在するかチェック
+			if (model != null) {
+				argTypes.add(IModel.class);
+				argObjs.add(model);
+			}
+			// コンストラクタを取得
+			Constructor<?> constructor = clazz.getConstructor((Class[])argTypes.toArray(new Class[0]));
+			// コンポーネントを生成
+			Component component = (Component)constructor.newInstance(argObjs.toArray());
 			// 結果を返却
 			return component;
 		} catch(NoSuchMethodException e) {
@@ -155,7 +363,7 @@ class ComponentBuilder {
 		// アノテーションを取得
 		WicketComponent annotation = field.getAnnotation(WicketComponent.class);
 		// property属性値を取得
-		String propertyName = annotation.property();
+		String propertyName = annotation.modelProperty();
 		// property属性値が指定されたかチェック
 		if (StringUtils.isNotEmpty(propertyName)) {
 			// property属性値をそのまま返却
@@ -166,35 +374,6 @@ class ComponentBuilder {
 		}
 	}
 	
-	/**
-	 * 指定されたフィールドに適用するモデルオブジェクトを返します。
-	 * @param field 処理対象のフィールド
-	 * @param modelMap モデルオブジェクトが格納されたコレクション
-	 * @return モデルオブジェクト
-	 */
-	private Object getModel(Field field, Map<String, Object> modelMap) {
-		// アノテーションを取得
-		WicketComponent annotation = field.getAnnotation(WicketComponent.class);
-		// model属性値を取得
-		String modelName = annotation.model();
-		// model属性値が指定されたかチェック
-		if (StringUtils.isNotEmpty(modelName)) {
-			// モデルオブジェクトのコレクションから取得
-			Object result = modelMap.get(modelName);
-			// 結果を返却
-			return result;
-		} else {
-			// モデルの個数が1つかどうかチェック
-			if (modelMap.size() == 1) {
-				// コレクションから取得して返却
-				return modelMap.values().iterator().next();
-			} else {
-				// モデルを特定できない
-				throw new IllegalStateException("Attribute[model] not found. Field name is " + field.getName());
-			}
-		}
-	}
-
 	/**
 	 * 指定されたcreate[フィールド名]Component()メソッドを呼び出し，その結果のオブジェクトをコンポーネントオブジェクトとして返します。
 	 * @param createMethod create[フィールド名]Component()メソッドオブジェクト

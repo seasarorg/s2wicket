@@ -50,7 +50,7 @@ class BuildingProcessor {
 	 */
 	void build(Component target) {
 		// モデルの構築
-		Map<String, Object> modelMap = buildModel(target);
+		Map<Field, Object> modelMap = buildModel(target);
 		// コンポーネントの構築
 		buildComponent(target, modelMap);
 	}
@@ -62,23 +62,25 @@ class BuildingProcessor {
 	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @return モデル名とモデルオブジェクトが対で格納されたコレクション
 	 */
-	private Map<String, Object> buildModel(Component target) {
+	private Map<Field, Object> buildModel(Component target) {
 		// 生成したモデルオブジェクトを格納するコレクションを生成
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<Field, Object> result = new HashMap<Field, Object>();
 		// モデルフィールドを抽出
 		Field[] targetFields = getTargetModelFields(target);
 		// フィールド毎に処理
 		for (int i = 0; i < targetFields.length; i++) {
 			// フィールドの値がnullかチェック
 			try {
-				if (targetFields[i].get(target) == null) {
+				// モデルオブジェクトを取得
+				Object modelObj = targetFields[i].get(target);
+				if (modelObj == null) {
 					// フィールド値とするモデルオブジェクトの生成をモデルビルダーに依頼
-					Object model = modelBuilder.build(targetFields[i], target);
+					modelObj = modelBuilder.build(targetFields[i], target);
 					// モデルフィールドにセット
-					targetFields[i].set(target, model);
-					// コレクションに追加
-					result.put(targetFields[i].getName(), model);
+					targetFields[i].set(target, modelObj);
 				}
+				// コレクションに追加
+				result.put(targetFields[i], modelObj);
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("Building model failed.", e);
 			} catch (IllegalAccessException e) {
@@ -140,7 +142,7 @@ class BuildingProcessor {
 	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @param modelMap モデルオブジェクトのコレクション
 	 */
-	private void buildComponent(Component target, Map<String, Object> modelMap) {
+	private void buildComponent(Component target, Map<Field, Object> modelMap) {
 		// コンポーネントフィールドを抽出
 		Field[] targetFields = getTargetComponentFields(target);
 		// フィールド毎に処理

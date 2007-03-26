@@ -50,7 +50,11 @@ class ComponentProxyFactory {
 		// インターセプタをセット
 		enhancer.setCallback(interceptor);
 		// プロキシオブジェクトを生成して返却
-		return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+		if (model != null) {
+			return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+		} else {
+			return (Component)enhancer.create(new Class[] {String.class}, new Object[] {wicketId});
+		}
 	}
 	
 	/**
