@@ -2,6 +2,7 @@ package org.seasar.wicket.uifactory;
 
 /**
  * ƒ‚ƒfƒ‹‚Ìí•Ê‚ğ’è‹`‚µ‚½—ñ‹“Œ^‚Å‚·B
+ * @see WicketModel
  * @author Yoichiro Tanaka
  * @since 1.3.0
  */
