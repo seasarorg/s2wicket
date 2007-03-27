@@ -1,7 +1,6 @@
 package org.seasar.wicket.uifactory;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
+import org.seasar.wicket.utils.Gadget;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -79,15 +79,15 @@ class ComponentBuilder {
 		// 生成したコンポーネントオブジェクトの変数
 		Component result;
 		// モデルを取得
-		IModel model;
+		Object model;
 		IModel parentModel = null;
 		try {
-			model = createIModel(field, target, modelMap);
+			model = createModel(field, target, modelMap);
 		} catch(NecessaryToBindException e) {
 			// 親のコンポーネントのモデルとバインドする必要あり
 			model = null;
 			try {
-				Component parentComponent = (Component)field.get(target);
+				Component parentComponent = (Component)e.getParentField().get(target);
 				parentModel = parentComponent.getModel();
 			} catch (IllegalArgumentException e1) {
 				// TODO 例外処理
@@ -120,7 +120,7 @@ class ComponentBuilder {
 		return result;
 	}
 	
-	private IModel createIModel(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
+	private Object createModel(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
 		// WicketComponentアノテーションを取得
 		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
 		// モデル名属性を取得
@@ -128,14 +128,14 @@ class ComponentBuilder {
 		// モデル名が指定されていたかチェック
 		if (StringUtils.isNotEmpty(modelName)) {
 			// モデル名が指定された場合の処理をコール
-			return createIModelForSpecifiedModelName(field, modelMap, modelName);
+			return createModelForSpecifiedModelName(field, modelMap, modelName);
 		} else {
 			// モデル名が指定されなかった場合の処理をコール
-			return createIModelForNotSpecifiedModelName(field, target, modelMap);
+			return createModelForNotSpecifiedModelName(field, target, modelMap);
 		}
 	}
 	
-	private IModel createIModelForNotSpecifiedModelName(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
+	private Object createModelForNotSpecifiedModelName(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
 		// WicketComponentアノテーションを取得
 		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
 		// 親のコンテナのフィールド名を取得
@@ -160,7 +160,10 @@ class ComponentBuilder {
 					// モデルフィールドのモデル種別属性を取得
 					ModelType modelType = modelAnnotation.type();
 					// モデル種別毎に処理
-					if (modelType.equals(ModelType.BASIC)) { // Model
+					if (modelType.equals(ModelType.RAW)) { // Raw
+						// 未対応
+						throw new UnsupportedOperationException("ModelType.RAW for parent container not supported.");
+					} else if (modelType.equals(ModelType.BASIC)) { // Model
 						// 未対応
 						throw new UnsupportedOperationException("ModelType.MODEL for parent container not supported.");
 					} else if (modelType.equals(ModelType.PROPERTY)) { // PropertyModel
@@ -177,20 +180,20 @@ class ComponentBuilder {
 						throw new IllegalStateException("Unknown ModelType.(2)");
 					}
 				} else {
-					// デフォルトのプロパティモデルを生成し返却
-					return createDefaultPropertyModel(field, modelMap);
+					// デフォルトのモデルを生成し返却
+					return createDefaultModel(field, modelMap);
 				}
 			} catch(NoSuchFieldException e) {
 				// TODO 例外処理
 				throw new IllegalStateException("Parent component field[" + parentName + "] not found.", e);
 			}
 		} else {
-			// デフォルトのプロパティモデルを生成し返却
-			return createDefaultPropertyModel(field, modelMap);				
+			// デフォルトのモデルを生成し返却
+			return createDefaultModel(field, modelMap);				
 		}
 	}
 	
-	private IModel createIModelForSpecifiedModelName(Field field, Map<Field, Object> modelMap, String modelName) {
+	private Object createModelForSpecifiedModelName(Field field, Map<Field, Object> modelMap, String modelName) {
 		// モデルオブジェクトのフィールドとオブジェクトを取得
 		Entry<Field, Object> modelMapEntry = getModelMapEntry(modelName, modelMap);
 		Field modelField = modelMapEntry.getKey();
@@ -200,7 +203,10 @@ class ComponentBuilder {
 		// モデルフィールドのモデル種別属性を取得
 		ModelType modelType = modelAnnotation.type();
 		// モデル種別毎に処理
-		if (modelType.equals(ModelType.BASIC)) { // Model
+		if (modelType.equals(ModelType.RAW)) { // モデルオブジェクトそのまま
+			// モデルオブジェクトをそのまま返却
+			return modelObj;
+		} else if (modelType.equals(ModelType.BASIC)) { // Model
 			// 基本モデルを生成
 			Model model = new Model((Serializable)modelObj);
 			// 基本モデルを返却
@@ -228,7 +234,7 @@ class ComponentBuilder {
 		}
 	}
 	
-	private IModel createDefaultPropertyModel(Field field, Map<Field, Object> modelMap) {
+	private Object createDefaultModel(Field field, Map<Field, Object> modelMap) {
 		// モデルの個数をチェック
 		if (modelMap.size() == 1) {
 			// モデルオブジェクトのフィールドとオブジェクトを取得
@@ -240,7 +246,10 @@ class ComponentBuilder {
 			// モデルフィールドのモデル種別属性を取得
 			ModelType modelType = modelAnnotation.type();
 			// モデル種別毎に処理
-			if (modelType.equals(ModelType.BASIC)) { // Model
+			if (modelType.equals(ModelType.RAW)) { // Raw
+				// モデルと関連付けを行わない
+				return null;
+			} else if (modelType.equals(ModelType.BASIC)) { // Model
 				// モデルと関連付けを行わない
 				return null;
 			} else if (modelType.equals(ModelType.PROPERTY)) { // PropertyModel
@@ -289,7 +298,7 @@ class ComponentBuilder {
 	 * @param model モデルオブジェクト
 	 * @return 生成されたコンポーネントオブジェクト
 	 */
-	private Component createNewComponentInstance(Field field, Component target, String wicketId, IModel model) {
+	private Component createNewComponentInstance(Field field, Component target, String wicketId, Object model) {
 		try {
 			// フィールドの型を取得
 			Class<?> clazz = field.getType();
@@ -302,16 +311,29 @@ class ComponentBuilder {
 				argTypes.add(target.getClass());
 				argObjs.add(target);
 			}
-			// wicket:idを第２引数としてセット
+			// wicket:idを引数としてセット
 			argTypes.add(String.class);
 			argObjs.add(wicketId);
+			// コンストラクタ
+			Constructor<?> constructor = null;
 			// モデルが存在するかチェック
 			if (model != null) {
-				argTypes.add(IModel.class);
+				// IModelかチェック
+				if (model instanceof IModel) {
+					// IModelクラスを引数にセット
+					argTypes.add(IModel.class);
+					// コンストラクタを取得
+					constructor = clazz.getConstructor((Class[])argTypes.toArray(new Class[0]));
+				} else {
+					// コンストラクタを取得
+					constructor = Gadget.getConstructorMatchLastArgType(clazz, argTypes.size() + 1, model.getClass());
+				}
+				// モデルオブジェクトをセット
 				argObjs.add(model);
+			} else {
+				// コンストラクタを取得
+				constructor = clazz.getConstructor((Class[])argTypes.toArray(new Class[0]));
 			}
-			// コンストラクタを取得
-			Constructor<?> constructor = clazz.getConstructor((Class[])argTypes.toArray(new Class[0]));
 			// コンポーネントを生成
 			Component component = (Component)constructor.newInstance(argObjs.toArray());
 			// 結果を返却

@@ -8,6 +8,7 @@ import static org.seasar.wicket.utils.Gadget.isWriteReplace;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -16,6 +17,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import org.apache.commons.lang.StringUtils;
+import org.seasar.wicket.utils.Gadget;
 
 import wicket.Component;
 import wicket.model.IModel;
@@ -36,7 +38,7 @@ class ComponentProxyFactory {
 	 * @param model モデルオブジェクト
 	 * @return プロキシオブジェクト
 	 */
-	static Component create(String fieldName, Class fieldType, Component target, String wicketId, IModel model) {
+	static Component create(String fieldName, Class fieldType, Component target, String wicketId, Object model) {
 		// インターセプタを生成
 		WicketComponentMethodInterceptor interceptor =
 			new WicketComponentMethodInterceptor(fieldName, fieldType, target, wicketId, model);
@@ -51,7 +53,12 @@ class ComponentProxyFactory {
 		enhancer.setCallback(interceptor);
 		// プロキシオブジェクトを生成して返却
 		if (model != null) {
-			return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+			if (model instanceof IModel) {
+				return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+			} else {
+				Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 2, model.getClass());
+				return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {wicketId, model});
+			}
 		} else {
 			return (Component)enhancer.create(new Class[] {String.class}, new Object[] {wicketId});
 		}
@@ -76,7 +83,7 @@ class ComponentProxyFactory {
 		private String wicketId;
 		
 		/** モデルオブジェクト */
-		private IModel model;
+		private Object model;
 		
 		/**
 		 * このオブジェクトが生成されるときに呼び出されます。
@@ -86,7 +93,7 @@ class ComponentProxyFactory {
 		 * @param wicketId wicket:id
 		 * @param model モデルオブジェクト
 		 */
-		private WicketComponentMethodInterceptor(String fieldName, Class fieldType, Component target, String wicketId, IModel model) {
+		private WicketComponentMethodInterceptor(String fieldName, Class fieldType, Component target, String wicketId, Object model) {
 			super();
 			this.fieldName = fieldName;
 			this.fieldTypeName = fieldType.getName();
@@ -185,7 +192,7 @@ class ComponentProxyFactory {
 		private String wicketId;
 		
 		/** モデルオブジェクト */
-		private IModel model;
+		private Object model;
 
 		/**
 		 * このオブジェクトが生成されるときに呼び出されます。
@@ -195,7 +202,7 @@ class ComponentProxyFactory {
 		 * @param wicketId wicket:id
 		 * @param model モデルオブジェクト
 		 */
-		private SerializedProxy(String fieldName, String fieldTypeName, Component target, String wicketId, IModel model) {
+		private SerializedProxy(String fieldName, String fieldTypeName, Component target, String wicketId, Object model) {
 			super();
 			this.fieldName = fieldName;
 			this.fieldTypeName = fieldTypeName;

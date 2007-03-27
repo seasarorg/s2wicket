@@ -1,5 +1,6 @@
 package org.seasar.wicket.utils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -100,6 +101,36 @@ public class Gadget {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * 指定されたクラスが持つコンストラクタの中で，指定された個数の引数を持ち，最後の引数の型が指定された型のオブジェクトを受け入れることができるコンストラクタを返します。
+	 * @param clazz コンストラクタを持つクラスオブジェクト
+	 * @param argCount 引数の数
+	 * @param targetClazz 最後の引数の検査対象の型 
+	 * @return 条件に一致するコンストラクタ
+	 * @throws IllegalArgumentException 条件に一致するコンストラクタがなかったとき
+	 */
+	public static Constructor getConstructorMatchLastArgType(Class clazz, int argCount, Class targetClazz) {
+		// 全てのコンストラクタを取得
+		Constructor[] constructors = clazz.getConstructors();
+		// コンストラクタごとに処理
+		for (int i = 0; i < constructors.length; i++) {
+			// 引数の型の配列を取得
+			Class[] parameterTypes = constructors[i].getParameterTypes();
+			// 引数の個数をチェック
+			if (argCount == parameterTypes.length) {
+				// 引数の型をチェック
+				if (((Class<? extends Object>)parameterTypes[argCount - 1]).isAssignableFrom(targetClazz)) {
+					// 結果を返却
+					return constructors[i];
+				}
+			}
+		}
+		// コンストラクタが存在しなかった
+		// TODO 例外処理
+		throw new IllegalArgumentException(
+				"Constructor to match [" + clazz.getName() + ":" + targetClazz.getName() + "] not found ");
 	}
 
 }
