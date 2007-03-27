@@ -3,6 +3,12 @@ package org.seasar.wicket.uifactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -42,11 +48,34 @@ class ModelBuilder {
 			// createメソッドを呼び出してモデルオブジェクトを生成
 			model = createModelByCreateMethod(createMethod, target);
 		} else {
-			// フィールドの型を使ってインスタンスを生成
-			model = createModelByFieldType(field);
+			// WicketModelアノテーションのexp属性値を取得
+			WicketModel annotation = field.getAnnotation(WicketModel.class);
+			String exp = annotation.exp();
+			// exp属性が指定されたかチェック
+			if (StringUtils.isNotEmpty(exp)) {
+				// OGNL式を使ってインスタンスを生成
+				model = createModelByOgnl(field, target, exp);
+			} else {
+				// フィールドの型を使ってインスタンスを生成
+				model = createModelByFieldType(field);
+			}
 		}
 		// 結果を返却
 		return model;
+	}
+
+	private Object createModelByOgnl(Field field, Component target, String exp) {
+		try {
+			// 式をパース
+			Object parsedExp = Ognl.parseExpression(exp);
+			// 式を評価し，評価結果を取得
+			Object result = Ognl.getValue(parsedExp, target);
+			// 結果を返却
+			return result;
+		} catch (OgnlException e) {
+			// TODO 例外処理
+			throw new IllegalStateException(e);
+		}
 	}
 
 	/**

@@ -23,4 +23,6 @@ public @interface WicketModel {
 	 */
 	public ModelType type() default ModelType.PROPERTY;
 	
+	public String exp() default "";
+	
 }
