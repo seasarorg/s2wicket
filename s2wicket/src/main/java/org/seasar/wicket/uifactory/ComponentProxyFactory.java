@@ -174,8 +174,18 @@ class ComponentProxyFactory {
 							// 結果を返却
 							return null;
 						} catch(MethodFailedException e) {
-							// TODO 例外処理
-							throw e.getReason();
+							// handleExceptionメソッドを取得
+							Method handleExceptionMethod = getMethod(target.getClass(), "handleException", new Class[] {Object.class, String.class, Exception.class});
+							// 取得できたかチェック
+							if (handleExceptionMethod != null) {
+								// handleExceptionメソッド呼び出し
+								handleExceptionMethod.invoke(target, new Object[] {target, method.getName(), e.getReason()});
+								// 結果を返却
+								return null;
+							} else {
+								// TODO 例外処理
+								throw e.getReason();
+							}
 						} catch(OgnlException e) {
 							// TODO 例外処理
 							throw new IllegalStateException(e);
