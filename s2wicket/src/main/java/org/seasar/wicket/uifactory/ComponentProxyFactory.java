@@ -9,12 +9,17 @@ import static org.seasar.wicket.utils.Gadget.isWriteReplace;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+
+import ognl.MethodFailedException;
+import ognl.Ognl;
+import ognl.OgnlException;
 
 import org.apache.commons.lang.StringUtils;
 import org.seasar.wicket.utils.Gadget;
@@ -143,14 +148,72 @@ class ComponentProxyFactory {
 				methodName += StringUtils.capitalize(fieldName);
 				// コンポーネントオブジェクトからメソッドを取得
 				Class<? extends Component> clazz = target.getClass();
-				Method targetMethod = clazz.getMethod(methodName, method.getParameterTypes());
-				// メソッド呼び出し
-				Object result = targetMethod.invoke(target, args);
-				// 結果を返却
-				return result;
+				Method targetMethod = getMethod(clazz, methodName, method.getParameterTypes());
+				// メソッドが存在したかチェック
+				if (targetMethod != null) {
+					// メソッド呼び出し
+					Object result = targetMethod.invoke(target, args);
+					// 結果を返却
+					return result;
+				} else {
+					// フィールドオブジェクトを取得
+					Field field = target.getClass().getDeclaredField(fieldName);
+					// WicketComponentアノテーションを取得
+					WicketComponent wicketComponentAnnotation = field.getAnnotation(WicketComponent.class);
+					// 呼び出されたメソッド名に一致するWicketActionアノテーションを取得
+					WicketAction wicketAction = getWicketActionAnnotation(wicketComponentAnnotation, method.getName());
+					// 該当するWicketActionアノテーションが存在したかチェック
+					if (wicketAction != null) {
+						try {
+							// 実行する式を取得
+							String exp = wicketAction.exp();
+							// 式をパース
+							Object parsedExp = Ognl.parseExpression(exp);
+							// 式を評価し，評価結果を取得
+							Ognl.getValue(parsedExp, target);
+							// 結果を返却
+							return null;
+						} catch(MethodFailedException e) {
+							// TODO 例外処理
+							throw e.getReason();
+						} catch(OgnlException e) {
+							// TODO 例外処理
+							throw new IllegalStateException(e);
+						}
+					} else {
+						// TODO 呼び出すものがないので例外をスロー
+						throw new IllegalStateException(
+								"Callable logic not found. Target method is " + target.getClass().getName() + "#" + method.getName() + ".");
+					}
+				}
 			} else {
 				// 普通にメソッドコール
 				return proxy.invokeSuper(obj, args);
+			}
+		}
+		
+		private WicketAction getWicketActionAnnotation(WicketComponent wicketComponentAnnotation, String methodName) {
+			WicketAction[] wicketActions = wicketComponentAnnotation.actions();
+			for (int i = 0; i < wicketActions.length; i++) {
+				if (wicketActions[i].method().equals(methodName)) {
+					return wicketActions[i];
+				}
+			}
+			return null;
+		}
+		
+		/**
+		 * 指定されたクラスに定義されたメソッドの中で，指定されたメソッド名と引数の型を持つメソッドを返します。
+		 * @param clazz 処理対象のクラスオブジェクト
+		 * @param methodName メソッド名
+		 * @param parameterTypes 引数の型の配列
+		 * @return 条件に一致したメソッドの情報を持つオブジェクト もし一致するメソッドがなければnull
+		 */
+		private Method getMethod(Class clazz, String methodName, Class[] parameterTypes) {
+			try {
+				return clazz.getMethod(methodName, parameterTypes);
+			} catch(NoSuchMethodException e) {
+				return null;
 			}
 		}
 

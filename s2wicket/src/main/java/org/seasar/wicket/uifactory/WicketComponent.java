@@ -40,4 +40,6 @@ public @interface WicketComponent {
 	
 	public String modelProperty() default "";
 	
+	public WicketAction[] actions() default {};
+	
 }
