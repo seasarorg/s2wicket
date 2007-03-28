@@ -164,38 +164,53 @@ class ComponentProxyFactory {
 					WicketAction wicketAction = getWicketActionAnnotation(wicketComponentAnnotation, method.getName());
 					// 該当するWicketActionアノテーションが存在したかチェック
 					if (wicketAction != null) {
-						try {
-							// 実行する式を取得
-							String exp = wicketAction.exp();
-							// 式をパース
-							Object parsedExp = Ognl.parseExpression(exp);
-							// 式を評価し，評価結果を取得
-							Ognl.getValue(parsedExp, target);
-							// 結果を返却
-							return null;
-						} catch(MethodFailedException e) {
-							// handleExceptionメソッドを取得
-							Method handleExceptionMethod = getMethod(target.getClass(), "handleException", new Class[] {Object.class, String.class, Exception.class});
-							// 取得できたかチェック
-							if (handleExceptionMethod != null) {
-								// handleExceptionメソッド呼び出し
-								handleExceptionMethod.invoke(target, new Object[] {target, method.getName(), e.getReason()});
-								// 結果を返却
-								return null;
-							} else {
+						// 実行する式を取得
+						String exp = wicketAction.exp();
+						// 式が指定されたかチェック
+						if (StringUtils.isNotEmpty(exp)) {
+							try {
+								// 式をパース
+								Object parsedExp = Ognl.parseExpression(exp);
+								// 式を評価し，評価結果を取得
+								Ognl.getValue(parsedExp, target);
+							} catch(MethodFailedException e) {
+								// handleExceptionメソッドを取得
+								Method handleExceptionMethod = getMethod(target.getClass(), "handleException", new Class[] {Object.class, String.class, Exception.class});
+								// 取得できたかチェック
+								if (handleExceptionMethod != null) {
+									// handleExceptionメソッド呼び出し
+									handleExceptionMethod.invoke(target, new Object[] {target, method.getName(), e.getReason()});
+									// 結果を返却
+									return null;
+								} else {
+									// TODO 例外処理
+									throw e.getReason();
+								}
+							} catch(OgnlException e) {
 								// TODO 例外処理
-								throw e.getReason();
+								throw new IllegalStateException(e);
 							}
-						} catch(OgnlException e) {
-							// TODO 例外処理
-							throw new IllegalStateException(e);
 						}
-					} else {
-						// TODO 呼び出すものがないので例外をスロー
-						throw new IllegalStateException(
-								"Callable logic not found. Target method is " + target.getClass().getName() + "#" + method.getName() + ".");
+						// responsePage属性値を取得
+						String responsePage = wicketAction.responsePage();
+						// responsePage属性が指定されたかチェック
+						if (StringUtils.isNotEmpty(responsePage)) {
+							// ページクラスを取得
+							Class<?> pageClazz;
+							try {
+								pageClazz = Class.forName(responsePage);
+							} catch(ClassNotFoundException e) {
+								// 処理対象のコンポーネントのパッケージからページクラスを取得
+								Package targetPackage = target.getClass().getPackage();
+								pageClazz = Class.forName(targetPackage.getName() + "." + responsePage);
+							}
+							// レスポンスページをセット
+							target.setResponsePage(pageClazz);
+						}
 					}
 				}
+				// 結果を返却
+				return null;
 			} else {
 				// 普通にメソッドコール
 				return proxy.invokeSuper(obj, args);

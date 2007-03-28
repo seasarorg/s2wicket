@@ -6,4 +6,6 @@ public @interface WicketAction {
 	
 	public String exp() default "";
 	
+	public String responsePage() default "";
+	
 }
