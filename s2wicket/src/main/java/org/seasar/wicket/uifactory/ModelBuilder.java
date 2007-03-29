@@ -1,13 +1,24 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.seasar.wicket.uifactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 import ognl.Ognl;
-import ognl.OgnlContext;
 import ognl.OgnlException;
 
 import org.apache.commons.lang.StringUtils;
@@ -57,13 +68,20 @@ class ModelBuilder {
 				model = createModelByOgnl(field, target, exp);
 			} else {
 				// フィールドの型を使ってインスタンスを生成
-				model = createModelByFieldType(field);
+				model = createModelByFieldType(field, target);
 			}
 		}
 		// 結果を返却
 		return model;
 	}
 
+	/**
+	 * 指定されたモデルフィールドについて，指定されたOGNL式の評価結果をモデルオブジェクトとして取得し，その結果を返します。
+	 * @param field 処理対象のモデルフィールド
+	 * @param target 処理対象のコンポーネントオブジェクト
+	 * @param exp モデルを生成するためのOGNL式
+	 * @return 生成されたモデルオブジェクト
+	 */
 	private Object createModelByOgnl(Field field, Component target, String exp) {
 		try {
 			// 式をパース
@@ -73,17 +91,17 @@ class ModelBuilder {
 			// 結果を返却
 			return result;
 		} catch (OgnlException e) {
-			// TODO 例外処理
-			throw new IllegalStateException(e);
+			throw new WicketUIFactoryException(target, "Creating model object by OGNL expression failed. exp=[" + exp + "]", e);
 		}
 	}
 
 	/**
 	 * 指定されたフィールドの型を使用してそのインスタンスを生成し，それをモデルオブジェクトとして返します。
 	 * @param field 処理対象のフィールドオブジェクト
+	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @return 生成されたモデルオブジェクト
 	 */
-	private Object createModelByFieldType(Field field) {
+	private Object createModelByFieldType(Field field, Component target) {
 		try {
 			// フィールドの型を生成
 			Class<?> type = field.getType();
@@ -92,11 +110,9 @@ class ModelBuilder {
 			// 結果を返却
 			return model;
 		} catch (InstantiationException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create model object for " + field.getName() + " failed.");
+			throw new WicketUIFactoryException(target, "Create model object for " + field.getName() + " failed.");
 		} catch (IllegalAccessException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create model object for " + field.getName() + " failed.");
+			throw new WicketUIFactoryException(target, "Create model object for " + field.getName() + " failed.");
 		}
 	}
 
@@ -113,14 +129,11 @@ class ModelBuilder {
 			// 結果を返却
 			return model;
 		} catch (IllegalArgumentException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Invoke " + target.getClass().getName() + "#" + createMethod.getName() + " failed.");
+			throw new WicketUIFactoryException(target, "Invoke " + createMethod.getName() + " failed.");
 		} catch (IllegalAccessException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Invoke " + target.getClass().getName() + "#" + createMethod.getName() + " failed.");
+			throw new WicketUIFactoryException(target, "Invoke " + createMethod.getName() + " failed.");
 		} catch (InvocationTargetException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Invoke " + target.getClass().getName() + "#" + createMethod.getName() + " failed.");
+			throw new WicketUIFactoryException(target, "Invoke " + createMethod.getName() + " failed.");
 		}
 	}
 

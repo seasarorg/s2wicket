@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.seasar.wicket.uifactory;
 
 import java.io.Serializable;
@@ -90,11 +104,9 @@ class ComponentBuilder {
 				Component parentComponent = (Component)e.getParentField().get(target);
 				parentModel = parentComponent.getModel();
 			} catch (IllegalArgumentException e1) {
-				// TODO 例外処理
-				throw new IllegalStateException(e1);
+				throw new WicketUIFactoryException(target, "Get value of parent field failed.", e1);
 			} catch (IllegalAccessException e1) {
-				// TODO 例外処理
-				throw new IllegalStateException(e1);
+				throw new WicketUIFactoryException(target, "Get value of parent field failed.", e1);
 			}
 		}
 		// wicket:idを決定
@@ -120,6 +132,14 @@ class ComponentBuilder {
 		return result;
 	}
 	
+	/**
+	 * 指定されたコンポーネントに関連付けるモデルを生成します。
+	 * @param field 処理対象のコンポーネントのフィールド
+	 * @param target 処理対象のコンポーネントオブジェクト
+	 * @param modelMap 生成されたモデルオブジェクトが格納されたコレクション
+	 * @return 生成されたモデル
+	 * @throws NecessaryToBindException 関連付けがBoundCompoundPropertyModelによるプロパティの明示的な指定を必要とするとき
+	 */
 	private Object createModel(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
 		// WicketComponentアノテーションを取得
 		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
@@ -128,13 +148,22 @@ class ComponentBuilder {
 		// モデル名が指定されていたかチェック
 		if (StringUtils.isNotEmpty(modelName)) {
 			// モデル名が指定された場合の処理をコール
-			return createModelForSpecifiedModelName(field, modelMap, modelName);
+			return createModelForSpecifiedModelName(field, modelMap, modelName, target);
 		} else {
 			// モデル名が指定されなかった場合の処理をコール
 			return createModelForNotSpecifiedModelName(field, target, modelMap);
 		}
 	}
 	
+	/**
+	 * 指定されたコンポーネントフィールドのWicketComponentアノテーションにおいて，
+	 * モデル名が指定されなかったときのモデル生成処理を行います。
+	 * @param field 処理対象のコンポーネントのフィールド
+	 * @param target 処理対象のコンポーネントオブジェクト
+	 * @param modelMap 生成されたモデルオブジェクトが格納されたコレクション
+	 * @return 生成されたモデル
+	 * @throws NecessaryToBindException 関連付けがBoundCompoundPropertyModelによるプロパティの明示的な指定を必要とするとき
+	 */
 	private Object createModelForNotSpecifiedModelName(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
 		// WicketComponentアノテーションを取得
 		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
@@ -153,7 +182,7 @@ class ComponentBuilder {
 				// モデル名属性が指定されていたかチェック
 				if (StringUtils.isNotEmpty(parentModelName)) {
 					// モデルオブジェクトのフィールドを取得
-					Entry<Field, Object> modelMapEntry = getModelMapEntry(parentModelName, modelMap);
+					Entry<Field, Object> modelMapEntry = getModelMapEntry(parentModelName, modelMap, target);
 					Field modelField = modelMapEntry.getKey();
 					// モデルフィールドのWicketModelアノテーションを取得
 					WicketModel modelAnnotation = modelField.getAnnotation(WicketModel.class);
@@ -177,15 +206,14 @@ class ComponentBuilder {
 						throw new NecessaryToBindException(parentField);
 					} else {
 						// モデル種別未指定はあり得ない
-						throw new IllegalStateException("Unknown ModelType.(2)");
+						throw new IllegalStateException("Unknown ModelType.");
 					}
 				} else {
 					// デフォルトのモデルを生成し返却
 					return createDefaultModel(field, modelMap);
 				}
 			} catch(NoSuchFieldException e) {
-				// TODO 例外処理
-				throw new IllegalStateException("Parent component field[" + parentName + "] not found.", e);
+				throw new WicketUIFactoryException(target, "Parent component field[" + parentName + "] not found.", e);
 			}
 		} else {
 			// デフォルトのモデルを生成し返却
@@ -193,9 +221,18 @@ class ComponentBuilder {
 		}
 	}
 	
-	private Object createModelForSpecifiedModelName(Field field, Map<Field, Object> modelMap, String modelName) {
+	/**
+	 * 指定されたコンポーネントフィールドのWicketComponentアノテーションにおいて，
+	 * モデル名が指定されたときのモデル生成処理を行います。
+	 * @param field 処理対象のコンポーネントのフィールド
+	 * @param modelMap 生成されたモデルオブジェクトが格納されたコレクション
+	 * @param modelName 指定されたモデルの名前
+	 * @param component 処理対象のコンポーネントオブジェクト
+	 * @return 生成されたモデル
+	 */
+	private Object createModelForSpecifiedModelName(Field field, Map<Field, Object> modelMap, String modelName, Component target) {
 		// モデルオブジェクトのフィールドとオブジェクトを取得
-		Entry<Field, Object> modelMapEntry = getModelMapEntry(modelName, modelMap);
+		Entry<Field, Object> modelMapEntry = getModelMapEntry(modelName, modelMap, target);
 		Field modelField = modelMapEntry.getKey();
 		Object modelObj = modelMapEntry.getValue();
 		// モデルフィールドのWicketModelアノテーションを取得
@@ -230,10 +267,16 @@ class ComponentBuilder {
 			return boundCompoundPropertyModel;
 		} else {
 			// モデル種別未指定はあり得ない
-			throw new IllegalStateException("Unknown ModelType.(1)");
+			throw new IllegalStateException("Unknown ModelType.");
 		}
 	}
 	
+	/**
+	 * 明示的に使用するモデルが指定されなかったときに関連付けるモデルを生成します。
+	 * @param field 処理対象のコンポーネントフィールド
+	 * @param modelMap 生成されたモデルオブジェクトが格納されたコレクション
+	 * @return 生成されたモデル
+	 */
 	private Object createDefaultModel(Field field, Map<Field, Object> modelMap) {
 		// モデルの個数をチェック
 		if (modelMap.size() == 1) {
@@ -267,7 +310,7 @@ class ComponentBuilder {
 				throw new UnsupportedOperationException("ModelType.BOUND_COMPOUND_PROPERTY for parent container not supported.");
 			} else {
 				// モデル種別未指定はあり得ない
-				throw new IllegalStateException("Unknown ModelType.(3)");
+				throw new IllegalStateException("Unknown ModelType.");
 			} 
 		} else {
 			// 関連付けるモデルを特定できない
@@ -279,15 +322,16 @@ class ComponentBuilder {
 	 * 指定されたフィールド名に一致するモデルオブジェクトのマップエントリを返します。
 	 * @param fieldName フィールド名
 	 * @param modelMap モデルフィールドとモデルオブジェクトが格納されたコレクション
+	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @return モデルオブジェクトのマップエントリ
 	 */
-	private Map.Entry<Field, Object> getModelMapEntry(String fieldName, Map<Field, Object> modelMap) {
+	private Map.Entry<Field, Object> getModelMapEntry(String fieldName, Map<Field, Object> modelMap, Component target) {
 		for(Map.Entry<Field, Object> entry : modelMap.entrySet()) {
 			if (entry.getKey().getName().equals(fieldName)) {
 				return entry;
 			}
 		}
-		throw new IllegalArgumentException("Model object entry not found. fieldName = " + fieldName);
+		throw new WicketUIFactoryException(target, "Model object entry not found. fieldName = " + fieldName);
 	}
 
 	/**
@@ -339,20 +383,15 @@ class ComponentBuilder {
 			// 結果を返却
 			return component;
 		} catch(NoSuchMethodException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create new component instance for " + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
 		} catch (IllegalArgumentException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create new component instance for " + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
 		} catch (InstantiationException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create new component instance for " + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
 		} catch (IllegalAccessException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create new component instance for " + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
 		} catch (InvocationTargetException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create new component instance for " + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
 		}
 	}
 	
@@ -410,14 +449,11 @@ class ComponentBuilder {
 			// 結果を返却
 			return result;
 		} catch (IllegalArgumentException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create component object for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create component object for " + field.getName() + " failed.", e);
 		} catch (IllegalAccessException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create component object for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create component object for " + field.getName() + " failed.", e);
 		} catch (InvocationTargetException e) {
-			// TODO 例外処理
-			throw new IllegalStateException("Create component object for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+			throw new WicketUIFactoryException(target, "Create component object for " + field.getName() + " failed.", e);
 		}
 	}
 	
@@ -471,17 +507,13 @@ class ComponentBuilder {
 				// フィールドの値を親コンテナコンポーネントとする
 				result = (MarkupContainer)(parentField.get(target));
 			} catch (SecurityException e) {
-				// TODO 例外処理
-				throw new IllegalStateException("Get parent container for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+				throw new WicketUIFactoryException(target, "Get parent container for " + field.getName() + " failed.", e);
 			} catch (NoSuchFieldException e) {
-				// TODO 例外処理
-				throw new IllegalStateException("Get parent container for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+				throw new WicketUIFactoryException(target, "Get parent container for " + field.getName() + " failed.", e);
 			} catch (IllegalArgumentException e) {
-				// TODO 例外処理
-				throw new IllegalStateException("Get parent container for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+				throw new WicketUIFactoryException(target, "Get parent container for " + field.getName() + " failed.", e);
 			} catch (IllegalAccessException e) {
-				// TODO 例外処理
-				throw new IllegalStateException("Get parent container for " + target.getClass().getName() + "#" + field.getName() + " failed.", e);
+				throw new WicketUIFactoryException(target, "Get parent container for " + field.getName() + " failed.", e);
 			}
 		}
 		// 結果を返却

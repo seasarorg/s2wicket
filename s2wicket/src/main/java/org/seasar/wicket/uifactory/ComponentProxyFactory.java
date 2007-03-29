@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.seasar.wicket.uifactory;
 
 import static org.seasar.wicket.utils.Gadget.isEquals;
@@ -16,7 +30,6 @@ import java.lang.reflect.Modifier;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-
 import ognl.MethodFailedException;
 import ognl.Ognl;
 import ognl.OgnlException;
@@ -183,12 +196,11 @@ class ComponentProxyFactory {
 									// 結果を返却
 									return null;
 								} else {
-									// TODO 例外処理
+									// 原因となった例外を取得してスロー
 									throw e.getReason();
 								}
 							} catch(OgnlException e) {
-								// TODO 例外処理
-								throw new IllegalStateException(e);
+								throw new WicketUIFactoryException(target, "Evaluation of OGNL expression failed. exp=[" + exp + "]");
 							}
 						}
 						// responsePage属性値を取得
@@ -217,6 +229,12 @@ class ComponentProxyFactory {
 			}
 		}
 		
+		/**
+		 * 指定されたWicketComponentアノテーションが持つactions属性から，指定されたメソッド名に対応するWicketActionアノテーションを取得して返します。
+		 * @param wicketComponentAnnotation WicketComponentアノテーション
+		 * @param methodName メソッド名
+		 * @return WicketActionアノテーション もし存在しなかった場合はnull
+		 */
 		private WicketAction getWicketActionAnnotation(WicketComponent wicketComponentAnnotation, String methodName) {
 			WicketAction[] wicketActions = wicketComponentAnnotation.actions();
 			for (int i = 0; i < wicketActions.length; i++) {

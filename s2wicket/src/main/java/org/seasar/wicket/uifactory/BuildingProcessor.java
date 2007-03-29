@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.seasar.wicket.uifactory;
 
 import static org.seasar.wicket.utils.Gadget.isWicketClass;
@@ -16,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import wicket.Component;
 
 /**
- * 
+ * Wicketコンポーネントとそれが扱うモデルを構築する処理を持つプロセッサクラスです。
  * @author Yoichiro Tanaka
  * @since 1.3.0
  */
@@ -82,9 +96,9 @@ class BuildingProcessor {
 				// コレクションに追加
 				result.put(targetFields[i], modelObj);
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException("Building model failed.", e);
+				throw new WicketUIFactoryException(target, "Building model failed.", e);
 			} catch (IllegalAccessException e) {
-				throw new IllegalStateException("Building model failed.", e);
+				throw new WicketUIFactoryException(target, "Building model failed.", e);
 			}
 		}
 		// 結果のコレクションを返却
@@ -156,9 +170,9 @@ class BuildingProcessor {
 					targetFields[i].set(target, model);
 				}
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException("Building component failed.", e);
+				throw new WicketUIFactoryException(target, "Building component failed.", e);
 			} catch (IllegalAccessException e) {
-				throw new IllegalStateException("Building component failed.", e);
+				throw new WicketUIFactoryException(target, "Building component failed.", e);
 			}
 		}
 	}
