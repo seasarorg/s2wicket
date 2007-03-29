@@ -106,7 +106,8 @@ import wicket.model.PropertyModel;
  * </pre>
  * <p>というコードと等価です。{@link #BOUND_COMPOUND_PROPERTY}フィールドを使用した場合，そのモデルが関連付けられたコンポーネントを親に持つ
  * コンポーネントが定義された時に，そのコンポーネントとモデルが自動的に{@link BoundCompoundPropertyModel#bind(Component, String)}
- * メソッドを実行してバインドされます。例えば，</p>
+ * メソッドを実行してバインドされます。バインドされるプロパティ名として，{@link WicketComponent#modelProperty()}属性が指定されていた場合はその指定が採用され，
+ * {@link WicketComponent#modelProperty()}属性の指定がなかったときは，対象コンポーネントのフィールド名が採用されます。例えば，</p>
  * <pre>
  * &#064;WicketComponent(parent="form", modelProperty="keyword")
  * private TextField keywordField;
