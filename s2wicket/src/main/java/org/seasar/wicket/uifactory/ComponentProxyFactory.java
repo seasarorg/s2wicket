@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import org.seasar.wicket.utils.Gadget;
 
 import wicket.Component;
+import wicket.Page;
 import wicket.model.IModel;
 
 /**
@@ -212,8 +213,9 @@ class ComponentProxyFactory {
 							try {
 								pageClazz = Class.forName(responsePage);
 							} catch(ClassNotFoundException e) {
-								// 処理対象のコンポーネントのパッケージからページクラスを取得
-								Package targetPackage = target.getClass().getPackage();
+								// 処理対象のコンポーネントが所属するページオブジェクトのクラスのパッケージからページクラスを取得
+								Page page = target.getPage();
+								Package targetPackage = page.getClass().getPackage();
 								pageClazz = Class.forName(targetPackage.getName() + "." + responsePage);
 							}
 							// レスポンスページをセット
