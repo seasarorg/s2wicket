@@ -71,15 +71,28 @@ class ComponentProxyFactory {
 		// インターセプタをセット
 		enhancer.setCallback(interceptor);
 		// プロキシオブジェクトを生成して返却
-		if (model != null) {
-			if (model instanceof IModel) {
-				return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+		if (fieldType.isMemberClass()) { // 対象の型がインナークラスだった場合
+			if (model != null) {
+				if (model instanceof IModel) {
+					return (Component)enhancer.create(new Class[] {target.getClass(), String.class, IModel.class}, new Object[] {target, wicketId, model});
+				} else {
+					Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 3, model.getClass());
+					return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {target, wicketId, model});
+				}
 			} else {
-				Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 2, model.getClass());
-				return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {wicketId, model});
+				return (Component)enhancer.create(new Class[] {target.getClass(), String.class}, new Object[] {target, wicketId});
 			}
-		} else {
-			return (Component)enhancer.create(new Class[] {String.class}, new Object[] {wicketId});
+		} else { // 対象の型がトップレベルクラスだった場合
+			if (model != null) {
+				if (model instanceof IModel) {
+					return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+				} else {
+					Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 2, model.getClass());
+					return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {wicketId, model});
+				}
+			} else {
+				return (Component)enhancer.create(new Class[] {String.class}, new Object[] {wicketId});
+			}
 		}
 	}
 	
@@ -155,8 +168,9 @@ class ComponentProxyFactory {
 				// このプロキシを永続化せずにダミーのオブジェクトを永続化
 				return writeReplace();
 			}
-			// 呼び出し対象のメソッドが抽象メソッドかチェック
-			if (Modifier.isAbstract(method.getModifiers())) {
+			// 呼び出し対象のメソッドが「抽象メソッド」もしくは「protectedでvoid」かチェック
+			if ((Modifier.isAbstract(method.getModifiers()))
+					|| (Modifier.isProtected(method.getModifiers()) && method.getReturnType().equals(Void.TYPE))) {
 				// 実際に呼び出すメソッドの名前を決定
 				String methodName = method.getName();
 				methodName += StringUtils.capitalize(fieldName);
@@ -220,11 +234,20 @@ class ComponentProxyFactory {
 							}
 							// レスポンスページをセット
 							target.setResponsePage(pageClazz);
+							// 結果を返却
+							return null;
 						}
 					}
+					// メソッドがprotectedでvoidかチェック
+					if (Modifier.isProtected(method.getModifiers()) && method.getReturnType().equals(Void.TYPE)) {
+						// イベントハンドラメソッドもなく，WicketActionアノテーションも指定されなかったので，
+						// 普通にメソッドコール
+						return proxy.invokeSuper(obj, args);
+					} else {
+						// 結果を返却
+						return null;
+					}
 				}
-				// 結果を返却
-				return null;
 			} else {
 				// 普通にメソッドコール
 				return proxy.invokeSuper(obj, args);

@@ -15,18 +15,13 @@
 package org.seasar.wicket.uifactory;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
-import org.seasar.wicket.utils.Gadget;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -113,14 +108,8 @@ class ComponentBuilder {
 		String wicketId = getWicketId(field);
 		// フィールドの型を取得
 		Class<?> clazz = field.getType();
-		// フィールドの型が抽象クラスかチェック
-		if (Modifier.isAbstract(clazz.getModifiers())) {
-			// 動的プロキシを生成
-			result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, model);
-		} else {
-			// 素直にインスタンス生成
-			result = createNewComponentInstance(field, target, wicketId, model);
-		}
+		// 動的プロキシを生成
+		result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, model);
 		// 親のコンポーネントのモデルとバインドする必要性をチェック
 		if (parentModel != null) {
 			// プロパティ名を取得
@@ -334,67 +323,6 @@ class ComponentBuilder {
 		throw new WicketUIFactoryException(target, "Model object entry not found. fieldName = " + fieldName);
 	}
 
-	/**
-	 * 指定されたフィールドに対応するコンポーネントオブジェクトを生成して返します。
-	 * @param field 処理対象のフィールドオブジェクト
-	 * @param component 処理対象のコンポーネントオブジェクト
-	 * @param wicketId wicket:id
-	 * @param model モデルオブジェクト
-	 * @return 生成されたコンポーネントオブジェクト
-	 */
-	private Component createNewComponentInstance(Field field, Component target, String wicketId, Object model) {
-		try {
-			// フィールドの型を取得
-			Class<?> clazz = field.getType();
-			// コンストラクタの引数の型のコレクションと，引数のオブジェクトのコレクションを生成
-			List<Class> argTypes = new ArrayList<Class>();
-			List<Object> argObjs = new ArrayList<Object>();
-			// フィールドの型がインナークラスかチェック
-			if (clazz.isMemberClass()) {
-				// コンストラクタの第１引数にコンポーネントオブジェクトをセット
-				argTypes.add(target.getClass());
-				argObjs.add(target);
-			}
-			// wicket:idを引数としてセット
-			argTypes.add(String.class);
-			argObjs.add(wicketId);
-			// コンストラクタ
-			Constructor<?> constructor = null;
-			// モデルが存在するかチェック
-			if (model != null) {
-				// IModelかチェック
-				if (model instanceof IModel) {
-					// IModelクラスを引数にセット
-					argTypes.add(IModel.class);
-					// コンストラクタを取得
-					constructor = clazz.getConstructor((Class[])argTypes.toArray(new Class[0]));
-				} else {
-					// コンストラクタを取得
-					constructor = Gadget.getConstructorMatchLastArgType(clazz, argTypes.size() + 1, model.getClass());
-				}
-				// モデルオブジェクトをセット
-				argObjs.add(model);
-			} else {
-				// コンストラクタを取得
-				constructor = clazz.getConstructor((Class[])argTypes.toArray(new Class[0]));
-			}
-			// コンポーネントを生成
-			Component component = (Component)constructor.newInstance(argObjs.toArray());
-			// 結果を返却
-			return component;
-		} catch(NoSuchMethodException e) {
-			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
-		} catch (IllegalArgumentException e) {
-			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
-		} catch (InstantiationException e) {
-			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
-		} catch (IllegalAccessException e) {
-			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
-		} catch (InvocationTargetException e) {
-			throw new WicketUIFactoryException(target, "Create new component instance for " + field.getName() + " failed.", e);
-		}
-	}
-	
 	/**
 	 * 指定されたフィールドのwicket:idを返します。
 	 * @param field 処理対象のフィールドオブジェクト
