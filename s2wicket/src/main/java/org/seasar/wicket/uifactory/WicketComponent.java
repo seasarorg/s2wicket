@@ -23,14 +23,11 @@ import java.lang.annotation.Target;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
-import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.SubmitLink;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
-import wicket.model.PropertyModel;
 
 /**
  * Wicketコンポーネントの生成をS2Wicketに指示するためのアノテーションです。<br />
@@ -128,7 +125,7 @@ import wicket.model.PropertyModel;
  * </li>
  * </ol>
  * <p>{@link WicketComponent}アノテーションが付与されたコンポーネントは，それぞれ発生したイベントの種別に従って，
- * 呼び出されるメソッドが定義されています。また，{@link ListView}クラスのpopulate()メソッドのように，
+ * 呼び出されるメソッドが定義されています。また，{@link ListView}クラスのpopulateItem()メソッドのように，
  * 表示する情報を与えるためにコールバックされるメソッドも存在します。{@link WicketComponent}アノテーションが
  * 付与されたコンポーネントについて，「[メソッド名]+[フィールド名]」という命名規則に従って決定されるメソッドを定義しておくことにより，
  * コンポーネントのメソッドがWicketによって呼び出された際に，定義したメソッドがS2Wicketによって実行されます。
@@ -137,7 +134,20 @@ import wicket.model.PropertyModel;
  * <li>抽象メソッドであること。</li>
  * <li>スコープがprotectedであり，戻り値の型がvoidであること。</li>
  * </ul>
- * <p>定義するメソッドの引数や戻り値の型は，オリジナルの抽象メソッドと一致している必要があります。
+ * <p>定義するメソッドの引数や戻り値の型は，オリジナルの抽象メソッドと一致している必要があります。例えば，{@link ListView}クラスの
+ * populateItem()メソッドであれば，</p>
+ * <pre>
+ * &#064;WicketComponent
+ * private ListView employeeList;
+ * public void populateItemEmployeeList(ListItem item) {
+ *     ...
+ * }
+ * </pre>
+ * <p>というようなメソッドを作成することによって，S2Wicketから呼び出されます。</p>
+ * <p>もし該当するメソッドが定義されていなかった場合，{@link #actions()}属性で{@link WicketAction}アノテーションを
+ * 記述することにより，OGNL式による処理の記述と実行が可能になります。これについても，対象となるメソッドは，上記の２つの
+ * 条件を満たしている必要があります。{@link #actions()}属性を使ったOGNL式の評価に関しては，
+ * {@link WicketAction}アノテーションの説明をご覧ください。</p>
  * 
  * @see WicketAction
  * @see WicketModel
@@ -166,13 +176,25 @@ public @interface WicketComponent {
 	
 	/**
 	 * 生成するコンポーネントと関連付けを行うモデルオブジェクトのフィールド名を指定するための属性（任意）です。
-	 * 
-	 * @return
+	 * 省略時の動作は，{@link WicketComponent}アノテーションのJavadocコメントをご覧ください。
+	 * @return 関連付けるモデルのフィールド名
 	 */
 	public String modelName() default "";
 	
+	/**
+	 * モデルオブジェクトとこのコンポーネントを関連付ける際に指定する，モデルオブジェクトのプロパティ名を指定するための属性（任意）です。
+	 * この属性を省略した場合，このアノテーションが付与されたフィールドの名前がプロパティ名として採用されます。
+	 * この属性の記述には，OGNL式を使用することができます。
+	 * @return モデルオブジェクトのプロパティ名
+	 */
 	public String modelProperty() default "";
 	
+	/**
+	 * このアノテーションが付与されたコンポーネントで発生するイベントなどに対応して行いたい処理をOGNL式で記述したい場合に使用する属性（任意）です。
+	 * 適用したいメソッドごとに{@link WicketAction}アノテーションを定義し，その配列をactions属性に指定します。
+	 * この属性を省略した場合は，命名規則に則って定義されたメソッドの呼び出しが行われます。
+	 * @return 処理を行いたいメソッドごとに記述された{@link WicketAction}アノテーションの配列
+	 */
 	public WicketAction[] actions() default {};
 	
 }
