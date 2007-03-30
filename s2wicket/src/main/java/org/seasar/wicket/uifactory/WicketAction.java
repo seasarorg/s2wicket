@@ -124,10 +124,12 @@ import wicket.markup.html.link.Link;
  * もしlogicオブジェクトのcreate()メソッド呼び出し時にDivisionNotFoundException例外が発生した場合は，
  * emp.SelectDivisionPageクラスのページに遷移し，それ以外の場合は不具合として{@link IllegalStateException}
  * 例外をスローしています。</p>
- * <p>{@link WicketAction}アノテーションが適用されるのは，対象のイベントハンドラメソッドが抽象メソッドの場合に
- * 限られます。これは，S2Wicketによって生成される動的プロキシに本機能が実装されるためです。
- * 対象のコンポーネントの型が具象クラスだった場合は，{@link WicketAction}アノテーションを使用しても適用されずに，
- * コンポーネントの具象クラスに定義されたイベントハンドラメソッドが実行されます。</p>
+ * <p>{@link WicketAction}アノテーションが適用されるメソッドは，</p>
+ * <ul>
+ * <li>抽象メソッドである。</li>
+ * <li>スコープがprotectedであり，戻り値の型がvoidである。</li>
+ * </ul>
+ * <p>のどちらかの条件を満たしているメソッドに限ります。</p>
  * 
  * @see WicketComponent
  * @author Yoichiro Tanaka
