@@ -26,6 +26,7 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.SubmitLink;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
@@ -126,11 +127,17 @@ import wicket.model.PropertyModel;
  * </ul>
  * </li>
  * </ol>
- * <p>{@link WicketComponent}アノテーションが付与されたフィールドの型が抽象クラスの場合，
- * 未実装のメソッドに対して開発者は実装を与える必要があります。{@link WicketComponent}アノテーションが
- * 付与されたコンポーネントは，「[メソッド名]+[フィールド名]」という命名規則に従って決定されるメソッドを，
- * 抽象メソッドの呼び出し時に実行します。このメソッドの引数や戻り値の型は，
- * オリジナルの抽象メソッドと一致している必要があります。例えば，{@link SubmitLink}
+ * <p>{@link WicketComponent}アノテーションが付与されたコンポーネントは，それぞれ発生したイベントの種別に従って，
+ * 呼び出されるメソッドが定義されています。また，{@link ListView}クラスのpopulate()メソッドのように，
+ * 表示する情報を与えるためにコールバックされるメソッドも存在します。{@link WicketComponent}アノテーションが
+ * 付与されたコンポーネントについて，「[メソッド名]+[フィールド名]」という命名規則に従って決定されるメソッドを定義しておくことにより，
+ * コンポーネントのメソッドがWicketによって呼び出された際に，定義したメソッドがS2Wicketによって実行されます。
+ * これは，対象のメソッドが以下のどちらかの条件を満たしている場合に限ります。</p>
+ * <ul>
+ * <li>抽象メソッドであること。</li>
+ * <li>スコープがprotectedであり，戻り値の型がvoidであること。</li>
+ * </ul>
+ * <p>定義するメソッドの引数や戻り値の型は，オリジナルの抽象メソッドと一致している必要があります。
  * 
  * @see WicketAction
  * @see WicketModel
