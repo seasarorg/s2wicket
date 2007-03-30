@@ -36,6 +36,7 @@ import ognl.OgnlException;
 
 import org.apache.commons.lang.StringUtils;
 import org.seasar.wicket.utils.Gadget;
+import org.seasar.wicket.utils.OgnlUtils;
 
 import wicket.Component;
 import wicket.Page;
@@ -197,10 +198,8 @@ class ComponentProxyFactory {
 						// 式が指定されたかチェック
 						if (StringUtils.isNotEmpty(exp)) {
 							try {
-								// 式をパース
-								Object parsedExp = Ognl.parseExpression(exp);
 								// 式を評価し，評価結果を取得
-								Ognl.getValue(parsedExp, target);
+								OgnlUtils.evaluate(exp, target);
 							} catch(MethodFailedException e) {
 								// handleExceptionメソッドを取得
 								Method handleExceptionMethod = getMethod(target.getClass(), "handleException", new Class[] {Object.class, String.class, Exception.class});

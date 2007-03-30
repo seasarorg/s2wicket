@@ -18,10 +18,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import ognl.Ognl;
 import ognl.OgnlException;
 
 import org.apache.commons.lang.StringUtils;
+import org.seasar.wicket.utils.OgnlUtils;
 
 import wicket.Component;
 
@@ -84,10 +84,8 @@ class ModelBuilder {
 	 */
 	private Object createModelByOgnl(Field field, Component target, String exp) {
 		try {
-			// ®‚ğƒp[ƒX
-			Object parsedExp = Ognl.parseExpression(exp);
 			// ®‚ğ•]‰¿‚µC•]‰¿Œ‹‰Ê‚ğæ“¾
-			Object result = Ognl.getValue(parsedExp, target);
+			Object result = OgnlUtils.evaluate(exp, target);
 			// Œ‹‰Ê‚ğ•Ô‹p
 			return result;
 		} catch (OgnlException e) {
