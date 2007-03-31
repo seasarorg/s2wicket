@@ -16,6 +16,7 @@ package org.seasar.wicket.uifactory;
 
 import wicket.Component;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.list.ListView;

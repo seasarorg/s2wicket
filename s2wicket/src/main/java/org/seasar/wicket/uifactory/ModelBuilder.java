@@ -45,7 +45,7 @@ class ModelBuilder {
 	/**
 	 * 指定されたフィールドに対応するモデルオブジェクトを生成し，その結果を返します。
 	 * このメソッドに渡されるフィールドは，{@link #isSupported(Field)}メソッドの呼び出し結果がtrueのフィールドのみです。
-	 * @param targetField 処理対象のフィールドオブジェクト
+	 * @param field 処理対象のフィールドオブジェクト
 	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @return 生成されたモデルオブジェクト
 	 */

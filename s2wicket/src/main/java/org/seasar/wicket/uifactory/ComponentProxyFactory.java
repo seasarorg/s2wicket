@@ -137,10 +137,10 @@ class ComponentProxyFactory {
 
 		/**
 		 * 指定されたオブジェクトのメソッド呼び出しをインターセプトします。
-		 * @param object コール対象のオブジェクト
+		 * @param obj コール対象のオブジェクト
 		 * @param method 呼び出されたメソッドの情報
 		 * @param args メソッド呼び出しの際に指定された引数
-		 * @param methodProxy メソッドプロキシ
+		 * @param proxy メソッドプロキシ
 		 * @throws Throwable メソッド呼び出し時に何らかの例外が発生したとき
 		 */
 		public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {

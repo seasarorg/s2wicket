@@ -51,7 +51,7 @@ class ComponentBuilder {
 	/**
 	 * 指定されたフィールドに対応するコンポーネントオブジェクトを生成し，その結果を返します。
 	 * このメソッドに渡されるフィールドは，{@link #isSupported(Field)}メソッドの呼び出し結果がtrueのフィールドのみです。
-	 * @param targetField 処理対象のフィールドオブジェクト
+	 * @param field 処理対象のフィールドオブジェクト
 	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @param modelMap モデルオブジェクトが格納されたコレクション
 	 * @return 生成されたコンポーネントオブジェクト
@@ -216,7 +216,7 @@ class ComponentBuilder {
 	 * @param field 処理対象のコンポーネントのフィールド
 	 * @param modelMap 生成されたモデルオブジェクトが格納されたコレクション
 	 * @param modelName 指定されたモデルの名前
-	 * @param component 処理対象のコンポーネントオブジェクト
+	 * @param target 処理対象のコンポーネントオブジェクト
 	 * @return 生成されたモデル
 	 */
 	private Object createModelForSpecifiedModelName(Field field, Map<Field, Object> modelMap, String modelName, Component target) {

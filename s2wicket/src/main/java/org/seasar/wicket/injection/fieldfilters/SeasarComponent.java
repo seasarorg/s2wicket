@@ -23,6 +23,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.wicket.injection.FieldFilter;
+
 /**
  * Seasarコンポーネントのためのプレースホルダとなるフィールドにタグ付けするためのアノテーションです。
  * <p>このアノテーションが付与されたフィールドには，Seasarコンテナにより管理されているコンポーネントがインジェクションされます。

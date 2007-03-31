@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 
 import org.apache.commons.lang.StringUtils;
 import org.seasar.wicket.injection.FieldFilter;
+import org.seasar.wicket.injection.SeasarComponentInjectionListener;
 
 /**
  * {@link SeasarComponent}アノテーションが付与されたフィールドをインジェクション対象とする処理を持つフィルタ実装クラスです。<br />

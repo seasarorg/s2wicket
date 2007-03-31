@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.seasar.wicket.injection.fieldfilters.AnnotationFieldFilter;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponent;
 
 /**
  * 指定されたフィールドについて，それがインジェクション対象かどうかを判断し，
