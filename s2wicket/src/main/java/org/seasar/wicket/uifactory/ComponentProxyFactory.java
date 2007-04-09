@@ -27,19 +27,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import net.sf.cglib.core.GeneratorStrategy;
+import net.sf.cglib.core.NamingPolicy;
+import net.sf.cglib.core.Predicate;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import ognl.MethodFailedException;
-import ognl.Ognl;
 import ognl.OgnlException;
 
 import org.apache.commons.lang.StringUtils;
 import org.seasar.wicket.utils.Gadget;
 import org.seasar.wicket.utils.OgnlUtils;
 
+import wicket.Application;
 import wicket.Component;
 import wicket.Page;
+import wicket.Session;
 import wicket.model.IModel;
 
 /**
@@ -49,6 +53,10 @@ import wicket.model.IModel;
  */
 class ComponentProxyFactory {
 	
+	public ComponentProxyFactory() {
+		super();
+	}
+
 	/**
 	 * プロキシオブジェクトを生成して返します。
 	 * @param fieldName 処理対象のフィールドの名前
@@ -58,10 +66,10 @@ class ComponentProxyFactory {
 	 * @param model モデルオブジェクト
 	 * @return プロキシオブジェクト
 	 */
-	static Component create(String fieldName, Class fieldType, Component target, String wicketId, Object model) {
+	static Component create(String fieldName, Class fieldType, Component target, String wicketId, Object model, String parentId) {
 		// インターセプタを生成
 		WicketComponentMethodInterceptor interceptor =
-			new WicketComponentMethodInterceptor(fieldName, fieldType, target, wicketId, model);
+			new WicketComponentMethodInterceptor(fieldName, fieldType, target, wicketId, model, parentId);
 		// エンハンサを生成
 		Enhancer enhancer = new Enhancer();
 		// 実装するインタフェースをセット
@@ -71,28 +79,46 @@ class ComponentProxyFactory {
 		enhancer.setSuperclass(fieldType);
 		// インターセプタをセット
 		enhancer.setCallback(interceptor);
-		// プロキシオブジェクトを生成して返却
-		if (fieldType.isMemberClass()) { // 対象の型がインナークラスだった場合
-			if (model != null) {
-				if (model instanceof IModel) {
-					return (Component)enhancer.create(new Class[] {target.getClass(), String.class, IModel.class}, new Object[] {target, wicketId, model});
+		// もしApplicationオブジェクトがアタッチされていない場合は，ダミーのApplicationオブジェクトをアタッチする
+		boolean dummyAttached = false;
+System.out.println("Application.isAttached() = " + Application.isAttached());
+		if (!Application.isAttached()) {
+			Application dummyApplication = new DummyApplication();
+			Application.set(dummyApplication);
+			Session.set(new DummySession(dummyApplication));
+			dummyAttached = true;
+		}
+System.out.println("(2) Application.isAttached() = " + Application.isAttached());
+		try {
+			// プロキシオブジェクトを生成して返却
+			if (fieldType.isMemberClass()) { // 対象の型がインナークラスだった場合
+				if (model != null) {
+					if (model instanceof IModel) {
+						return (Component)enhancer.create(new Class[] {target.getClass(), String.class, IModel.class}, new Object[] {target, wicketId, model});
+					} else {
+						Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 3, model.getClass());
+						return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {target, wicketId, model});
+					}
 				} else {
-					Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 3, model.getClass());
-					return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {target, wicketId, model});
+					return (Component)enhancer.create(new Class[] {target.getClass(), String.class}, new Object[] {target, wicketId});
 				}
-			} else {
-				return (Component)enhancer.create(new Class[] {target.getClass(), String.class}, new Object[] {target, wicketId});
+			} else { // 対象の型がトップレベルクラスだった場合
+				if (model != null) {
+					if (model instanceof IModel) {
+						return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
+					} else {
+						Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 2, model.getClass());
+						return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {wicketId, model});
+					}
+				} else {
+					return (Component)enhancer.create(new Class[] {String.class}, new Object[] {wicketId});
+				}
 			}
-		} else { // 対象の型がトップレベルクラスだった場合
-			if (model != null) {
-				if (model instanceof IModel) {
-					return (Component)enhancer.create(new Class[] {String.class, IModel.class}, new Object[] {wicketId, model});
-				} else {
-					Constructor constructor = Gadget.getConstructorMatchLastArgType(fieldType, 2, model.getClass());
-					return (Component)enhancer.create(constructor.getParameterTypes(), new Object[] {wicketId, model});
-				}
-			} else {
-				return (Component)enhancer.create(new Class[] {String.class}, new Object[] {wicketId});
+		} finally {
+			// ダミーのApplicationオブジェクトがアタッチされていたら解除
+			if (dummyAttached) {
+				Session.unset();
+				Application.unset();
 			}
 		}
 	}
@@ -118,6 +144,8 @@ class ComponentProxyFactory {
 		/** モデルオブジェクト */
 		private Object model;
 		
+		private String parentId;
+		
 		/**
 		 * このオブジェクトが生成されるときに呼び出されます。
 		 * @param fieldName 処理対象のフィールドの名前
@@ -126,13 +154,15 @@ class ComponentProxyFactory {
 		 * @param wicketId wicket:id
 		 * @param model モデルオブジェクト
 		 */
-		private WicketComponentMethodInterceptor(String fieldName, Class fieldType, Component target, String wicketId, Object model) {
+		private WicketComponentMethodInterceptor(
+				String fieldName, Class fieldType, Component target, String wicketId, Object model, String parentId) {
 			super();
 			this.fieldName = fieldName;
 			this.fieldTypeName = fieldType.getName();
 			this.target = target;
 			this.wicketId = wicketId;
 			this.model = model;
+			this.parentId = parentId;
 		}
 
 		/**
@@ -291,7 +321,7 @@ class ComponentProxyFactory {
 		 * @throws ObjectStreamException 何らかの例外が発生したとき
 		 */
 		public Object writeReplace() throws ObjectStreamException {
-			return new SerializedProxy(fieldName, fieldTypeName, target, wicketId, model);
+			return new SerializedProxy(fieldName, fieldTypeName, target, wicketId, model, parentId);
 		}
 		
 		/**
@@ -323,6 +353,8 @@ class ComponentProxyFactory {
 		
 		/** モデルオブジェクト */
 		private Object model;
+		
+		private String parentId;
 
 		/**
 		 * このオブジェクトが生成されるときに呼び出されます。
@@ -332,13 +364,15 @@ class ComponentProxyFactory {
 		 * @param wicketId wicket:id
 		 * @param model モデルオブジェクト
 		 */
-		private SerializedProxy(String fieldName, String fieldTypeName, Component target, String wicketId, Object model) {
+		private SerializedProxy(
+				String fieldName, String fieldTypeName, Component target, String wicketId, Object model, String parentId) {
 			super();
 			this.fieldName = fieldName;
 			this.fieldTypeName = fieldTypeName;
 			this.target = target;
 			this.wicketId = wicketId;
 			this.model = model;
+			this.parentId = parentId;
 		}
 		
 		/**
@@ -348,10 +382,12 @@ class ComponentProxyFactory {
 		 * @throws ObjectStreamException 何らかの例外が発生したとき
 		 */
 		private Object readResolve() throws ObjectStreamException {
+			System.out.println("ComponentProxyFactory:readResolve() fieldName=" + fieldName + " fieldTypeName=" + fieldTypeName
+					+ " target=" + target + " wicketId=" + wicketId + " model=" + model + " parentId=" + parentId);
 			try {
 				Class fieldType = Class.forName(fieldTypeName);
-				Object proxy = ComponentProxyFactory.create(fieldName, fieldType, target, wicketId, model);
-				return proxy;
+				Component component = ComponentProxyFactory.create(fieldName, fieldType, target, wicketId, model, parentId);
+				return component;
 			} catch(ClassNotFoundException e) {
 				throw new IllegalStateException("Field type [" + fieldTypeName + "] class not found.", e);
 			}

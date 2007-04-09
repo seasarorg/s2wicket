@@ -28,6 +28,7 @@ import wicket.MarkupContainer;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 
@@ -69,7 +70,7 @@ class ComponentBuilder {
 			result = createComponentByCreateMethod(createMethod, target, field);
 		} else {
 			// フィールドの型を使ってインスタンスを生成
-			result = createComponentByFieldType(field, target, modelMap);
+			result = createComponentByFieldType(field, target, modelMap, parent.getId());
 		}
 		// 親コンテナに追加
 		parent.add(result);
@@ -82,9 +83,10 @@ class ComponentBuilder {
 	 * @param field 処理対象のフィールドオブジェクト
 	 * @param target 処理対象のフィールドを持つコンポーネントオブジェクト
 	 * @param modelMap モデルオブジェクトが格納されたコレクション
+	 * @param parent 親のコンテナコンポーネント
 	 * @return 生成されたコンポーネントオブジェクト
 	 */
-	private Component createComponentByFieldType(Field field, Component target, Map<Field, Object> modelMap) {
+	private Component createComponentByFieldType(Field field, Component target, Map<Field, Object> modelMap, String parentId) {
 		// 生成したコンポーネントオブジェクトの変数
 		Component result;
 		// モデルを取得
@@ -109,7 +111,10 @@ class ComponentBuilder {
 		// フィールドの型を取得
 		Class<?> clazz = field.getType();
 		// 動的プロキシを生成
-		result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, model);
+		result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, model, parentId);
+		
+		System.out.println("resul = " + result.getClass().getName());
+		
 		// 親のコンポーネントのモデルとバインドする必要性をチェック
 		if (parentModel != null) {
 			// プロパティ名を取得
@@ -132,15 +137,27 @@ class ComponentBuilder {
 	private Object createModel(Field field, Component target, Map<Field, Object> modelMap) throws NecessaryToBindException {
 		// WicketComponentアノテーションを取得
 		WicketComponent targetAnnotation = field.getAnnotation(WicketComponent.class);
-		// モデル名属性を取得
-		String modelName = targetAnnotation.modelName();
-		// モデル名が指定されていたかチェック
-		if (StringUtils.isNotEmpty(modelName)) {
-			// モデル名が指定された場合の処理をコール
-			return createModelForSpecifiedModelName(field, modelMap, modelName, target);
+		// どのモデルオブジェクトを使用するかの属性を取得
+		UseModel useModel = targetAnnotation.useModel();
+		// どのモデルオブジェクトを使用するかにより処理分岐
+		if (useModel.equals(UseModel.FIELD)) { // フィールドに定義されたモデルを使用
+			// モデル名属性を取得
+			String modelName = targetAnnotation.modelName();
+			// モデル名が指定されていたかチェック
+			if (StringUtils.isNotEmpty(modelName)) {
+				// モデル名が指定された場合の処理をコール
+				return createModelForSpecifiedModelName(field, modelMap, modelName, target);
+			} else {
+				// モデル名が指定されなかった場合の処理をコール
+				return createModelForNotSpecifiedModelName(field, target, modelMap);
+			}
+		} else if (useModel.equals(UseModel.LOADABLE_DETACHABLE)) { // 必要なときに読み込み，不必要になったら取り除くモデルを使用
+			// LoadableDetachableModelの動的プロキシを生成
+			LoadableDetachableModel loadableDetachableModel = LoadableDetachableModelProxyFactory.create(field.getName(), target);
+			// 結果を返却
+			return loadableDetachableModel;
 		} else {
-			// モデル名が指定されなかった場合の処理をコール
-			return createModelForNotSpecifiedModelName(field, target, modelMap);
+			throw new IllegalStateException("Unknown UseModel value.");
 		}
 	}
 	

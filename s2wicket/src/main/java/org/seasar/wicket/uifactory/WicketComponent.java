@@ -175,6 +175,14 @@ public @interface WicketComponent {
 	public String parent() default "";
 	
 	/**
+	 * どのモデルオブジェクトを使用するかを指定するための属性（任意）です。
+	 * この属性を省略した場合は，{@link UseModel#FIELD}が指定されたことになり，
+	 * フィールドに定義されたモデルをコンポーネントに関連付けます。
+	 * @return どのモデルオブジェクトを使用するか
+	 */
+	public UseModel useModel() default UseModel.FIELD;
+	
+	/**
 	 * 生成するコンポーネントと関連付けを行うモデルオブジェクトのフィールド名を指定するための属性（任意）です。
 	 * 省略時の動作は，{@link WicketComponent}アノテーションのJavadocコメントをご覧ください。
 	 * @return 関連付けるモデルのフィールド名
