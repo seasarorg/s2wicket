@@ -112,9 +112,6 @@ class ComponentBuilder {
 		Class<?> clazz = field.getType();
 		// 動的プロキシを生成
 		result = ComponentProxyFactory.create(field.getName(), clazz, target, wicketId, model, parentId);
-		
-		System.out.println("resul = " + result.getClass().getName());
-		
 		// 親のコンポーネントのモデルとバインドする必要性をチェック
 		if (parentModel != null) {
 			// プロパティ名を取得

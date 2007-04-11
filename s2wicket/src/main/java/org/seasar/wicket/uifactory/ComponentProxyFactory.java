@@ -44,7 +44,9 @@ import wicket.Application;
 import wicket.Component;
 import wicket.Page;
 import wicket.Session;
+import wicket.markup.html.list.ListItem;
 import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * コンポーネントに対する動的プロキシを生成する処理を持つファクトリクラスです。
@@ -81,14 +83,12 @@ class ComponentProxyFactory {
 		enhancer.setCallback(interceptor);
 		// もしApplicationオブジェクトがアタッチされていない場合は，ダミーのApplicationオブジェクトをアタッチする
 		boolean dummyAttached = false;
-System.out.println("Application.isAttached() = " + Application.isAttached());
 		if (!Application.isAttached()) {
 			Application dummyApplication = new DummyApplication();
 			Application.set(dummyApplication);
 			Session.set(new DummySession(dummyApplication));
 			dummyAttached = true;
 		}
-System.out.println("(2) Application.isAttached() = " + Application.isAttached());
 		try {
 			// プロキシオブジェクトを生成して返却
 			if (fieldType.isMemberClass()) { // 対象の型がインナークラスだった場合
@@ -215,66 +215,102 @@ System.out.println("(2) Application.isAttached() = " + Application.isAttached())
 					// 結果を返却
 					return result;
 				} else {
-					// フィールドオブジェクトを取得
-					Field field = target.getClass().getDeclaredField(fieldName);
-					// WicketComponentアノテーションを取得
-					WicketComponent wicketComponentAnnotation = field.getAnnotation(WicketComponent.class);
-					// 呼び出されたメソッド名に一致するWicketActionアノテーションを取得
-					WicketAction wicketAction = getWicketActionAnnotation(wicketComponentAnnotation, method.getName());
-					// 該当するWicketActionアノテーションが存在したかチェック
-					if (wicketAction != null) {
-						// 実行する式を取得
-						String exp = wicketAction.exp();
-						// 式が指定されたかチェック
-						if (StringUtils.isNotEmpty(exp)) {
-							try {
-								// 式を評価し，評価結果を取得
-								OgnlUtils.evaluate(exp, target);
-							} catch(MethodFailedException e) {
-								// handleExceptionメソッドを取得
-								Method handleExceptionMethod = getMethod(target.getClass(), "handleException", new Class[] {Object.class, String.class, Exception.class});
-								// 取得できたかチェック
-								if (handleExceptionMethod != null) {
-									// handleExceptionメソッド呼び出し
-									handleExceptionMethod.invoke(target, new Object[] {target, method.getName(), e.getReason()});
-									// 結果を返却
-									return null;
-								} else {
-									// 原因となった例外を取得してスロー
-									throw e.getReason();
-								}
-							} catch(OgnlException e) {
-								throw new WicketUIFactoryException(target, "Evaluation of OGNL expression failed. exp=[" + exp + "]");
+					// populateItemメソッドかチェック
+					if (Gadget.isPopulateItem(method)) {
+						ListItem listItem = (ListItem)args[0];
+						Object modelObject = listItem.getModelObject();
+						// ItemPopulatorクラスが定義されているかチェック
+						String itemPopulatorClassName =
+							target.getClass().getName() + "$" + StringUtils.capitalize(fieldName) + "ItemPopulator";
+						Class<?> itemPopulatorClass = Class.forName(itemPopulatorClassName);
+						Field[] fields = itemPopulatorClass.getDeclaredFields();
+						for (Field field : fields) {
+							field.setAccessible(true);
+							if (field.isAnnotationPresent(WicketPopulateItem.class)) {
+								Class<? extends Object> modelClass = modelObject.getClass();
+								Method getter = modelClass.getMethod("get" + StringUtils.capitalize(field.getName()), new Class[0]);
+								Object propertyValue = getter.invoke(modelObject, new Object[0]);
+								Class<?> fieldType = field.getType();
+								Constructor<?> constructor = fieldType.getConstructor(new Class[] {String.class, IModel.class});
+								Component comp = (Component)constructor.newInstance(new Object[] {field.getName(), new Model((Serializable)propertyValue)});
+								listItem.add(comp);
 							}
 						}
-						// responsePage属性値を取得
-						String responsePage = wicketAction.responsePage();
-						// responsePage属性が指定されたかチェック
-						if (StringUtils.isNotEmpty(responsePage)) {
-							// ページクラスを取得
-							Class<?> pageClazz;
-							try {
-								pageClazz = Class.forName(responsePage);
-							} catch(ClassNotFoundException e) {
-								// 処理対象のコンポーネントが所属するページオブジェクトのクラスのパッケージからページクラスを取得
-								Page page = target.getPage();
-								Package targetPackage = page.getClass().getPackage();
-								pageClazz = Class.forName(targetPackage.getName() + "." + responsePage);
+						// 結果を返却
+						return null;
+					} else {
+						// フィールドオブジェクトを取得
+						Field field = null;
+						try {
+							field = target.getClass().getDeclaredField(fieldName);
+						} catch(NoSuchFieldException e) {
+//							e.printStackTrace();
+//							System.out.println("methodName:" + methodName + " fieldName:" + fieldName + " fieldType:" + fieldTypeName + " target.super=" + target.getClass().getSuperclass().getName());
+//							for (Field f : target.getClass().getSuperclass().getDeclaredFields()) {
+//								System.out.println("  f : " + f.getName());
+//							}
+//							throw e;
+							field = target.getClass().getSuperclass().getDeclaredField(fieldName);
+						}
+						// WicketComponentアノテーションを取得
+						WicketComponent wicketComponentAnnotation = field.getAnnotation(WicketComponent.class);
+						// 呼び出されたメソッド名に一致するWicketActionアノテーションを取得
+						WicketAction wicketAction = getWicketActionAnnotation(wicketComponentAnnotation, method.getName());
+						// 該当するWicketActionアノテーションが存在したかチェック
+						if (wicketAction != null) {
+							// 実行する式を取得
+							String exp = wicketAction.exp();
+							// 式が指定されたかチェック
+							if (StringUtils.isNotEmpty(exp)) {
+								try {
+									// 式を評価し，評価結果を取得
+									OgnlUtils.evaluate(exp, target);
+								} catch(MethodFailedException e) {
+									// handleExceptionメソッドを取得
+									Method handleExceptionMethod = getMethod(target.getClass(), "handleException", new Class[] {Object.class, String.class, Exception.class});
+									// 取得できたかチェック
+									if (handleExceptionMethod != null) {
+										// handleExceptionメソッド呼び出し
+										handleExceptionMethod.invoke(target, new Object[] {target, method.getName(), e.getReason()});
+										// 結果を返却
+										return null;
+									} else {
+										// 原因となった例外を取得してスロー
+										throw e.getReason();
+									}
+								} catch(OgnlException e) {
+									throw new WicketUIFactoryException(target, "Evaluation of OGNL expression failed. exp=[" + exp + "]");
+								}
 							}
-							// レスポンスページをセット
-							target.setResponsePage(pageClazz);
+							// responsePage属性値を取得
+							String responsePage = wicketAction.responsePage();
+							// responsePage属性が指定されたかチェック
+							if (StringUtils.isNotEmpty(responsePage)) {
+								// ページクラスを取得
+								Class<?> pageClazz;
+								try {
+									pageClazz = Class.forName(responsePage);
+								} catch(ClassNotFoundException e) {
+									// 処理対象のコンポーネントが所属するページオブジェクトのクラスのパッケージからページクラスを取得
+									Page page = target.getPage();
+									Package targetPackage = page.getClass().getPackage();
+									pageClazz = Class.forName(targetPackage.getName() + "." + responsePage);
+								}
+								// レスポンスページをセット
+								target.setResponsePage(pageClazz);
+								// 結果を返却
+								return null;
+							}
+						}
+						// メソッドがprotectedでvoidかチェック
+						if (Modifier.isProtected(method.getModifiers()) && method.getReturnType().equals(Void.TYPE)) {
+							// イベントハンドラメソッドもなく，WicketActionアノテーションも指定されなかったので，
+							// 普通にメソッドコール
+							return proxy.invokeSuper(obj, args);
+						} else {
 							// 結果を返却
 							return null;
 						}
-					}
-					// メソッドがprotectedでvoidかチェック
-					if (Modifier.isProtected(method.getModifiers()) && method.getReturnType().equals(Void.TYPE)) {
-						// イベントハンドラメソッドもなく，WicketActionアノテーションも指定されなかったので，
-						// 普通にメソッドコール
-						return proxy.invokeSuper(obj, args);
-					} else {
-						// 結果を返却
-						return null;
 					}
 				}
 			} else {
@@ -321,7 +357,8 @@ System.out.println("(2) Application.isAttached() = " + Application.isAttached())
 		 * @throws ObjectStreamException 何らかの例外が発生したとき
 		 */
 		public Object writeReplace() throws ObjectStreamException {
-			return new SerializedProxy(fieldName, fieldTypeName, target, wicketId, model, parentId);
+//			return new SerializedProxy(fieldName, fieldTypeName, target, wicketId, model, parentId);
+			return this;
 		}
 		
 		/**
