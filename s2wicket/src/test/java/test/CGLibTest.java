@@ -11,7 +11,9 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -52,31 +54,31 @@ public class CGLibTest extends TestCase {
 	}
 	
 	public void testDeserialize() throws Exception {
-		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(Component.class);
-		enhancer.setInterfaces(new Class[] {Serializable.class, WriteReplaceHolder.class});
-		enhancer.setCallback(new ComponentMethodInterceptor());
-		enhancer.setNamingPolicy(new NamingPolicy() {
-			public String getClassName(String prefix, String source, Object key, Predicate names) {
-				String className = "test.Hoge$" + source.substring(source.lastIndexOf('.') + 1);
-				String k = key.toString();
-				int i = k.indexOf(',');
-				if (i != -1) { 
-					className += "$" + k.substring(k.indexOf('$') + 1, k.indexOf(','));
-				} else {
-					className += "$" + k.substring(k.indexOf('$') + 1);
-				}
-				System.out.println("className = [" + className + "]");
-				return className;
-			}
-		});
-		Component proxy = (Component)enhancer.create();
-		//
-		FileInputStream fis = new FileInputStream("./test.ser");
-		ObjectInputStream in = new ObjectInputStream(fis);
-		Object obj = in.readObject();
-		in.close();
-		((Component)obj).doClick();
+//		Enhancer enhancer = new Enhancer();
+//		enhancer.setSuperclass(Component.class);
+//		enhancer.setInterfaces(new Class[] {Serializable.class, WriteReplaceHolder.class});
+//		enhancer.setCallback(new ComponentMethodInterceptor());
+//		enhancer.setNamingPolicy(new NamingPolicy() {
+//			public String getClassName(String prefix, String source, Object key, Predicate names) {
+//				String className = "test.Hoge$" + source.substring(source.lastIndexOf('.') + 1);
+//				String k = key.toString();
+//				int i = k.indexOf(',');
+//				if (i != -1) { 
+//					className += "$" + k.substring(k.indexOf('$') + 1, k.indexOf(','));
+//				} else {
+//					className += "$" + k.substring(k.indexOf('$') + 1);
+//				}
+//				System.out.println("className = [" + className + "]");
+//				return className;
+//			}
+//		});
+//		Component proxy = (Component)enhancer.create();
+//		//
+//		FileInputStream fis = new FileInputStream("./test.ser");
+//		ObjectInputStream in = new ObjectInputStream(fis);
+//		Object obj = in.readObject();
+//		in.close();
+//		((Component)obj).doClick();
 	}
 	
 	private static class ComponentMethodInterceptor
@@ -92,7 +94,7 @@ public class CGLibTest extends TestCase {
 				return null;
 			} else if (methodName.equals("writeReplace")) {
 				System.out.println("ComponentMethodInterceptor#intercept()#writeReplace()");
-				return writeReplace0(obj);
+				return writeReplace0(proxy);
 			} else {
 				return proxy.invokeSuper(obj, args);
 			}
@@ -110,7 +112,12 @@ public class CGLibTest extends TestCase {
 					}
 					int modifiers = field.getModifiers();
 					if (!Modifier.isTransient(modifiers) && !Modifier.isStatic(modifiers)) {
-						fieldMap.put(field.getName(), field.get(obj));
+						Object fieldValue = field.get(obj);
+						fieldMap.put(field.getName(), fieldValue);
+						System.out.println("Field: " + field.getName() + " Value: " + fieldValue.getClass().getName());
+						for (Field f : fieldValue.getClass().getDeclaredFields()) {
+							System.out.println("  f: " + f.getName());
+						}
 					}
 				}
 				return new SerializedProxy(clazz, fieldMap);
@@ -132,7 +139,8 @@ public class CGLibTest extends TestCase {
 			this.fields = fields;
 		}
 		
-		public Object readResolve() throws ObjectStreamException {
+		private Object readResolve() throws ObjectStreamException {
+			System.out.println("readResolve called.");
 			try {
 				Enhancer enhancer = new Enhancer();
 				enhancer.setSuperclass(superClazz);
@@ -170,6 +178,12 @@ public class CGLibTest extends TestCase {
 	}
 	
 	public static abstract class Component {
+		
+		private List<String> attrList;
+		
+		public Component() {
+			attrList = new ArrayList<String>();
+		}
 		
 		public abstract void doClick();
 		
