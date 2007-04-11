@@ -22,6 +22,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.list.ListItem;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -91,6 +92,10 @@ public class Gadget {
 	
 	public static boolean isGetMethodInterceptor(Method method) {
 		return isMethod(method, MethodInterceptor.class, new Class[0], "getMethodInterceptor");
+	}
+	
+	public static boolean isPopulateItem(Method method) {
+		return isMethod(method, void.class, new Class[] {ListItem.class}, "populateItem");
 	}
 
 	/**
