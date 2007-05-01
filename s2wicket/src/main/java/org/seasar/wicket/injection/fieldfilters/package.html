@@ -1,0 +1,46 @@
+<html>
+<body>
+
+<p>インジェクション対象のフィールドかどうかを判断するフィールドフィルタの実装クラスを持つパッケージです。</p>
+
+<p>このパッケージには，S2Wicketがインジェクション対象とするフィールドを判断するロジックを持つ，
+{@link org.seasar.wicket.injection.FieldFilter}インタフェースの実装クラスが配置されています。
+このパッケージにある標準フィールドフィルタによって，S2Wicketが標準で提供する規約に従って，
+インジェクションを行うことができます。</p>
+
+<p>フィールドフィルタは，S2Wicketに登録することで適用されます。フィールドフィルタの登録は，２つの方法があります。<p>
+
+<ul>
+<li>SeasarComponentInjectionListenerクラスのコンストラクタの引数で明示的に指定する。</li>
+<li>Seasarコンテナに自作したフィールドフィルタを登録する。</li>
+</ul>
+  
+<p>SeasarComponentInjectionListenerクラスのコンストラクタには，引数にList&lt;FieldFilter&gt;コレクションを受け取るものが２つあります。
+適用したいフィールドフィルタのインスタンスを生成し，それらをListコレクションに追加して，
+SeasarComponentInjectionListenerクラスのコンストラクタに明示的に渡すことで，コレクションに含まれるフィールドフィルタが
+使用されるようになります。この場合，インジェクション対象とする判断は，Listコレクション内でのフィールドフィルタの順番となります。</p>
+  
+<p>SeasarComponentInjectionListenerクラスのコンストラクタには，引数にList&lt;FieldFilter&gt;コレクションを受け取らないものもあります。
+これを使用した場合，@SeasarComponentアノテーションが付与されたフィールドをインジェクション対象とする
+AnnotationFieldFilterクラスが暗黙的に適用されます。さらに，追加で適用したいフィールドフィルタをSeasarコンテナにコンポーネント登録
+しておくことで，S2Wicketは自動的にそれをルックアップし，暗黙的に適用します。例えば，
+{@link org.seasar.wicket.injection.fieldfilters.FieldNamePatternFieldFilter}フィールドフィルタを登録したい場合は，</p>
+
+<pre>  
+&lt;components&gt;
+    &lt;component name="myFilter"
+            class="org.seasar.wicket.injection.fieldfilters.FieldNamePatternFieldFilter"&gt;
+        &lt;property name="packageNamePatternRegex"&gt;"..."&lt;/property&gt;
+        &lt;property name="classNamePatternRegex"&gt;"..."&lt;/property&gt;
+        &lt;property name="fieldNamePatternRegex"&gt;"..."&lt;/property&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+
+<p>というようにdiconファイルに記述するなどしてSeasarコンテナからルックアップ可能なようにしておけば，自動的に適用されます。
+この場合，インジェクション対象とする判断は，Seasarコンテナからフィールドフィルタをルックアップした結果の順序(
+S2Container#findComponents()メソッドの結果得られる配列の順序)に依存します。ただし，自動的に適用される
+AnnotationFieldFilterクラスに関しては，必ず最後の評価順となります。</p>
+
+</body>
+</html>
