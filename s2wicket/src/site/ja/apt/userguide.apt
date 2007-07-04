@@ -349,7 +349,7 @@ filter.setFieldNamePatternRegex("フィールド名の正規表現");
   
 +------------------------------------------------------+
 <component name="filter1"
-        class="org.seasar.wicket.injection.filters.FieldNamePatternFieldFilter">
+        class="org.seasar.wicket.injection.fieldfilters.FieldNamePatternFieldFilter">
     <property name="packageNamePatternRegex">"パッケージ名の正規表現"</property>
     <property name="classNamePatternRegex">"クラス名の正規表現"</property>
     <property name="fieldNamePatternRegex">"フィールド名の正規表現"</property>
