@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.seasar.framework.container.S2Container;
+import org.seasar.wicket.injection.fieldfilters.AnnotationFieldFilter;
 
 import wicket.Component;
 import wicket.MarkupContainer;

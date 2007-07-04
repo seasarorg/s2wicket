@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.wicket.injection.FieldFilter;
 
 /**
@@ -234,8 +235,8 @@ public class FieldNamePatternFieldFilter implements FieldFilter {
 		if (fieldNamePattern == null)
 			throw new IllegalStateException("fieldNamePatternRegex not set.");
 		Class<?> clazz = field.getDeclaringClass();
-		Package pkg = clazz.getPackage();
-		Matcher matcher = packageNamePattern.matcher(pkg.getName());
+		String packageName = ClassUtil.getPackageName(clazz);
+		Matcher matcher = packageNamePattern.matcher(packageName);
 		if (matcher.matches()) {
 			matcher = classNamePattern.matcher(clazz.getSimpleName());
 			if (matcher.matches()) {

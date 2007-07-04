@@ -230,7 +230,7 @@ class ProxyFactory {
 	/**
 	 * writeReplace()メソッドを持つことを規定するインタフェースです。
 	 */
-	private static interface WriteReplaceHolder {
+	public static interface WriteReplaceHolder {
 		
 		/**
 		 * オブジェクトがシリアライズされる際に呼び出されます。
@@ -245,7 +245,7 @@ class ProxyFactory {
 	/**
 	 * メソッドインターセプタを返す処理を規定したインタフェースです。
 	 */
-	static interface MethodInterceptorHolder {
+	public static interface MethodInterceptorHolder {
 
 		/**
 		 * メソッドインターセプタを返します。

@@ -29,7 +29,6 @@ public class AllTests {
 		suite.addTestSuite(ComponentResolverTest.class);
 		suite.addTestSuite(SupportedFieldTest.class);
 		suite.addTestSuite(SeasarComponentInjectionListenerTest.class);
-		suite.addTestSuite(AnnotationFieldFilterTest.class);
 		suite.addTestSuite(GadgetTest.class);
 		suite.addTestSuite(InjectionProcessorTest.class);
 		suite.addTestSuite(FieldValueProducerTest.class);
