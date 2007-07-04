@@ -223,7 +223,7 @@ public class InputPage extends WebPage {
 filter.setPackageNamePatternRegex(&quot;パッケージ名の正規表現&quot;);
 filter.setClassNamePatternRegex(&quot;クラス名の正規表現&quot;);
 filter.setFieldNamePatternRegex(&quot;フィールド名の正規表現&quot;);</pre></div></div><div class="section"><h5>Seasarコンテナに登録する場合</h5><p>FieldNamePatternFieldFilterクラスのインスタンスをSeasarコンテナに登録する場合は， diconファイルに以下のように記述します。</p><div class="source"><pre>&lt;component name=&quot;filter1&quot;
-        class=&quot;org.seasar.wicket.injection.filters.FieldNamePatternFieldFilter&quot;&gt;
+        class=&quot;org.seasar.wicket.injection.fieldfilters.FieldNamePatternFieldFilter&quot;&gt;
     &lt;property name=&quot;packageNamePatternRegex&quot;&gt;&quot;パッケージ名の正規表現&quot;&lt;/property&gt;
     &lt;property name=&quot;classNamePatternRegex&quot;&gt;&quot;クラス名の正規表現&quot;&lt;/property&gt;
     &lt;property name=&quot;fieldNamePatternRegex&quot;&gt;&quot;フィールド名の正規表現&quot;&lt;/property&gt;
