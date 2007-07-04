@@ -1,4 +1,3 @@
-'/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/AnnotationFieldFilter.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/ComponentResolver.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/FieldFilter.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/fieldfilters/AnnotationFieldFilter.java'
@@ -11,6 +10,5 @@
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/ProxyFactory.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/S2ContainerHolder.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/S2ContainerLocator.java'
-'/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/SeasarComponent.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/SeasarComponentInjectionListener.java'
 '/Users/yoichiro/Documents/seasar/s2wicket/src/main/java/org/seasar/wicket/injection/SupportedField.java'
