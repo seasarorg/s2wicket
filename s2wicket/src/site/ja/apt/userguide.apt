@@ -83,7 +83,7 @@ Yoichiro Tanaka
         <dependency>
             <groupId>org.seasar.wicket</groupId>
             <artifactId>s2wicket</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.1</version>
         </dependency>
     </dependencies>
     ...
@@ -92,8 +92,8 @@ Yoichiro Tanaka
 
   pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
   利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
-  Eclipseプロジェクトのクラスパスに，s2wicket-1.1.1.jarファイルやその他必要なライブラリが追加されます。
-  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.1.1.jar
+  Eclipseプロジェクトのクラスパスに，s2wicket-1.2.1.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.2.1.jar
   ファイルや必要なライブラリが含まれるようになります。
   
 ** 配布パッケージに含まれるjarファイルを利用する。
@@ -116,7 +116,7 @@ S2Wicket
   +- LICENSE.txt
   +- pom.xml
   +- build.xml
-  +- s2wicket-1.1.1.jar
+  +- s2wicket-1.2.1.jar
 +------------------------------------------------------+
 
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
@@ -132,7 +132,7 @@ s2wicket
   +- lib
       +- cglib-nodep-2.1_3.jar
       +- commons-lang-2.2.jar
-  +- s2wicket-1.1.1.jar
+  +- s2wicket-1.2.1.jar
 +------------------------------------------------------+
 
   S2Wicketのアーカイブに含まれる上記３つのjarファイルを，あなたのWebアプリケーションにコピーして配置します。
@@ -145,7 +145,7 @@ s2wicket
           +- ...
           +- cglib-nodep-2.1_3.jar
           +- commons-lang-2.2.jar
-          +- s2wicket-1.1.1.jar
+          +- s2wicket-1.2.1.jar
 +------------------------------------------------------+
 
   S2Wicketは，wicketとseasar2が前提となりますので，/WEB-INF/libディレクトリ内には，
@@ -160,7 +160,7 @@ s2wicket
   S2Wicketの配布パッケージには，ソースコードが含まれています。さらにmaven2のpom.xmlファイルも提供しています。
   あなたはmaven2を使用して，配布パッケージに含まれるソースコードからS2Wicketのjarファイルをビルドすることができます。
   
-  S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.1.1.jarファイルをビルドし，
+  S2Wicketのアーカイブに含まれるソースファイルを使用してs2wicket-1.2.1.jarファイルをビルドし，
   maven2のローカルリポジトリにインストールすることができます。インストールされれば，あなたのWebアプリケーション
   から，maven2を使用して必要なライブラリを自動的に組み込むことが可能となります。
 
@@ -178,15 +178,15 @@ S2Wicket
   +- LICENSE.txt
   +- pom.xml
   +- build.xml
-  +- s2wicket-1.1.1.jar
+  +- s2wicket-1.2.1.jar
 +------------------------------------------------------+
 
   このような構成になっていない場合は，ダウンロードしたアーカイブが破損している可能性があります。
   もう一度ダウンロードし直してください。
 
-*** 2. s2wicket-1.1.1.jarをビルド＆インストールする
+*** 2. s2wicket-1.2.1.jarをビルド＆インストールする
 
-  s2wicket-1.1.1.jarをビルドし，maven2のローカルリポジトリにインストールします。
+  s2wicket-1.2.1.jarをビルドし，maven2のローカルリポジトリにインストールします。
   コマンドプロンプトやシェルを開き，以下のコマンドを実行します。
 
 +------------------------------------------------------+
@@ -209,7 +209,7 @@ S2Wicket
         <dependency>
             <groupId>org.seasar.wicket</groupId>
             <artifactId>s2wicket</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.1</version>
         </dependency>
     </dependencies>
     ...
@@ -220,8 +220,8 @@ S2Wicket
 
   pom.xmlファイルにS2Wicketへの依存関係が記述されたことにより，maven2の各種ゴールでS2Wicketが
   利用されるようになります。例えば，「mvn eclipse:eclipse」を実行することにより，あなたのWebアプリケーションの
-  Eclipseプロジェクトのクラスパスに，s2wicket-1.1.1.jarファイルやその他必要なライブラリが追加されます。
-  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.1.1.jar
+  Eclipseプロジェクトのクラスパスに，s2wicket-1.2.1.jarファイルやその他必要なライブラリが追加されます。
+  また，「mvn package」を行うことにより，warファイルの/WEB-INF/libディレクトリに，s2wicket-1.2.1.jar
   ファイルや必要なライブラリが含まれるようになります。
   
 * 3. {フィールドフィルタ}
@@ -253,7 +253,7 @@ S2Wicket
   Seasarコンテナから型を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
   
 +------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponent;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponent;
 
 public class InputPage extends WebPage {
 
@@ -273,7 +273,7 @@ public class InputPage extends WebPage {
   Seasarコンテナから名前を指定してコンポーネントオブジェクトをルックアップする場合は，以下のように記述します。
 
 +------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponent;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponent;
 
 public class InputPage extends WebPage {
 
@@ -467,7 +467,7 @@ public class ServiceFieldFilter implements FieldFilter {
   引数にWebApplicationオブジェクトのみを指定します。
 
 +------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponentInjectionListener;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponentInjectionListener;
 
 public class OrderApplication extends WebApplication {
 
@@ -502,7 +502,7 @@ public class OrderApplication extends WebApplication {
   WebApplicationオブジェクトとS2Containerオブジェクト，フィールドフィルタのコレクションを引数に取るコンストラクタを使用します。
   
 +------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponentInjectionListener;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponentInjectionListener;
 
 public class OrderApplication extends WebApplication {
 
@@ -548,7 +548,7 @@ public class OrderApplication extends WebApplication {
   フォームのサブミット時にインジェクションされたオブジェクトを使用する場合は，以下のように記述します。
  
 +------------------------------------------------------+
-import org.seasar.wicket.injection.SeasarComponent;
+import org.seasar.wicket.injection.fieldfilters.SeasarComponent;
 
 public class InputPage extends WebPage {
 
