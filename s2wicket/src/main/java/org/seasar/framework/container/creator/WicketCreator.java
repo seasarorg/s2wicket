@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * WicketコンポーネントをSMART DeployするためのCreator。
  * <p>
- * SAWicketを使用する際に、creator.diconファイルに、このクラスを記述することで、SMART Deployに沿った形で
+ * S2Wicketを使用する際に、creator.diconファイルに、このクラスを記述することで、SMART Deployに沿った形で
  * WicketコンポーネントがS2Containerに登録され、Wicketコンポーネントをインスタンス化した時に自動的にDIされます。
  * </p>
  * <p>
@@ -50,7 +50,7 @@ public class WicketCreator extends ComponentCreatorImpl {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     /** S2Containerへクラスを登録する際の接頭辞 */
-    public static final String COMPONENTNAME_PREFIX = "sawicket$";
+    public static final String COMPONENTNAME_PREFIX = "s2wicket$";
 
     public WicketCreator(NamingConvention namingConvention) {
         super(namingConvention);

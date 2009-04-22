@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.karatachi.sawicket;
+package org.seasar.wicket;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
@@ -25,7 +25,7 @@ import org.seasar.framework.container.util.SmartDeployUtil;
 
 /**
  * WicketのComponent初期化時に依存性注入を行うためのコンポーネント初期化リスナ。
- * SAWicketFilter内でWebApplication初期化後に自動的に登録します。
+ * S2WicketFilter内でWebApplication初期化後に自動的に登録します。
  * 
  * @author TAKEUCHI Hideyuki (chimerast)
  */

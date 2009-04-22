@@ -1,4 +1,4 @@
-package org.karatachi.sawicket;
+package org.seasar.wicket;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,7 +32,7 @@ import org.seasar.framework.util.URLUtil;
  * 
  * @author TAKEUCHI Hideyuki (chimerast)
  */
-public class SAWicketDebugBuilder {
+public class S2WicketDebugBuilder {
     private static final String MODE_BEGIN = "<strong><font color='#DC143C'>";
     private static final String MODE_END = "</font></strong>";
 
@@ -43,7 +43,7 @@ public class SAWicketDebugBuilder {
 
     private final S2Container s2container;
 
-    public SAWicketDebugBuilder() {
+    public S2WicketDebugBuilder() {
         this.s2container = SingletonS2ContainerFactory.getContainer();
     }
 

@@ -16,10 +16,10 @@
 package org.seasar.framework.container.assembler;
 
 import org.apache.wicket.proxy.LazyInitProxyFactory;
-import org.karatachi.sawicket.injection.SAProxyTargetLocator;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.wicket.injection.S2ProxyTargetLocator;
 
 /**
  * 実インスタンスの代わりにProxyオブジェクトを生成してコンポーネントに注入するバインディングタイプ定義。
@@ -46,14 +46,14 @@ public class ProxyBindingTypeDef extends BindingTypeMayDef {
             // keyがclassまたはinterfaceの場合は、プロパティのクラスタイプなので
             // そのクラスタイプでproxyの作成
             return LazyInitProxyFactory.createProxy((Class<?>) key,
-                    new SAProxyTargetLocator(key));
+                    new S2ProxyTargetLocator(key));
         } else {
             // keyがコンポーネント名の場合があるのかわからないが、
             // 一度値を取り出してそのクラスタイプでpxoryを作成
             Object value =
                     super.getValue(componentDef, key, component, propertyName);
             return LazyInitProxyFactory.createProxy(value.getClass(),
-                    new SAProxyTargetLocator(key));
+                    new S2ProxyTargetLocator(key));
         }
     }
 }

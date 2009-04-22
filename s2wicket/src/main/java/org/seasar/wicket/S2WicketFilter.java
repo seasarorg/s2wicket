@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.karatachi.sawicket;
+package org.seasar.wicket;
 
 import java.io.IOException;
 import java.net.URL;
@@ -80,12 +80,12 @@ import org.slf4j.LoggerFactory;
  * 
  * <pre>
  * &lt;filter&gt;
- *   &lt;filter-name&gt;sawicketfilter&lt;/filter-name&gt;
- *   &lt;filter-class&gt;org.karatachi.sawicket.SAWicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+ *   &lt;filter-class&gt;org.seasar.wicket.S2WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;!-- Wicketのアプリケーションクラス --&gt;
  *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *     &lt;param-value&gt;org.karatachi.example.ExampleApplication&lt;/param-value&gt;
+ *     &lt;param-value&gt;org.seasar.wicket.example.ExampleApplication&lt;/param-value&gt;
  *   &lt;/init-param&gt;
  *   &lt;init-param&gt;
  *     &lt;!-- Wicketの配備モード（デフォルトはdevelopmentモード） --&gt;
@@ -101,22 +101,22 @@ import org.slf4j.LoggerFactory;
  *   &lt;init-param&gt;
  *     &lt;!-- リロードを行う対象となるクラス（developmentモード時のみ有効） --&gt;
  *     &lt;param-name&gt;reloadingClassPattern&lt;/param-name&gt;
- *     &lt;param-value&gt;org.karatachi.example.*&lt;/param-value&gt;
+ *     &lt;param-value&gt;org.seasar.wicket.example.*&lt;/param-value&gt;
  *   &lt;/init-param&gt;
  * &lt;/filter&gt;
  * &lt;filter-mapping&gt;
- *   &lt;filter-name&gt;sawicketfilter&lt;/filter-name&gt;
+ *   &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
  *   &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
  * &lt;/filter-mapping&gt;
  * </pre>
  * 
  * @author TAKEUCHI Hideyuki (chimerast)
  */
-public class SAWicketFilter extends ReloadingWicketFilter {
+public class S2WicketFilter extends ReloadingWicketFilter {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     // セッションクラスローダのタグ
-    private static final String SESSION_LOADER = "sawicket$loader";
+    private static final String SESSION_LOADER = "s2wicket$loader";
 
     /** Wicketのコンフィグ */
     private String configuration;
@@ -185,7 +185,7 @@ public class SAWicketFilter extends ReloadingWicketFilter {
 
         if (SmartDeployUtil.isHotdeployMode(SingletonS2ContainerFactory.getContainer())) {
             throw new ServletException(
-                    "SAWicket does not support HOT deploy mode.");
+                    "S2Wicket does not support HOT deploy mode.");
         }
 
         super.init(filterConfig);
@@ -242,7 +242,7 @@ public class SAWicketFilter extends ReloadingWicketFilter {
                 HttpServletRequest req = (HttpServletRequest) request;
                 HttpServletResponse res = (HttpServletResponse) response;
                 if (debug.equals(req.getServletPath())) {
-                    SAWicketDebugBuilder builder = new SAWicketDebugBuilder();
+                    S2WicketDebugBuilder builder = new S2WicketDebugBuilder();
                     builder.doResponse(req, res);
                     return;
                 }

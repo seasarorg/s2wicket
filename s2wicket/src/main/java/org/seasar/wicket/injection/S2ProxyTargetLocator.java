@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.karatachi.sawicket.injection;
+package org.seasar.wicket.injection;
 
 import java.io.Serializable;
 
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author TAKEUCHI Hideyuki (chimerast)
  */
-public class SAProxyTargetLocator implements IProxyTargetLocator, Serializable {
+public class S2ProxyTargetLocator implements IProxyTargetLocator, Serializable {
     private static final long serialVersionUID = 1L;
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -44,7 +44,7 @@ public class SAProxyTargetLocator implements IProxyTargetLocator, Serializable {
      * @param key
      *            S2Containerからオブジェクトを取り出すためのキー
      */
-    public SAProxyTargetLocator(Object key) {
+    public S2ProxyTargetLocator(Object key) {
         this.key = key;
     }
 
