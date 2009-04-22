@@ -110,7 +110,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
-          <locales>en,ja</locales>
+          <locales>ja</locales>
           <inputEncoding>UTF-8</inputEncoding>
           <outputEncoding>UTF-8</outputEncoding>
         </configuration>
@@ -140,8 +140,9 @@
     </repository>
   </repositories>
 
-  <name>Karatachi SAWicket</name>
+  <name>S2Wicket</name>
   <description>Seasar Container extension for Wicket</description>
+  <url>http://s2wicket.sandbox.seasar.org/</url>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -149,16 +150,28 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  <organization>
+    <name>The Seasar Foundation and the others</name>
+    <url>http://www.seasar.org/</url>
+  </organization>
 
   <scm>
-    <developerConnection>scm:svn:https://repo.karatachi.org/svn</developerConnection>
-    <url>http://karatachi.org/</url>
+    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</developerConnection>
+    <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
   </scm>
   <distributionManagement>
     <repository>
-      <id>karatachi-repository</id>
-      <name>Karatachi Project Repository</name>
-      <url>dav:https://repo.karatachi.org/mvn</url>
+      <uniqueVersion>false</uniqueVersion>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>dav:https://www.seasar.org/maven/maven2</url>
     </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
+      <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
+    </snapshotRepository>
   </distributionManagement>
 </project>
