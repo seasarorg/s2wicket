@@ -7,7 +7,7 @@
   <version>1.4-SNAPSHOT</version>
   <packaging>jar</packaging>
   <properties>
-    <wicket.version>1.4-rc2</wicket.version>
+    <wicket.version>1.4-rc4</wicket.version>
     <s2container.version>2.4.35</s2container.version>
     <s2dao.version>1.0.50</s2dao.version>
     <slf4j.version>1.5.6</slf4j.version>
@@ -55,12 +55,6 @@
       <groupId>org.seasar.dao</groupId>
       <artifactId>s2-dao-tiger</artifactId>
       <version>${s2dao.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.3</version>
     </dependency>
 
     <!-- JSP / Servlet -->
@@ -150,10 +144,10 @@
 
   <scm>
     <connection>
-      scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket
+      scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-libs
     </connection>
     <developerConnection>
-      scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket
+      scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-libs
     </developerConnection>
     <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
   </scm>
