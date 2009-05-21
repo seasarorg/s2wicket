@@ -110,8 +110,8 @@
   <url>http://s2wicket.sandbox.seasar.org/</url>
 
   <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</developerConnection>
+    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-example</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-example</developerConnection>
     <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
   </scm>
   <distributionManagement>
