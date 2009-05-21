@@ -40,6 +40,7 @@ import org.seasar.framework.container.external.servlet.HttpServletExternalContex
 import org.seasar.framework.container.external.servlet.HttpServletExternalContextComponentDefRegister;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.container.filter.S2ContainerFilter;
 import org.seasar.framework.container.util.SmartDeployUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.slf4j.Logger;
@@ -130,6 +131,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
 
     /** アプリケーションのコンフィグ(DEPLOYMENT, DEVELOPMENT) */
     private String applicationConfigType;
+    /** アプリケーションのデフォルトエンコーディング */
+    private String applicationEncoding;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -197,6 +200,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                         contextKey);
         webApplication.addComponentInstantiationListener(new ComponentInjectionListener());
         applicationConfigType = webApplication.getConfigurationType();
+        applicationEncoding =
+                webApplication.getRequestCycleSettings().getResponseRequestEncoding();
     }
 
     @Override
@@ -249,20 +254,27 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             }
         }
 
+        if (request.getCharacterEncoding() == null) {
+            request.setCharacterEncoding(applicationEncoding);
+        }
+
         // S2ContainerFilterの処理と同じ
         S2Container container = SingletonS2ContainerFactory.getContainer();
         ExternalContext externalContext = container.getExternalContext();
         if (externalContext == null) {
             throw new EmptyRuntimeException("externalContext");
         }
-        externalContext.setRequest(request);
-        externalContext.setResponse(response);
 
+        final Object originalRequest = externalContext.getRequest();
+        final Object originalResponse = externalContext.getResponse();
         try {
+            externalContext.setRequest(request);
+            externalContext.setResponse(response);
             super.doFilter(request, response, chain);
         } finally {
-            externalContext.setRequest(null);
-            externalContext.setResponse(null);
+            externalContext.setRequest(originalRequest);
+            externalContext.setResponse(originalResponse);
+            invalidateSession(request);
         }
     }
 
@@ -273,5 +285,21 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             String def) {
         String value = filterConfig.getInitParameter(key);
         return value != null ? value : def;
+    }
+
+    /*
+     * リクエストの属性に#INVALIDATE_SESSIONがBoolean#TRUEで設定されていた場合、
+     * HttpSessionを破棄します。
+     */
+    private void invalidateSession(final ServletRequest request) {
+        final Object invalidateSession =
+                request.getAttribute(S2ContainerFilter.INVALIDATE_SESSION);
+        if (Boolean.TRUE.equals(invalidateSession)) {
+            final HttpSession session =
+                    ((HttpServletRequest) request).getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+        }
     }
 }
