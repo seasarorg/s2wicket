@@ -4,7 +4,7 @@
 
   <groupId>org.seasar</groupId>
   <artifactId>s2wicket-example</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.4-rc5</version>
   <packaging>war</packaging>
   <dependencies>
     <dependency>
