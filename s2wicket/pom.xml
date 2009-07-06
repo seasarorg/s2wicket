@@ -4,10 +4,10 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket</artifactId>
-  <version>1.4-rc5</version>
+  <version>1.4-rc6</version>
   <packaging>jar</packaging>
   <properties>
-    <wicket.version>1.4-rc5</wicket.version>
+    <wicket.version>1.4-rc6</wicket.version>
     <s2container.version>2.4.38</s2container.version>
     <s2dao.version>1.0.50</s2dao.version>
     <slf4j.version>1.5.8</slf4j.version>
