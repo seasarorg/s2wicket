@@ -78,7 +78,7 @@
       <version>1.0</version>
     </dependency>
 
-    <!-- Tomcat5.5の場合必要､6では不要 -->
+    <!-- Tomcat5.5の場合必要 6では不要 -->
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-annotation_1.0_spec</artifactId>
@@ -92,7 +92,7 @@
       <version>1.0</version>
     </dependency>
 
-    <!-- Tomcat5.5では必要､Tomcat6でJPAを使う場合必要 -->
+    <!-- Tomcat5.5では必要 Tomcat6でJPAを使う場合必要 -->
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-jpa_3.0_spec</artifactId>
