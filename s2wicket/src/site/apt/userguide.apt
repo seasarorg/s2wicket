@@ -1,0 +1,166 @@
+ ------
+Wicket Seasar Integration User Guide Page
+ ------
+TAKEUCHI Hideyuki
+ ------
+2008/09/25
+
+使用方法
+
+  S2Wicketを使用して、WicketとSeasar2を連携するための手順について紹介します。
+
+* 目次
+  
+  * {{{#前提条件}前提条件}}
+
+  * {{{#S2WicketをあなたのWicketプロジェクトに追加する}S2WicketをあなたのWicketプロジェクトに追加する}}
+
+  * {{{#S2Containerおよびweb.xmlの設定}S2Containerおよびweb.xmlの設定}}
+  
+  * {{{#インジェクション}インジェクション}}
+  
+* 0. {前提条件}
+
+  WicketおよびSeasar2 Containerが使用可能な状態にWebアプリケーションがセットアップされていることとします。
+  また、インジェクションしたいコンポーネントオブジェクトが、Seasar2のDIコンテナに登録されていることとします。
+  
+  maven2を使用してS2Wicketを利用する場合は、maven2が利用可能な状態になっていることが必要です。
+  
+* 1. {S2Wicketをあなたのプロジェクトに追加する}
+
+  S2Wicketをセットアップする形態として、jarファイルを直接追加することも可能ですが、
+  ライブラリの依存関係が複雑なためmaven2を利用してセットアップすることをおすすめします。
+  
+  S2Wicketは、seasar.orgが提供するmaven2リポジトリに各種jarを登録しています。
+  あなたのWebアプリケーションがmaven2でプロジェクト管理されている場合は、
+  pom.xmlファイルにseasar.orgのmaven2リポジトリの場所とS2Wicketの依存関係を記述するだけで、
+  すぐにS2Wicketを使用可能な状態にすることができます。
+  
+  まず、pom.xmlファイルにseasar.orgが提供するmaven2リポジトリの場所を以下のように記述します。
+  
++------------------------------------------------------+
+<project ...>
+    ...
+    <repositories>
+        ...
+        <repository>
+            <id>maven.seasar.org</id>
+            <name>The Seasar Foundation Maven2 Repository</name>
+            <url>http://maven.seasar.org/maven2</url>
+        </repository>
+    </repositories>
+    ...
+</project>
++------------------------------------------------------+
+
+  さらに、S2Wicketへの依存関係を以下のように記述します。
+  
++------------------------------------------------------+
+<project ...>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>org.seasar.wicket</groupId>
+            <artifactId>s2wicket</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+    </dependencies>
+    ...
+</project>
++------------------------------------------------------+
+
+  S2Wicketは、S2ContainerおよびWicketに依存しているため、S2Wicketへの依存をpom.xmlに
+  記述しmaven2でビルドをするだけで、S2ContainerおよびWicketのライブラリがすべて
+  環境にダウンロードされます。
+  
+  また、もし、S2Container本体だけではなくs2-extension、s2-tiger、s2dao、s2dao-tigerを使用し、
+  データベースに依存するWebアプリケーションを作成する場合はartifactIdをs2wicketの代わりに
+  s2wicket-libsにすると必要なライブラリ一式がそろった状態で開発を始めることができます。
+  
+** ロギングAPIについて
+
+  S2Wicketでは、Seasarが使用しているcommons-loggingではなく、Wicketが使用している
+  より先進的なSLF4Jを利用しています。そのため、commons-logging用の設定ではなく
+  SLF4J用の設定が必要になるのでご注意ください。ログ出力APIにはLogbackを使用するのが
+  おすすめです。
+  
+* 2. {S2Containerおよびweb.xmlの設定}
+
+  S2Wicketを利用にするには、convention.dicon、s2container.dicon、web.xmlの
+  設定が必要です。
+
+  S2WicketはS2Container2.4のSMART Deployに対応しています。そのため、Wicket
+  コンポーネントにS2Containerに登録されたコンポーネントをインジェクションするには、
+  convention.diconに以下の設定を追加します。
+  
++------------------------------------------------------+
+<components>
+  ...
+  <component class="org.seasar.framework.container.creator.WicketCreator" />
+</components>
++------------------------------------------------------+
+  
+  また、S2WicketはS2ContainerのHOT Deploy機能を使用せずにWicketのReleoading
+  WicketFilterを使用してHOT Deployと同等の機能を実現しています。そのため、
+  競合するHOT Deployは使用しないようにする必要があります。また、Wicketの
+  ReloadingWicketFilterの機能を使用する場合はWARM deployを利用する方が
+  開発時のメモリ効率の観点から推奨されます。一般的にはs2container.diconの記述は
+  以下の通りになります。
+
++------------------------------------------------------+
+<components>
+  <include condition="#ENV == 'ut' || #ENV == 'it'" path="warmdeploy.dicon" />
+  <include condition="#ENV == 'product'" path="cooldeploy.dicon" />
+</components>
++------------------------------------------------------+
+  
+  以上のS2Containerの設定に加えて、web.xmlで、WicketFilterの代わりにS2Wicket独自の
+  フィルタを使用するように設定します。
+  
++------------------------------------------------------+
+  <filter>
+    <filter-name>s2wicketfilter</filter-name>
+    <filter-class>org.seasar.wicket.S2WicketFilter</filter-class>
+    <init-param>
+      <param-name>applicationClassName</param-name>
+      <param-value>foo.bar.YourApplication</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>s2wicketfilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
++------------------------------------------------------+
+
+  以上で設定は終了です。
+
+* 3. {インジェクション}
+
+  前項までの設定でS2ContainerによるWicketコンポーネントへのコンポーネントオブジェクトの
+  インジェクションが行われるようになります。
+  
+  インジェクション先の対象はWicketのComponentクラスを継承する全クラスが対象となります。
+  命名規約による制限はありません。
+  
+  インジェクションの方法はS2Containerの標準の方法である、getterおよびsetterを定義する方法、
+  フィールドに@Bindingアノテーションをつける方法が使用できます。プロパティの命名規則等に
+  ついてはS2Container標準に準拠します。
+
+  例えば、WebPageクラスに対してS2Daoコンポーネントをインジェクションするには以下のように
+  なります。
+  
++------------------------------------------------------+
+public class IndexPage extends WebPage {
+  @Binding
+  private EmployeeDao employeeDao
+
+  public IndexPage(PageParameters parameters) {
+    super(parameters);
+    
+    add(new Label("count", Integer.toString(employeeDao.count()));
+  }
+}
++------------------------------------------------------+
+
+
