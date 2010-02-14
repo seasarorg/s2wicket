@@ -4,7 +4,7 @@
 
   <groupId>org.seasar</groupId>
   <artifactId>s2wicket-example</artifactId>
-  <version>1.4.1</version>
+  <version>1.4.5</version>
   <packaging>war</packaging>
   <dependencies>
     <dependency>
@@ -14,15 +14,9 @@
     </dependency>
 
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>0.9.17</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.1.116</version>
+      <version>1.2.128</version>
     </dependency>
   </dependencies>
 
