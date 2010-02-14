@@ -1,0 +1,715 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<meta http-equiv="Content-Language" content="ja" /> 
+<meta http-equiv="Content-Style-Type" content="text/css" /> 
+<title>S2Wicket - プロジェクトの依存関係</title>
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/main.css" media="screen,projection" />
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/print.css" media="print" />
+<link href="./css/maven-base.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/maven-theme.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/prettify.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript" src="./js/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+
+<div id="wrapper">
+
+<div id="header">
+
+<div class="line"><span class="hide">spacer</span></div>
+
+<div id="logo"><h1 id="h01" class="hide">The Seasar Project</h1><a href="http://www.seasar.org/" alt="The Seasar Project" title="The Seasar Project"><img src="http://www.seasar.org/images/seasar_logo_blue.gif" alt="The Seasar Project" width="390" height="180" /></a></div>
+
+<div id="tool">
+
+<h2><a href="http://search.seasar.org/">Site Search</a></h2>
+
+<form id="search" action="http://search.seasar.org/">
+<div>
+	<input id="search_phrase" type="text" name="phrase" size="20" />
+	<input type="hidden" name="perpage" value="30" />
+	<input type="hidden" name="enc" value="UTF-8" />
+	<input id="search_go" type="submit" value="Search" />
+</div>
+</form>
+
+<h2>Seasar Banner</h2>
+              <span id="bannerLeft">
+    
+            S2Wicket
+    
+            </span>
+      
+</div>
+
+<div id="navi">
+	<p id="navi_left">  </p>
+	<p id="navi_right"><a href="./../en/">English</a> | <a href="./../ja/">Japanese</a></p>
+</div>
+
+</div><!-- header -->
+
+<div id="contents_left">
+           
+  
+
+  
+    
+  
+  
+                   <h2>About</h2>
+        <ul>
+              
+    <li class="none">
+              <a href="index.html">ホーム</a>
+        </li>
+              
+    <li class="none">
+              <a href="license.html">ライセンス</a>
+        </li>
+              
+    <li class="none">
+              <a href="download.html">ダウンロード</a>
+        </li>
+              
+    <li class="none">
+              <a href="changelog.html">変更履歴</a>
+        </li>
+          </ul>
+          <h2>ドキュメント</h2>
+        <ul>
+              
+    <li class="none">
+              <a href="userguide.html">使い方(1.4.x～)</a>
+        </li>
+              
+    <li class="none">
+              <a href="old_userguide.html">使い方(～1.2.x)</a>
+        </li>
+              
+    <li class="none">
+              <a href="apidocs/index.html">API</a>
+        </li>
+          </ul>
+          <h2>プロジェクト文書</h2>
+        <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+            
+            
+      
+            
+      
+              
+            <li class="expanded">
+              <a href="project-info.html">プロジェクト情報</a>
+                <ul>
+                  
+    <li class="none">
+              <a href="plugin-management.html">Plugin Management</a>
+        </li>
+                  
+    <li class="none">
+              <a href="plugins.html">Project Plugins</a>
+        </li>
+                  
+    <li class="none">
+              <a href="source-repository.html">ソースリポジトリ</a>
+        </li>
+                  
+    <li class="none">
+              <a href="project-summary.html">プロジェクトサマリ</a>
+        </li>
+                  
+    <li class="none">
+              <a href="team-list.html">プロジェクトチーム</a>
+        </li>
+                  
+    <li class="none">
+              <a href="license.html">プロジェクトライセンス</a>
+        </li>
+                  
+    <li class="none">
+              <a href="mail-lists.html">メーリングリスト</a>
+        </li>
+                  
+    <li class="none">
+              <strong>依存関係</strong>
+        </li>
+                  
+    <li class="none">
+              <a href="issue-tracking.html">課題追跡</a>
+        </li>
+                  
+    <li class="none">
+              <a href="integration.html">継続的結合</a>
+        </li>
+              </ul>
+        </li>
+          </ul>
+                                       <a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy" name="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png" />
+          </a>
+                       
+  
+
+  
+    
+  
+  
+  </div><!-- contents_left -->
+
+<div id="contents_center">
+
+<div id="article">
+<div class="section"><h2>プロジェクトの依存関係</h2>
+<div class="section"><h3>compile</h3>
+<p>以下はこのプロジェクトのコンパイル依存関係です。これらの依存関係はアプリケーションをコンパイルおよび実行するのに必要です。</p>
+<table class="bodyTable"><tr class="a"><th>グループID</th>
+<th>成果物ID</th>
+<th>バージョン</th>
+<th>Type</th>
+</tr>
+<tr class="b"><td>commons-logging</td>
+<td>commons-logging</td>
+<td>99.0-does-not-exist</td>
+<td>jar</td>
+</tr>
+<tr class="a"><td>org.apache.wicket</td>
+<td><a href="http://wicket.apache.org/wicket/wicket" class="externalLink">wicket</a></td>
+<td>1.4.5</td>
+<td>jar</td>
+</tr>
+<tr class="b"><td>org.apache.wicket</td>
+<td><a href="http://wicket.apache.org/wicket-ioc/wicket-ioc" class="externalLink">wicket-ioc</a></td>
+<td>1.4.5</td>
+<td>jar</td>
+</tr>
+<tr class="a"><td>org.seasar.container</td>
+<td><a href="http://s2container.seasar.org/" class="externalLink">s2-framework</a></td>
+<td>2.4.40</td>
+<td>jar</td>
+</tr>
+<tr class="b"><td>org.slf4j</td>
+<td><a href="http://www.slf4j.org" class="externalLink">jcl-over-slf4j</a></td>
+<td>1.5.10</td>
+<td>jar</td>
+</tr>
+<tr class="a"><td>org.slf4j</td>
+<td><a href="http://www.slf4j.org" class="externalLink">slf4j-api</a></td>
+<td>1.5.10</td>
+<td>jar</td>
+</tr>
+</table>
+</div>
+<div class="section"><h3>provided</h3>
+<p>以下はこのプロジェクトの提供済み依存関係のリストです。これらの依存関係はアプリケーションをコンパイルするのに必要ですが、実際にライブラリを使用する際には実行環境によってデフォルトで提供されるべきものです。</p>
+<table class="bodyTable"><tr class="b"><th>グループID</th>
+<th>成果物ID</th>
+<th>バージョン</th>
+<th>Type</th>
+</tr>
+<tr class="a"><td>javax.servlet</td>
+<td>servlet-api</td>
+<td>2.4</td>
+<td>jar</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="section"><h2>プロジェクトの過渡的依存関係</h2>
+<p>以下はこのプロジェクトの過渡的依存ライブラリのリストです。過渡的依存ライブラリはプロジェクトの依存ライブラリの依存ライブラリです。</p>
+<div class="section"><h3>compile</h3>
+<p>以下はこのプロジェクトのコンパイル依存関係です。これらの依存関係はアプリケーションをコンパイルおよび実行するのに必要です。</p>
+<table class="bodyTable"><tr class="b"><th>グループID</th>
+<th>成果物ID</th>
+<th>バージョン</th>
+<th>Type</th>
+</tr>
+<tr class="a"><td>aopalliance</td>
+<td><a href="http://aopalliance.sourceforge.net" class="externalLink">aopalliance</a></td>
+<td>1.0</td>
+<td>jar</td>
+</tr>
+<tr class="b"><td>cglib</td>
+<td><a href="http://cglib.sourceforge.net/" class="externalLink">cglib-nodep</a></td>
+<td>2.1_3</td>
+<td>jar</td>
+</tr>
+<tr class="a"><td>jboss</td>
+<td><a href="http://www.jboss.org/products/javassist" class="externalLink">javassist</a></td>
+<td>3.4.ga</td>
+<td>jar</td>
+</tr>
+<tr class="b"><td>junit</td>
+<td><a href="http://junit.org" class="externalLink">junit</a></td>
+<td>3.8.2</td>
+<td>jar</td>
+</tr>
+<tr class="a"><td>ognl</td>
+<td>ognl</td>
+<td>2.6.9-patch-20090427</td>
+<td>jar</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="section"><h2>プロジェクト依存関係グラフ</h2>
+<script language="javascript" type="text/javascript">
+      function toggleDependencyDetail( divId, imgId )
+      {
+        var div = document.getElementById( divId );
+        var img = document.getElementById( imgId );
+        if( div.style.display == '' )
+        {
+          div.style.display = 'none';
+          img.src='./images/icon_info_sml.gif';
+        }
+        else
+        {
+          div.style.display = '';
+          img.src='./images/close.gif';
+        }
+      }
+</script>
+<div class="section"><h3>依存関係ツリー</h3>
+<ul><li>org.seasar.wicket:s2wicket:jar:1.4.5 <img id="_762847708" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1782280567', '_762847708' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1782280567" style="display:none"><table class="bodyTable"><tr class="b"><th>S2Wicket</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>Seasar Container extension for Wicket</p>
+<p><b>URL: </b><a href="http://s2wicket.sandbox.seasar.org/" class="externalLink">http://s2wicket.sandbox.seasar.org/</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.apache.org/licenses/LICENSE-2.0.txt" class="externalLink">The Apache Software License, Version 2.0</a></p>
+</td>
+</tr>
+</table>
+</div><ul><li>org.apache.wicket:wicket:jar:1.4.5 (compile) <img id="_1965610347" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1862261910', '_1965610347' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1862261910" style="display:none"><table class="bodyTable"><tr class="b"><th>Wicket</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>Wicket is a Java web application framework that takes simplicity, 
+		separation of concerns and ease of development to a whole new level. 
+		Wicket pages can be mocked up, previewed and later revised using 
+		standard WYSIWYG HTML design tools. Dynamic content processing and 
+		form handling is all handled in Java code using a first-class 
+		component model backed by POJO data beans that can easily be 
+		persisted using your favorite technology.</p>
+<p><b>URL: </b><a href="http://wicket.apache.org/wicket/wicket" class="externalLink">http://wicket.apache.org/wicket/wicket</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.apache.org/licenses/LICENSE-2.0.txt" class="externalLink">The Apache Software License, Version 2.0</a></p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>org.apache.wicket:wicket-ioc:jar:1.4.5 (compile) <img id="_109091263" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1062785210', '_109091263' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1062785210" style="display:none"><table class="bodyTable"><tr class="b"><th>Wicket IoC common code</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>Wicket IoC common dependencies for injection and proxying. Used by Spring, Guice, etc.</p>
+<p><b>URL: </b><a href="http://wicket.apache.org/wicket-ioc/wicket-ioc" class="externalLink">http://wicket.apache.org/wicket-ioc/wicket-ioc</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.apache.org/licenses/LICENSE-2.0.txt" class="externalLink">The Apache Software License, Version 2.0</a></p>
+</td>
+</tr>
+</table>
+</div><ul><li>org.apache.wicket:wicket:jar:1.4.5 (compile) <img id="_1492030693" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1036465079', '_1492030693' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1036465079" style="display:none"><table class="bodyTable"><tr class="b"><th>Wicket</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>Wicket is a Java web application framework that takes simplicity, 
+		separation of concerns and ease of development to a whole new level. 
+		Wicket pages can be mocked up, previewed and later revised using 
+		standard WYSIWYG HTML design tools. Dynamic content processing and 
+		form handling is all handled in Java code using a first-class 
+		component model backed by POJO data beans that can easily be 
+		persisted using your favorite technology.</p>
+<p><b>URL: </b><a href="http://wicket.apache.org/wicket/wicket" class="externalLink">http://wicket.apache.org/wicket/wicket</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.apache.org/licenses/LICENSE-2.0.txt" class="externalLink">The Apache Software License, Version 2.0</a></p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>cglib:cglib-nodep:jar:2.1_3 (compile) <img id="_1000141673" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_627797546', '_1000141673' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_627797546" style="display:none"><table class="bodyTable"><tr class="b"><th>cglib</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>このプロジェクトについての説明は現在用意されていません。</p>
+<p><b>URL: </b><a href="http://cglib.sourceforge.net/" class="externalLink">http://cglib.sourceforge.net/</a></p>
+<p><b>プロジェクトライセンス: </b>プロジェクトライセンスは定義されていません。</p>
+</td>
+</tr>
+</table>
+</div></li>
+</ul>
+</li>
+<li>org.seasar.container:s2-framework:jar:2.4.40 (compile) <img id="_100901504" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_995301379', '_100901504' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_995301379" style="display:none"><table class="bodyTable"><tr class="b"><th>Seasar2 Framework</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>DI Container with AOP</p>
+<p><b>URL: </b><a href="http://s2container.seasar.org/" class="externalLink">http://s2container.seasar.org/</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.apache.org/licenses/LICENSE-2.0.txt" class="externalLink">The Apache Software License, Version 2.0</a></p>
+</td>
+</tr>
+</table>
+</div><ul><li>aopalliance:aopalliance:jar:1.0 (compile) <img id="_545325430" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_2029420351', '_545325430' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_2029420351" style="display:none"><table class="bodyTable"><tr class="b"><th>AOP alliance</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>AOP Alliance</p>
+<p><b>URL: </b><a href="http://aopalliance.sourceforge.net" class="externalLink">http://aopalliance.sourceforge.net</a></p>
+<p><b>プロジェクトライセンス: </b>Public Domain</p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>jboss:javassist:jar:3.4.ga (compile) <img id="_1403055702" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1042632070', '_1403055702' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1042632070" style="display:none"><table class="bodyTable"><tr class="b"><th>Javassist</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>Javassist (Java programming assistant) is a load-time reflective system for Java.</p>
+<p><b>URL: </b><a href="http://www.jboss.org/products/javassist" class="externalLink">http://www.jboss.org/products/javassist</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/*checkout*/jboss/javassist/License.html?rev=HEAD&amp;content-type=text/html" class="externalLink">MPL 1.1</a></p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>ognl:ognl:jar:2.6.9-patch-20090427 (compile) <img id="_1294184705" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_981553644', '_1294184705' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_981553644" style="display:none"><table class="bodyTable"><tr class="b"><th>OGNL</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>Patch for OGNL version 2.6.9 (http://www.ognl.org/)</p>
+<p><b>プロジェクトライセンス: </b>プロジェクトライセンスは定義されていません。</p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>junit:junit:jar:3.8.2 (compile) <img id="_423561090" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1336450322', '_423561090' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1336450322" style="display:none"><table class="bodyTable"><tr class="b"><th>JUnit</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>JUnit is a regression testing framework written by Erich Gamma and Kent Beck. It is used by the developer who implements unit tests in Java.</p>
+<p><b>URL: </b><a href="http://junit.org" class="externalLink">http://junit.org</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.opensource.org/licenses/cpl1.0.txt" class="externalLink">Common Public License Version 1.0</a></p>
+</td>
+</tr>
+</table>
+</div></li>
+</ul>
+</li>
+<li>javax.servlet:servlet-api:jar:2.4 (provided) <img id="_1713557953" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1520228357', '_1713557953' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1520228357" style="display:none"><table class="bodyTable"><tr class="b"><th>Unnamed - javax.servlet:servlet-api:jar:2.4</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>このプロジェクトについての説明は現在用意されていません。</p>
+<p><b>プロジェクトライセンス: </b>プロジェクトライセンスは定義されていません。</p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>org.slf4j:slf4j-api:jar:1.5.10 (compile) <img id="_133755382" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_805087263', '_133755382' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_805087263" style="display:none"><table class="bodyTable"><tr class="b"><th>SLF4J API Module</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>The slf4j API</p>
+<p><b>URL: </b><a href="http://www.slf4j.org" class="externalLink">http://www.slf4j.org</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.opensource.org/licenses/mit-license.php" class="externalLink">MIT License</a></p>
+</td>
+</tr>
+</table>
+</div></li>
+<li>org.slf4j:jcl-over-slf4j:jar:1.5.10 (compile) <img id="_1857696996" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_564131802', '_1857696996' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_564131802" style="display:none"><table class="bodyTable"><tr class="b"><th>JCL 1.1.1 implemented over SLF4J</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>JCL 1.1.1 implementation over SLF4J</p>
+<p><b>URL: </b><a href="http://www.slf4j.org" class="externalLink">http://www.slf4j.org</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.opensource.org/licenses/mit-license.php" class="externalLink">MIT License</a></p>
+</td>
+</tr>
+</table>
+</div><ul><li>org.slf4j:slf4j-api:jar:1.5.10 (compile) <img id="_1160863022" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1224161893', '_1160863022' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1224161893" style="display:none"><table class="bodyTable"><tr class="b"><th>SLF4J API Module</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>The slf4j API</p>
+<p><b>URL: </b><a href="http://www.slf4j.org" class="externalLink">http://www.slf4j.org</a></p>
+<p><b>プロジェクトライセンス: </b><a href="http://www.opensource.org/licenses/mit-license.php" class="externalLink">MIT License</a></p>
+</td>
+</tr>
+</table>
+</div></li>
+</ul>
+</li>
+<li>commons-logging:commons-logging:jar:99.0-does-not-exist (compile) <img id="_1301016722" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_1565232010', '_1301016722' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_1565232010" style="display:none"><table class="bodyTable"><tr class="b"><th>Unnamed - commons-logging:commons-logging:jar:99.0-does-not-exist</th>
+</tr>
+<tr class="a"><td><p><b>説明: </b>このプロジェクトについての説明は現在用意されていません。</p>
+<p><b>プロジェクトライセンス: </b>プロジェクトライセンスは定義されていません。</p>
+</td>
+</tr>
+</table>
+</div></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section"><h2>プロジェクトライセンス</h2>
+<p><b>Unamed: </b>OGNL, Unnamed - commons-logging:commons-logging:jar:99.0-does-not-exist, Unnamed - javax.servlet:servlet-api:jar:2.4, cglib</p>
+<p><b>Public Domain: </b>AOP alliance</p>
+<p><b>MPL 1.1: </b>Javassist</p>
+<p><b>Common Public License Version 1.0: </b>JUnit</p>
+<p><b>MIT License: </b>JCL 1.1.1 implemented over SLF4J, SLF4J API Module</p>
+<p><b>The Apache Software License, Version 2.0: </b>S2Wicket, Seasar2 Framework, Wicket, Wicket IoC common code</p>
+</div>
+<div class="section"><h2>Dependency File Details</h2>
+<table class="bodyTable"><tbody><tr class="b"><th align="left">Filename</th>
+<th align="right">Size</th>
+<th align="right">Entries</th>
+<th align="right">Classes</th>
+<th align="right">Packages</th>
+<th align="center">JDK Rev</th>
+<th align="center">Debug</th>
+</tr>
+<tr class="a"><td align="left">aopalliance-1.0.jar</td>
+<td align="right">4.36 kB</td>
+<td align="right">15</td>
+<td align="right">9</td>
+<td align="right">2</td>
+<td align="center">1.3</td>
+<td align="center">debug</td>
+</tr>
+<tr class="b"><td align="left">cglib-nodep-2.1_3.jar</td>
+<td align="right">316.64 kB</td>
+<td align="right">262</td>
+<td align="right">258</td>
+<td align="right">10</td>
+<td align="center">1.1</td>
+<td align="center">debug</td>
+</tr>
+<tr class="a"><td align="left">commons-logging-99.0-does-not-exist.jar</td>
+<td align="right">.17 kB</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="center">-</td>
+<td align="center">release</td>
+</tr>
+<tr class="b"><td align="left">servlet-api-2.4.jar</td>
+<td align="right">95.40 kB</td>
+<td align="right">67</td>
+<td align="right">42</td>
+<td align="right">2</td>
+<td align="center">1.2</td>
+<td align="center">debug</td>
+</tr>
+<tr class="a"><td align="left">javassist-3.4.ga.jar</td>
+<td align="right">459.97 kB</td>
+<td align="right">279</td>
+<td align="right">262</td>
+<td align="right">15</td>
+<td align="center">1.2</td>
+<td align="center">debug</td>
+</tr>
+<tr class="b"><td align="left">junit-3.8.2.jar</td>
+<td align="right">117.81 kB</td>
+<td align="right">120</td>
+<td align="right">102</td>
+<td align="right">6</td>
+<td align="center">1.2</td>
+<td align="center">debug</td>
+</tr>
+<tr class="a"><td align="left">ognl-2.6.9-patch-20090427.jar</td>
+<td align="right">163.06 kB</td>
+<td align="right">122</td>
+<td align="right">114</td>
+<td align="right">1</td>
+<td align="center">1.4</td>
+<td align="center">debug</td>
+</tr>
+<tr class="b"><td align="left">wicket-1.4.5.jar</td>
+<td align="right">1.77 MB</td>
+<td align="right">1,479</td>
+<td align="right">1,288</td>
+<td align="right">95</td>
+<td align="center">1.5</td>
+<td align="center">debug</td>
+</tr>
+<tr class="a"><td align="left">wicket-ioc-1.4.5.jar</td>
+<td align="right">22.78 kB</td>
+<td align="right">33</td>
+<td align="right">16</td>
+<td align="right">3</td>
+<td align="center">1.5</td>
+<td align="center">debug</td>
+</tr>
+<tr class="b"><td align="left">s2-framework-2.4.40.jar</td>
+<td align="right">660.18 kB</td>
+<td align="right">630</td>
+<td align="right">561</td>
+<td align="right">43</td>
+<td align="center">1.4</td>
+<td align="center">debug</td>
+</tr>
+<tr class="a"><td align="left">jcl-over-slf4j-1.5.10.jar</td>
+<td align="right">16.88 kB</td>
+<td align="right">23</td>
+<td align="right">9</td>
+<td align="right">2</td>
+<td align="center">1.3</td>
+<td align="center">debug</td>
+</tr>
+<tr class="b"><td align="left">slf4j-api-1.5.10.jar</td>
+<td align="right">23.10 kB</td>
+<td align="right">32</td>
+<td align="right">21</td>
+<td align="right">3</td>
+<td align="center">1.3</td>
+<td align="center">debug</td>
+</tr>
+<tr class="a"><th align="left">Total</th>
+<th align="right">Size</th>
+<th align="right">Entries</th>
+<th align="right">Classes</th>
+<th align="right">Packages</th>
+<th align="center">JDK Rev</th>
+<th align="center">Debug</th>
+</tr>
+<tr class="b"><td align="right">12</td>
+<td align="right">3.61 MB</td>
+<td align="right">3,063</td>
+<td align="right">2,682</td>
+<td align="right">182</td>
+<td align="center">1.5</td>
+<td align="right">11</td>
+</tr>
+<tr class="a"><td align="right">compile: 11</td>
+<td align="right">compile: 3.51 MB</td>
+<td align="right">compile: 2,996</td>
+<td align="right">compile: 2,640</td>
+<td align="right">compile: 180</td>
+<td align="center">-</td>
+<td align="right">compile: 10</td>
+</tr>
+<tr class="b"><td align="right">provided: 1</td>
+<td align="right">provided: 95.40 kB</td>
+<td align="right">provided: 67</td>
+<td align="right">provided: 42</td>
+<td align="right">provided: 2</td>
+<td align="center">-</td>
+<td align="right">provided: 1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section"><h2>Dependency Repository Locations</h2>
+<table class="bodyTable"><tbody><tr class="a"><th align="left">Repo ID</th>
+<th align="left">URL</th>
+<th align="center">Release</th>
+<th align="center">Snapshot</th>
+<th align="center">Blacklisted</th>
+</tr>
+<tr class="b"><td align="left">Version99</td>
+<td align="left">http://no-commons-logging.zapto.org/mvn2</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+</tr>
+<tr class="a"><td align="left">maven.seasar.org</td>
+<td align="left"><a href="http://maven.seasar.org/maven2" class="externalLink">http://maven.seasar.org/maven2</a></td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">-</td>
+</tr>
+<tr class="b"><td align="left">central</td>
+<td align="left"><a href="http://repo1.maven.org/maven2" class="externalLink">http://repo1.maven.org/maven2</a></td>
+<td align="center">Yes</td>
+<td align="center">-</td>
+<td align="center">-</td>
+</tr>
+</tbody>
+</table>
+<p>Repository locations for each of the Dependencies.</p>
+<table class="bodyTable"><tbody><tr class="a"><th align="left">Artifact</th>
+<th align="center">maven.seasar.org</th>
+<th align="center">central</th>
+</tr>
+<tr class="b"><td align="left">aopalliance:aopalliance:jar:1.0</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="a"><td align="left">cglib:cglib-nodep:jar:2.1_3</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="b"><td align="left">commons-logging:commons-logging:jar:99.0-does-not-exist</td>
+<td align="center">-</td>
+<td align="center">-</td>
+</tr>
+<tr class="a"><td align="left">javax.servlet:servlet-api:jar:2.4</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="b"><td align="left">jboss:javassist:jar:3.4.ga</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/jboss/javassist/3.4.ga/javassist-3.4.ga.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="a"><td align="left">junit:junit:jar:3.8.2</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/junit/junit/3.8.2/junit-3.8.2.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="b"><td align="left">ognl:ognl:jar:2.6.9-patch-20090427</td>
+<td align="center"><a href="http://maven.seasar.org/maven2/ognl/ognl/2.6.9-patch-20090427/ognl-2.6.9-patch-20090427.jar" class="externalLink"><img alt="Found at http://maven.seasar.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+<td align="center">-</td>
+</tr>
+<tr class="a"><td align="left">org.apache.wicket:wicket:jar:1.4.5</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/org/apache/wicket/wicket/1.4.5/wicket-1.4.5.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="b"><td align="left">org.apache.wicket:wicket-ioc:jar:1.4.5</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/org/apache/wicket/wicket-ioc/1.4.5/wicket-ioc-1.4.5.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="a"><td align="left">org.seasar.container:s2-framework:jar:2.4.40</td>
+<td align="center"><a href="http://maven.seasar.org/maven2/org/seasar/container/s2-framework/2.4.40/s2-framework-2.4.40.jar" class="externalLink"><img alt="Found at http://maven.seasar.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+<td align="center">-</td>
+</tr>
+<tr class="b"><td align="left">org.slf4j:jcl-over-slf4j:jar:1.5.10</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/1.5.10/jcl-over-slf4j-1.5.10.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="a"><td align="left">org.slf4j:slf4j-api:jar:1.5.10</td>
+<td align="center">-</td>
+<td align="center"><a href="http://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.5.10/slf4j-api-1.5.10.jar" class="externalLink"><img alt="Found at http://repo1.maven.org/maven2" src="images/icon_success_sml.gif" /></a></td>
+</tr>
+<tr class="b"><th align="left">Total</th>
+<th align="center">maven.seasar.org</th>
+<th align="center">central</th>
+</tr>
+<tr class="a"><td align="left">12 (compile: 11, provided: 1)</td>
+<td align="center">2</td>
+<td align="center">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div><!-- article -->
+
+</div><!-- contents_center -->
+
+<div id="footer">
+<address>  &copy; Copyright 
+                    <a href="http://www.seasar.org/">The Seasar Foundation and the others</a>.
+            and the others
+    
+              2010,
+        all rights reserved.
+  <a href="http://www.seasar.org">The Seasar Project</a>.
+</address>
+<div class="line"><span class="hide">spacer</span></div>
+</div><!-- footer -->
+
+</div><!-- wrapper -->
+
+</body>
+</html>

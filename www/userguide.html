@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<meta http-equiv="Content-Language" content="ja" /> 
+<meta http-equiv="Content-Style-Type" content="text/css" /> 
+<title>S2Wicket - Wicket Seasar Integration User Guide Page</title>
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/main.css" media="screen,projection" />
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/print.css" media="print" />
+<link href="./css/maven-base.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/maven-theme.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/prettify.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript" src="./js/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+
+<div id="wrapper">
+
+<div id="header">
+
+<div class="line"><span class="hide">spacer</span></div>
+
+<div id="logo"><h1 id="h01" class="hide">The Seasar Project</h1><a href="http://www.seasar.org/" alt="The Seasar Project" title="The Seasar Project"><img src="http://www.seasar.org/images/seasar_logo_blue.gif" alt="The Seasar Project" width="390" height="180" /></a></div>
+
+<div id="tool">
+
+<h2><a href="http://search.seasar.org/">Site Search</a></h2>
+
+<form id="search" action="http://search.seasar.org/">
+<div>
+	<input id="search_phrase" type="text" name="phrase" size="20" />
+	<input type="hidden" name="perpage" value="30" />
+	<input type="hidden" name="enc" value="UTF-8" />
+	<input id="search_go" type="submit" value="Search" />
+</div>
+</form>
+
+<h2>Seasar Banner</h2>
+              <span id="bannerLeft">
+    
+            S2Wicket
+    
+            </span>
+      
+</div>
+
+<div id="navi">
+	<p id="navi_left">  </p>
+	<p id="navi_right"><a href="./../en/">English</a> | <a href="./../ja/">Japanese</a></p>
+</div>
+
+</div><!-- header -->
+
+<div id="contents_left">
+           
+  
+
+  
+    
+  
+  
+                   <h2>About</h2>
+        <ul>
+              
+    <li class="none">
+              <a href="index.html">ホーム</a>
+        </li>
+              
+    <li class="none">
+              <a href="license.html">ライセンス</a>
+        </li>
+              
+    <li class="none">
+              <a href="download.html">ダウンロード</a>
+        </li>
+              
+    <li class="none">
+              <a href="changelog.html">変更履歴</a>
+        </li>
+          </ul>
+          <h2>ドキュメント</h2>
+        <ul>
+              
+    <li class="none">
+              <strong>使い方(1.4.x～)</strong>
+        </li>
+              
+    <li class="none">
+              <a href="old_userguide.html">使い方(～1.2.x)</a>
+        </li>
+              
+    <li class="none">
+              <a href="apidocs/index.html">API</a>
+        </li>
+          </ul>
+          <h2>プロジェクト文書</h2>
+        <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+              <a href="project-info.html">プロジェクト情報</a>
+              </li>
+          </ul>
+                                       <a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy" name="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png" />
+          </a>
+                       
+  
+
+  
+    
+  
+  
+  </div><!-- contents_left -->
+
+<div id="contents_center">
+
+<div id="article">
+<div class="section"><h2>使用方法</h2>
+<p>S2Wicketを使用して、WicketとSeasar2を連携するための手順について紹介します。</p>
+<div class="section"><h3>目次</h3>
+<ul><li><a href="#前提条件">前提条件</a></li>
+<li><a href="#S2WicketをWicketプロジェクトに追加する">S2WicketをWicketプロジェクトに追加する</a></li>
+<li><a href="#S2Containerおよびweb.xmlの設定">S2Containerおよびweb.xmlの設定</a></li>
+<li><a href="#インジェクション">インジェクション</a></li>
+<li><a href="#HOT Deployの代わりに">HOT Deployの代わりに</a></li>
+</ul>
+</div>
+<div class="section"><h3>0. <a name="前提条件">前提条件</a></h3>
+<p>WicketおよびSeasar2 Containerが使用可能な状態にWebアプリケーションがセットアップされていることとします。 また、インジェクションしたいコンポーネントオブジェクトが、Seasar2のDIコンテナに登録されていることとします。</p>
+<p>maven2を使用してS2Wicketを利用する場合は、maven2が利用可能な状態になっていることが必要です。</p>
+</div>
+<div class="section"><h3>1. <a name="S2WicketをWicketプロジェクトに追加する">S2WicketをWicketプロジェクトに追加する</a></h3>
+<p>S2Wicketをセットアップする方法として、jarファイルを直接追加することも可能ですが、 ライブラリの依存関係が複雑なためmaven2を利用してセットアップすることをおすすめします。</p>
+<p>S2Wicketは、seasar.orgが提供するmaven2リポジトリに各種jarを登録しています。 あなたのWebアプリケーションがmaven2でプロジェクト管理されている場合は、 pom.xmlファイルにseasar.orgのmaven2リポジトリの場所とS2Wicketの依存関係を記述するだけで、 すぐにS2Wicketを使用可能な状態にすることができます。</p>
+<p>まず、pom.xmlファイルにseasar.orgが提供するmaven2リポジトリの場所を以下のように記述します。</p>
+<div class="source"><pre>&lt;project ...&gt;
+    ...
+    &lt;repositories&gt;
+        ...
+        &lt;repository&gt;
+            &lt;id&gt;maven.seasar.org&lt;/id&gt;
+            &lt;name&gt;The Seasar Foundation Maven2 Repository&lt;/name&gt;
+            &lt;url&gt;http://maven.seasar.org/maven2&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+    ...
+&lt;/project&gt;</pre>
+</div>
+<p>さらに、S2Wicketへの依存関係を以下のように記述します。</p>
+<div class="source"><pre>&lt;project ...&gt;
+    ...
+    &lt;dependencies&gt;
+        ...
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.seasar.wicket&lt;/groupId&gt;
+            &lt;artifactId&gt;s2wicket&lt;/artifactId&gt;
+            &lt;version&gt;1.4.5&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    ...
+&lt;/project&gt;</pre>
+</div>
+<p>S2Wicketは、S2ContainerおよびWicketに依存しているため、S2Wicketへの依存をpom.xmlに 記述しmaven2でビルドをするだけで、S2ContainerおよびWicketのライブラリがすべて 環境にダウンロードされます。</p>
+<p>また、もし、S2Container本体だけではなくs2-extension、s2-tiger、s2dao、s2dao-tigerを使用し、 データベースを使用するWebアプリケーションを作成する場合は、artifactIdをs2wicketの代わりに s2wicket-libsにすると必要なライブラリ一式がそろった状態で開発を始めることができます。</p>
+<div class="section"><h4>ロギングAPIについて</h4>
+<p>S2Wicketでは、Seasarが使用しているcommons-loggingではなく、Wicketが使用している より先進的なSLF4Jを利用しています。そのため、commons-logging用の設定ではなく SLF4J用の設定が必要になるのでご注意ください。ログ出力APIにはLogbackを使用するのが おすすめです。</p>
+</div>
+</div>
+<div class="section"><h3>2. <a name="S2Containerおよびweb.xmlの設定">S2Containerおよびweb.xmlの設定</a></h3>
+<p>S2Wicketを利用にするには、convention.dicon、s2container.dicon、web.xmlの 設定が必要です。</p>
+<p>S2WicketはS2Container2.4のSMART Deployに対応しています。そのため、Wicket コンポーネントにS2Containerに登録されたコンポーネントをインジェクションするには、 convention.diconに以下の設定を追加します。</p>
+<div class="source"><pre>&lt;components&gt;
+  ...
+  &lt;component class=&quot;org.seasar.framework.container.creator.WicketCreator&quot; /&gt;
+&lt;/components&gt;</pre>
+</div>
+<p>また、S2WicketはS2ContainerのHOT Deploy機能を使用せずにWicketのReleoading WicketFilterを使用してHOT Deployと同等の機能を実現しています。そのため、 競合するHOT Deployは使用しないようにする必要があります。また、Wicketの ReloadingWicketFilterの機能を使用する場合はWARM deployを利用する方が 開発時のメモリ効率の観点から推奨されます。一般的にはs2container.diconの記述は 以下の通りになります。</p>
+<div class="source"><pre>&lt;components&gt;
+  &lt;include condition=&quot;#ENV == 'ut' || #ENV == 'it'&quot; path=&quot;warmdeploy.dicon&quot; /&gt;
+  &lt;include condition=&quot;#ENV == 'product'&quot; path=&quot;cooldeploy.dicon&quot; /&gt;
+&lt;/components&gt;</pre>
+</div>
+<p>以上のS2Containerの設定に加えて、web.xmlで、WicketFilterの代わりにS2Wicket独自の フィルタを使用するように設定します。</p>
+<div class="source"><pre>  &lt;filter&gt;
+    &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.seasar.wicket.S2WicketFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+      &lt;param-value&gt;foo.bar.YourApplication&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;</pre>
+</div>
+<p>以上で設定は終了です。</p>
+</div>
+<div class="section"><h3>3. <a name="インジェクション">インジェクション</a></h3>
+<p>前項までの設定でS2ContainerによるWicketコンポーネントへのコンポーネントオブジェクトの インジェクションが行われるようになります。</p>
+<p>インジェクション先の対象はWicketのComponentクラスを継承する全クラスが対象となります。 命名規約による制限はありません。</p>
+<p>インジェクションの方法はS2Containerの標準である、getterおよびsetterを定義する方法、 フィールドに@Bindingアノテーションをつける方法が使用できます。プロパティの命名規則等に ついてはS2Container標準に準拠します。</p>
+<p>例えば、WebPageクラスに対してS2Daoコンポーネントをインジェクションするには以下のように なります。</p>
+<div class="source"><pre>public class IndexPage extends WebPage {
+  @Binding
+  private EmployeeDao employeeDao
+
+  public IndexPage(PageParameters parameters) {
+    super(parameters);
+    
+    add(new Label(&quot;count&quot;, Integer.toString(employeeDao.count()));
+  }
+}</pre>
+</div>
+</div>
+<div class="section"><h3>4. <a name="HOT_Deployの代わりに">HOT Deployの代わりに</a></h3>
+<p>S2Wicketでは2項に書いたようにHOT Deployを利用できませんが、代わりに WicketのReloadingWicketFilterの機能を利用することで開発時にtomcatの再起動を 行わずクラスのリロードを行うことができます。</p>
+<p>この機能を利用するには、web.xmlにフィルターのパラメータとして、 リロードを行うクラス名のパターンをreloadingClassPatternとして追加し、 configurationをdevelopmentにします。</p>
+<div class="source"><pre>  &lt;filter&gt;
+    &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.seasar.wicket.S2WicketFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+      &lt;param-value&gt;foo.bar.YourApplication&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;configuration&lt;/param-name&gt;
+      &lt;param-value&gt;development&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;reloadingClassPattern&lt;/param-name&gt;
+      &lt;param-value&gt;foo.bar.**&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;</pre>
+</div>
+<p>また、この設定だけではリロードの際にS2Containerの全コンポーネントが リロードされてしまうため、S2ContainerのWARM Deploy機能を使うことを 推奨します。</p>
+<p>開発時にはweb.xmlのconfigurationを'development'にし、S2Containerの env.txtの中身を'ut'。公開時にはconfigurationを'deployment'にし、 S2Containerのenv.txtの中身を'product'にするのがよいと思います。</p>
+<div class="section"><h4>EclipseのWTPについて</h4>
+<p>EclipseのWTPを使用していると、上記の設定をしても javaファイルを保存するたびにハードディスクががりがり動くとか、 数秒待たないと更新されないといったことがあるかもしれません。</p>
+<p>EclpseのWTPでは何も設定しないとファイルを更新するたびに、自動的に アプリケーション全体のリロードが行われます。S2Wicketを利用しない場合は それが正しい動作なのですが、クラス毎のリロードをサポートしている S2Wicketでは無駄な動作となります。</p>
+<p>S2Wicketの機能を最大限に有効にするには、次の設定を行ってください。</p>
+<ul><li>サーバーの設定画面 → 公開なしでモジュールを供給(serve modules without publishing)をチェック</li>
+<li>各モジュールの設定 → 自動リロードを使用不可に</li>
+</ul>
+</div>
+</div>
+</div>
+
+</div><!-- article -->
+
+</div><!-- contents_center -->
+
+<div id="footer">
+<address>  &copy; Copyright 
+                    <a href="http://www.seasar.org/">The Seasar Foundation and the others</a>.
+            and the others
+    
+              2010,
+        all rights reserved.
+  <a href="http://www.seasar.org">The Seasar Project</a>.
+</address>
+<div class="line"><span class="hide">spacer</span></div>
+</div><!-- footer -->
+
+</div><!-- wrapper -->
+
+</body>
+</html>
