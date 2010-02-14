@@ -12,12 +12,14 @@ TAKEUCHI Hideyuki
 * 目次
   
   * {{{#前提条件}前提条件}}
-
-  * {{{#S2WicketをあなたのWicketプロジェクトに追加する}S2WicketをあなたのWicketプロジェクトに追加する}}
-
+  
+  * {{{#S2WicketをWicketプロジェクトに追加する}S2WicketをWicketプロジェクトに追加する}}
+  
   * {{{#S2Containerおよびweb.xmlの設定}S2Containerおよびweb.xmlの設定}}
   
   * {{{#インジェクション}インジェクション}}
+  
+  * {{{#HOT Deployの代わりに}HOT Deployの代わりに}}
   
 * 0. {前提条件}
 
@@ -26,9 +28,9 @@ TAKEUCHI Hideyuki
   
   maven2を使用してS2Wicketを利用する場合は、maven2が利用可能な状態になっていることが必要です。
   
-* 1. {S2Wicketをあなたのプロジェクトに追加する}
+* 1. {S2WicketをWicketプロジェクトに追加する}
 
-  S2Wicketをセットアップする形態として、jarファイルを直接追加することも可能ですが、
+  S2Wicketをセットアップする方法として、jarファイルを直接追加することも可能ですが、
   ライブラリの依存関係が複雑なためmaven2を利用してセットアップすることをおすすめします。
   
   S2Wicketは、seasar.orgが提供するmaven2リポジトリに各種jarを登録しています。
@@ -75,7 +77,7 @@ TAKEUCHI Hideyuki
   環境にダウンロードされます。
   
   また、もし、S2Container本体だけではなくs2-extension、s2-tiger、s2dao、s2dao-tigerを使用し、
-  データベースに依存するWebアプリケーションを作成する場合はartifactIdをs2wicketの代わりに
+  データベースを使用するWebアプリケーションを作成する場合は、artifactIdをs2wicketの代わりに
   s2wicket-libsにすると必要なライブラリ一式がそろった状態で開発を始めることができます。
   
 ** ロギングAPIについて
@@ -143,7 +145,7 @@ TAKEUCHI Hideyuki
   インジェクション先の対象はWicketのComponentクラスを継承する全クラスが対象となります。
   命名規約による制限はありません。
   
-  インジェクションの方法はS2Containerの標準の方法である、getterおよびsetterを定義する方法、
+  インジェクションの方法はS2Containerの標準である、getterおよびsetterを定義する方法、
   フィールドに@Bindingアノテーションをつける方法が使用できます。プロパティの命名規則等に
   ついてはS2Container標準に準拠します。
 
@@ -163,4 +165,56 @@ public class IndexPage extends WebPage {
 }
 +------------------------------------------------------+
 
+* 4. {HOT Deployの代わりに}
 
+  S2Wicketでは2項に書いたようにHOT Deployを利用できませんが、代わりに
+  WicketのReloadingWicketFilterの機能を利用することで開発時にtomcatの再起動を
+  行わずクラスのリロードを行うことができます。
+  
+  この機能を利用するには、web.xmlにフィルターのパラメータとして、
+  リロードを行うクラス名のパターンをreloadingClassPatternとして追加し、
+  configurationをdevelopmentにします。
+  
++------------------------------------------------------+
+  <filter>
+    <filter-name>s2wicketfilter</filter-name>
+    <filter-class>org.seasar.wicket.S2WicketFilter</filter-class>
+    <init-param>
+      <param-name>applicationClassName</param-name>
+      <param-value>foo.bar.YourApplication</param-value>
+    </init-param>
+    <init-param>
+      <param-name>configuration</param-name>
+      <param-value>development</param-value>
+    </init-param>
+    <init-param>
+      <param-name>reloadingClassPattern</param-name>
+      <param-value>foo.bar.**</param-value>
+    </init-param>
+  </filter>
++------------------------------------------------------+
+
+  また、この設定だけではリロードの際にS2Containerの全コンポーネントが
+  リロードされてしまうため、S2ContainerのWARM Deploy機能を使うことを
+  推奨します。
+  
+  開発時にはweb.xmlのconfigurationを'development'にし、S2Containerの
+  env.txtの中身を'ut'。公開時にはconfigurationを'deployment'にし、
+  S2Containerのenv.txtの中身を'product'にするのがよいと思います。
+  
+** EclipseのWTPについて
+  
+  EclipseのWTPを使用していると、上記の設定をしても
+  javaファイルを保存するたびにハードディスクががりがり動くとか、
+  数秒待たないと更新されないといったことがあるかもしれません。
+  
+  EclpseのWTPでは何も設定しないとファイルを更新するたびに、自動的に
+  アプリケーション全体のリロードが行われます。S2Wicketを利用しない場合は
+  それが正しい動作なのですが、クラス毎のリロードをサポートしている
+  S2Wicketでは無駄な動作となります。
+  
+  S2Wicketの機能を最大限に有効にするには、次の設定を行ってください。
+  
+  * サーバーの設定画面 → 公開なしでモジュールを供給(serve modules without publishing)をチェック
+    
+  * 各モジュールの設定 → 自動リロードを使用不可に

@@ -20,11 +20,6 @@ TAKEUCHI Hideyuki
   自動的にSeasarコンテナからコンポーネントオブジェクトをルックアップし，処理を呼び出してくれます。
   そこから先はSeasarの世界です。AOPやS2Daoなどの優れた機構を，思う存分使用することが可能となります。
   
-* 謝辞
-
-  S2Wicketを開発するにあたり，{{{http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182494}wicket-springやwicket-spring-annot}}を参考にさせていただきました。
-  {{{http://sourceforge.net/project/showfiles.php?group_id=119783&package_id=182494}wicket-springやwicket-spring-annot}}の作者であるIgor Vaynberg氏に感謝いたします。
-  
 * Wicketとは
 
   {{{http://wicket.apache.org/}Wicket}}は，POHP(Plain Old HTML Page)ソリューションの代表格であるWebアプリケーションフレームワークです。
