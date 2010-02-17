@@ -25,7 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
@@ -43,6 +42,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.filter.S2ContainerFilter;
 import org.seasar.framework.container.util.SmartDeployUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.wicket.debug.S2DebugPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,7 +156,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                     reloadingClassPattern);
         }
 
-        if (!Application.DEPLOYMENT.equalsIgnoreCase(configuration)
+        if (Application.DEVELOPMENT.equalsIgnoreCase(configuration)
                 && reloadingClassPattern != null) {
             ReloadingClassLoader.getPatterns().clear();
             // すべてのクラスが読み込まれる前に先に監視クラスを設定
@@ -202,6 +202,11 @@ public class S2WicketFilter extends ReloadingWicketFilter {
         applicationConfigType = webApplication.getConfigurationType();
         applicationEncoding =
                 webApplication.getRequestCycleSettings().getResponseRequestEncoding();
+
+        if (Application.DEVELOPMENT.equalsIgnoreCase(configuration)
+                && debug != null) {
+            webApplication.mountBookmarkablePage(debug, S2DebugPage.class);
+        }
     }
 
     @Override
@@ -240,17 +245,6 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                     }
                 }
                 session.setAttribute(SESSION_LOADER, getClassLoader());
-            }
-
-            // デバッグ出力
-            if (debug != null) {
-                HttpServletRequest req = (HttpServletRequest) request;
-                HttpServletResponse res = (HttpServletResponse) response;
-                if (debug.equals(req.getServletPath())) {
-                    S2WicketDebugBuilder builder = new S2WicketDebugBuilder();
-                    builder.doResponse(req, res);
-                    return;
-                }
             }
         }
 
