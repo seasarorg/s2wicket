@@ -4,12 +4,12 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket-libs</artifactId>
-  <version>1.4.6</version>
+  <version>1.4.7</version>
   <packaging>jar</packaging>
   <properties>
-    <wicket.version>1.4.6</wicket.version>
-    <s2container.version>2.4.40</s2container.version>
-    <s2dao.version>1.0.50</s2dao.version>
+    <wicket.version>1.4.7</wicket.version>
+    <s2container.version>2.4.41</s2container.version>
+    <s2dao.version>1.0.51</s2dao.version>
     <slf4j.version>1.5.10</slf4j.version>
     <logback.version>0.9.18</logback.version>
   </properties>
