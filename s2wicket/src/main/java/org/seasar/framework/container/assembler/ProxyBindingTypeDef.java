@@ -42,7 +42,7 @@ public class ProxyBindingTypeDef extends BindingTypeMayDef {
     protected Object getValue(ComponentDef componentDef, Object key,
             Object component, String propertyName)
             throws IllegalPropertyRuntimeException {
-        if (key instanceof Class) {
+        if (key instanceof Class<?>) {
             // keyがclassまたはinterfaceの場合は、プロパティのクラスタイプなので
             // そのクラスタイプでproxyの作成
             return LazyInitProxyFactory.createProxy((Class<?>) key,
