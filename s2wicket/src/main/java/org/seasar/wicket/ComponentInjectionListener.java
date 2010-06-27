@@ -29,7 +29,8 @@ import org.seasar.framework.container.util.SmartDeployUtil;
  * 
  * @author TAKEUCHI Hideyuki (chimerast)
  */
-class ComponentInjectionListener implements IComponentInstantiationListener {
+public class ComponentInjectionListener implements
+        IComponentInstantiationListener {
     public void onInstantiation(Component component) {
         Class<?> target = component.getClass();
         if (target.getCanonicalName() == null) {
