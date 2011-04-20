@@ -11,7 +11,6 @@
     <s2container.version>2.4.43</s2container.version>
     <s2dao.version>1.0.51</s2dao.version>
     <slf4j.version>1.6.1</slf4j.version>
-    <logback.version>0.9.28</logback.version>
   </properties>
   <dependencies>
     <dependency>
@@ -56,12 +55,6 @@
       <groupId>org.seasar.dao</groupId>
       <artifactId>s2-dao-tiger</artifactId>
       <version>${s2dao.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>${logback.version}</version>
     </dependency>
 
     <!-- JSP / Servlet -->
@@ -145,11 +138,6 @@
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
-    </repository>
-    <repository>
-      <id>Version99</id>
-      <name>Version 99 Does Not Exist Maven repository</name>
-      <url>http://no-commons-logging.zapto.org/mvn2</url>
     </repository>
   </repositories>
 
