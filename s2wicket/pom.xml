@@ -4,13 +4,18 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket</artifactId>
-  <version>1.4.17</version>
+  <version>1.4.17.1</version>
   <packaging>jar</packaging>
+  
   <properties>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+    <encoding>UTF-8</encoding>
     <wicket.version>1.4.17</wicket.version>
-    <s2container.version>2.4.43</s2container.version>
+    <s2container.version>2.4.44</s2container.version>
     <slf4j.version>1.6.1</slf4j.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.wicket</groupId>
@@ -69,16 +74,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <version>2.1.2</version>
         <executions>
@@ -133,7 +128,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2</version>
+        <version>2.2.1</version>
         <configuration>
           <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
@@ -181,8 +176,8 @@
   </organization>
 
   <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</developerConnection>
+    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/branches/1.4/s2wicket</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/branches/1.4/s2wicket</developerConnection>
     <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
   </scm>
   <distributionManagement>
