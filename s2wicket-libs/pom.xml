@@ -4,14 +4,16 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket-libs</artifactId>
-  <version>1.4.17</version>
+  <version>1.4.17.1</version>
   <packaging>jar</packaging>
+  
   <properties>
     <wicket.version>1.4.17</wicket.version>
-    <s2container.version>2.4.43</s2container.version>
+    <s2container.version>2.4.44</s2container.version>
     <s2dao.version>1.0.51</s2dao.version>
     <slf4j.version>1.6.1</slf4j.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.seasar.wicket</groupId>
@@ -56,74 +58,9 @@
       <artifactId>s2-dao-tiger</artifactId>
       <version>${s2dao.version}</version>
     </dependency>
-
-    <!-- JSP / Servlet -->
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jsp_2.0_spec</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-servlet_2.4_spec</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!--S2JTA,S2Txを使う場合必要 -->
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jta_1.1_spec</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <!-- Tomcat5.5の場合必要 6では不要 -->
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-annotation_1.0_spec</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <!-- Tomcatの場合必要 -->
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-ejb_3.0_spec</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <!-- Tomcat5.5では必要 Tomcat6でJPAを使う場合必要 -->
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jpa_3.0_spec</artifactId>
-      <version>1.0</version>
-    </dependency>
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptors>
-            <descriptor>src/main/assembly/distribute.xml</descriptor>
-          </descriptors>
-        </configuration>
-      </plugin>
-    </plugins>
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -157,12 +94,8 @@
   </organization>
 
   <scm>
-    <connection>
-      scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-libs
-    </connection>
-    <developerConnection>
-      scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-libs
-    </developerConnection>
+    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/branches/1.4/s2wicket-libs</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/branches/1.4/s2wicket-libs</developerConnection>
     <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
   </scm>
   <distributionManagement>
