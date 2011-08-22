@@ -4,16 +4,16 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket</artifactId>
-  <version>1.4.17.1</version>
+  <version>1.4.18</version>
   <packaging>jar</packaging>
-  
+
   <properties>
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
     <encoding>UTF-8</encoding>
-    <wicket.version>1.4.17</wicket.version>
+    <wicket.version>1.4.18</wicket.version>
     <s2container.version>2.4.44</s2container.version>
-    <slf4j.version>1.6.1</slf4j.version>
+    <slf4j.version>1.6.2</slf4j.version>
   </properties>
 
   <dependencies>
@@ -55,6 +55,7 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>99.0-does-not-exist</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -154,9 +155,9 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
     <repository>
-      <id>Version99</id>
-      <name>Version 99 Does Not Exist Maven repository</name>
-      <url>http://no-commons-logging.zapto.org/mvn2</url>
+      <id>repo.karatachi.org</id>
+      <name>Karatachi Repository</name>
+      <url>http://repo.karatachi.org/mvn</url>
     </repository>
   </repositories>
 
