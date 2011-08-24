@@ -4,19 +4,45 @@
 
   <groupId>org.seasar</groupId>
   <artifactId>s2wicket-example</artifactId>
-  <version>1.4.7</version>
+  <version>1.4.18</version>
   <packaging>war</packaging>
   <dependencies>
     <dependency>
       <groupId>org.seasar.wicket</groupId>
       <artifactId>s2wicket-libs</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.2.128</version>
+    </dependency>
+
+    <!--S2JTA,S2Txを使う場合必要 -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jta_1.1_spec</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <!-- Tomcatの場合必要 -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-ejb_3.0_spec</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <!-- Tomcat5.5では必要 Tomcat6でJPAを使う場合必要 -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jpa_3.0_spec</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
