@@ -6,12 +6,12 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.h2.tools.RunScript;
 import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.wicket.S2WebApplication;
 import org.seasar.wicket.example.web.index.IndexPage;
 
-public class S2WicketExampleApplication extends S2WebApplication {
+public class S2WicketExampleApplication extends WebApplication {
     @Override
     protected void init() {
         initializeDatabase();
@@ -23,7 +23,8 @@ public class S2WicketExampleApplication extends S2WebApplication {
                 SingletonS2Container.getComponent(DataSource.class);
         try {
             Connection connection = dataSource.getConnection();
-            RunScript.execute(connection,
+            RunScript.execute(
+                    connection,
                     new InputStreamReader(
                             getClass().getClassLoader().getResourceAsStream(
                                     "init.sql"), "UTF-8"));

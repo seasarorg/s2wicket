@@ -1,12 +1,14 @@
 package org.seasar.wicket.debug;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -49,7 +51,7 @@ public class S2DebugPage extends WebPage {
                 @Override
                 protected void populateItem(LoopItem item) {
                     item.setDefaultModel(new CompoundPropertyModel<ComponentDef>(
-                            container.getComponentDef(item.getIteration())));
+                            container.getComponentDef(item.getIndex())));
                 }
             }.setVisible(container.getComponentDefSize() > 0));
             add(new AutoResolveLoop("containers", container.getChildSize()) {
@@ -57,20 +59,22 @@ public class S2DebugPage extends WebPage {
 
                 @Override
                 protected void populateItem(LoopItem item) {
-                    item.add(new SimpleAttributeModifier("class", "level"
+                    item.add(AttributeModifier.replace("class", "level"
                             + (level + 1)));
                     item.add(new S2ContainerFragment("container",
-                            container.getChild(item.getIteration()), level + 1));
+                            container.getChild(item.getIndex()), level + 1));
                 }
             }.setVisible(container.getChildSize() > 0));
         }
 
-        public boolean resolve(MarkupContainer container,
+        public Component resolve(MarkupContainer container,
                 MarkupStream markupStream, ComponentTag tag) {
             if (tag.isAutoComponentTag()) {
-                return false;
+                return null;
             }
-            return container.autoAdd(new Label(tag.getId()), markupStream);
+            Component component = new Label(tag.getId());
+            container.autoAdd(component, markupStream);
+            return component;
         }
     }
 
@@ -82,12 +86,14 @@ public class S2DebugPage extends WebPage {
             super(id, iterations);
         }
 
-        public boolean resolve(MarkupContainer container,
+        public Component resolve(MarkupContainer container,
                 MarkupStream markupStream, ComponentTag tag) {
             if (tag.isAutoComponentTag()) {
-                return false;
+                return null;
             }
-            return container.autoAdd(new Label(tag.getId()), markupStream);
+            Component component = new Label(tag.getId());
+            container.autoAdd(component, markupStream);
+            return component;
         }
     }
 

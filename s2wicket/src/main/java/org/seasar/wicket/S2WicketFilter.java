@@ -28,9 +28,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.application.ReloadingClassLoader;
 import org.apache.wicket.protocol.http.ReloadingWicketFilter;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.HttpSessionStore;
+import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IProvider;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
@@ -130,19 +134,20 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     private String reloadingClassPattern;
 
     /** アプリケーションのコンフィグ(DEPLOYMENT, DEVELOPMENT) */
-    private String applicationConfigType;
+    private RuntimeConfigurationType applicationConfigType;
     /** アプリケーションのデフォルトエンコーディング */
     private String applicationEncoding;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final boolean isServlet, FilterConfig filterConfig)
+            throws ServletException {
         if (SingletonS2ContainerFactory.hasContainer()) {
             SingletonS2ContainerFactory.destroy();
         }
 
         // コンフィギュレーションの読み取り
         configuration =
-                getInitParameter(filterConfig, "configuration", "development");
+                getInitParameter(filterConfig, "configuration", "development").toUpperCase();
         configPath = getInitParameter(filterConfig, "configPath", "app.dicon");
         debug = getInitParameter(filterConfig, "debug", null);
         reloadingClassPattern =
@@ -156,7 +161,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                     reloadingClassPattern);
         }
 
-        if (Application.DEVELOPMENT.equalsIgnoreCase(configuration)
+        if (RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)
                 && reloadingClassPattern != null) {
             ReloadingClassLoader.getPatterns().clear();
             // すべてのクラスが読み込まれる前に先に監視クラスを設定
@@ -191,21 +196,26 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                     "S2Wicket does not support HOT deploy mode.");
         }
 
-        super.init(filterConfig);
+        super.init(isServlet, filterConfig);
 
         // 関連づけられたWebApplicationを取り出す（現状これしか方法がない？）
-        String contextKey = "wicket:" + filterConfig.getFilterName();
         WebApplication webApplication =
-                (WebApplication) filterConfig.getServletContext().getAttribute(
-                        contextKey);
-        webApplication.addComponentInstantiationListener(new ComponentInjectionListener());
+                (WebApplication) Application.get(filterConfig.getFilterName());
+        webApplication.getComponentInstantiationListeners().add(
+                new ComponentInjectionListener());
         applicationConfigType = webApplication.getConfigurationType();
         applicationEncoding =
                 webApplication.getRequestCycleSettings().getResponseRequestEncoding();
 
-        if (Application.DEVELOPMENT.equalsIgnoreCase(configuration)
-                && debug != null) {
-            webApplication.mountBookmarkablePage(debug, S2DebugPage.class);
+        if (RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)) {
+            webApplication.setSessionStoreProvider(new IProvider<ISessionStore>() {
+                public ISessionStore get() {
+                    return new HttpSessionStore();
+                }
+            });
+            if (debug != null) {
+                webApplication.mountPackage(debug, S2DebugPage.class);
+            }
         }
     }
 
@@ -222,7 +232,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        if (Application.DEVELOPMENT.equalsIgnoreCase(applicationConfigType)) {
+        if (RuntimeConfigurationType.DEVELOPMENT == applicationConfigType) {
             if (request instanceof HttpServletRequest) {
                 // 旧セッションクラスローダーで読み込まれていたセッションオブジェクトの削除
                 HttpSession session =

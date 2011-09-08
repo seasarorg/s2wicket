@@ -60,7 +60,7 @@ public class WicketCreator extends ComponentCreatorImpl {
         setAutoBindingDef(AutoProxyBindingAutoDef.PROXY);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     @Override
     public ComponentDef createComponentDef(Class componentClass) {
         if (!getNamingConvention().isTargetClassName(componentClass.getName())) {
