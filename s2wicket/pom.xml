@@ -55,7 +55,6 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>99.0-does-not-exist</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -142,7 +141,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>1.0-beta-6</version>
+        <version>1.0-beta-7</version>
       </extension>
     </extensions>
   </build>
