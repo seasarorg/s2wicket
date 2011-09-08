@@ -221,7 +221,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                 }
             });
             if (debug != null) {
-                webApplication.mountPackage(debug, S2DebugPage.class);
+                webApplication.mountPage(debug, S2DebugPage.class);
             }
         }
     }
