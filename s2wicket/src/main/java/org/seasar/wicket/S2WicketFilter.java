@@ -141,9 +141,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
             throws ServletException {
-        if (SingletonS2ContainerFactory.hasContainer()) {
-            SingletonS2ContainerFactory.destroy();
-        }
+        // 再読み込み時にアプリケーションが破棄されるようにする 
+        destroy();
 
         // コンフィギュレーションの読み取り
         configuration =
@@ -196,7 +195,15 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                     "S2Wicket does not support HOT deploy mode.");
         }
 
+        // ApplicationならびにgetHomePage()で設定しているクラスがデフォルトの
+        // クラスローダで読み込まれてしまうため正しく設定
+        ClassLoader previousClassLoader =
+                Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClassLoader());
+
         super.init(isServlet, filterConfig);
+
+        Thread.currentThread().setContextClassLoader(previousClassLoader);
 
         // 関連づけられたWebApplicationを取り出す（現状これしか方法がない？）
         WebApplication webApplication =
