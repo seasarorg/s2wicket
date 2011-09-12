@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<meta http-equiv="Content-Language" content="ja" /> 
+<meta http-equiv="Content-Style-Type" content="text/css" /> 
+<title>S2Wicket - Wicket Seasar Integration User Guide Page</title>
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/main.css" media="screen,projection" />
+<link rel="stylesheet" type="text/css" href="http://www.seasar.org/theme/print.css" media="print" />
+<link href="./css/maven-base.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/maven-theme.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="./css/prettify.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript" src="./js/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+
+<div id="wrapper">
+
+<div id="header">
+
+<div class="line"><span class="hide">spacer</span></div>
+
+<div id="logo"><h1 id="h01" class="hide">The Seasar Project</h1><a href="http://www.seasar.org/" alt="The Seasar Project" title="The Seasar Project"><img src="http://www.seasar.org/images/seasar_logo_blue.gif" alt="The Seasar Project" width="390" height="180" /></a></div>
+
+<div id="tool">
+
+<h2><a href="http://search.seasar.org/">Site Search</a></h2>
+
+<form id="search" action="http://search.seasar.org/">
+<div>
+	<input id="search_phrase" type="text" name="phrase" size="20" />
+	<input type="hidden" name="perpage" value="30" />
+	<input type="hidden" name="enc" value="UTF-8" />
+	<input id="search_go" type="submit" value="Search" />
+</div>
+</form>
+
+<h2>Seasar Banner</h2>
+              <span id="bannerLeft">
+    
+            S2Wicket
+    
+            </span>
+      
+</div>
+
+<div id="navi">
+	<p id="navi_left">  </p>
+	<p id="navi_right"><a href="./../en/">English</a> | <a href="./../ja/">Japanese</a></p>
+</div>
+
+</div><!-- header -->
+
+<div id="contents_left">
+           
+  
+
+  
+    
+  
+  
+                   <h2>About</h2>
+        <ul>
+              
+    <li class="none">
+              <a href="index.html">ホーム</a>
+        </li>
+              
+    <li class="none">
+              <a href="license.html">ライセンス</a>
+        </li>
+              
+    <li class="none">
+              <a href="download.html">ダウンロード</a>
+        </li>
+              
+    <li class="none">
+              <a href="changelog.html">変更履歴</a>
+        </li>
+          </ul>
+          <h2>ドキュメント</h2>
+        <ul>
+              
+    <li class="none">
+              <strong>使い方(1.4.x～)</strong>
+        </li>
+              
+    <li class="none">
+              <a href="old_userguide.html">使い方(～1.2.x)</a>
+        </li>
+              
+    <li class="none">
+              <a href="apidocs/index.html">API</a>
+        </li>
+          </ul>
+          <h2>プロジェクト文書</h2>
+        <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+              <a href="project-info.html">プロジェクト情報</a>
+              </li>
+          </ul>
+                                       <a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy" name="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png" />
+          </a>
+                       
+  
+
+  
+    
+  
+  
+  </div><!-- contents_left -->
+
+<div id="contents_center">
+
+<div id="article">
+<div class="section"><h2>&#x4f7f;&#x7528;&#x65b9;&#x6cd5;<a name="a"></a></h2><p>S2Wicket&#x3092;&#x4f7f;&#x7528;&#x3057;&#x3066;&#x3001;Wicket&#x3068;Seasar2&#x3092;&#x9023;&#x643a;&#x3059;&#x308b;&#x305f;&#x3081;&#x306e;&#x624b;&#x9806;&#x306b;&#x3064;&#x3044;&#x3066;&#x7d39;&#x4ecb;&#x3057;&#x307e;&#x3059;&#x3002;</p><div class="section"><h3>&#x76ee;&#x6b21;<a name="a"></a></h3><ul><li><a href="#a">&#x524d;&#x63d0;&#x6761;&#x4ef6;</a></li><li><a href="#aS2WicketWicket">S2Wicket&#x3092;Wicket&#x30d7;&#x30ed;&#x30b8;&#x30a7;&#x30af;&#x30c8;&#x306b;&#x8ffd;&#x52a0;&#x3059;&#x308b;</a></li><li><a href="#aS2Containerweb.xml">S2Container&#x304a;&#x3088;&#x3073;web.xml&#x306e;&#x8a2d;&#x5b9a;</a></li><li><a href="#a">&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;</a></li><li><a href="#aHOT_Deploy">HOT Deploy&#x306e;&#x4ee3;&#x308f;&#x308a;&#x306b;</a></li></ul></div><div class="section"><h3>0. <a name="a">&#x524d;&#x63d0;&#x6761;&#x4ef6;</a><a name="a0._"></a></h3><p>Wicket&#x304a;&#x3088;&#x3073;Seasar2 Container&#x304c;&#x4f7f;&#x7528;&#x53ef;&#x80fd;&#x306a;&#x72b6;&#x614b;&#x306b;Web&#x30a2;&#x30d7;&#x30ea;&#x30b1;&#x30fc;&#x30b7;&#x30e7;&#x30f3;&#x304c;&#x30bb;&#x30c3;&#x30c8;&#x30a2;&#x30c3;&#x30d7;&#x3055;&#x308c;&#x3066;&#x3044;&#x308b;&#x3053;&#x3068;&#x3068;&#x3057;&#x307e;&#x3059;&#x3002; &#x307e;&#x305f;&#x3001;&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;&#x3057;&#x305f;&#x3044;&#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x30aa;&#x30d6;&#x30b8;&#x30a7;&#x30af;&#x30c8;&#x304c;&#x3001;Seasar2&#x306e;DI&#x30b3;&#x30f3;&#x30c6;&#x30ca;&#x306b;&#x767b;&#x9332;&#x3055;&#x308c;&#x3066;&#x3044;&#x308b;&#x3053;&#x3068;&#x3068;&#x3057;&#x307e;&#x3059;&#x3002;</p><p>maven2&#x3092;&#x4f7f;&#x7528;&#x3057;&#x3066;S2Wicket&#x3092;&#x5229;&#x7528;&#x3059;&#x308b;&#x5834;&#x5408;&#x306f;&#x3001;maven2&#x304c;&#x5229;&#x7528;&#x53ef;&#x80fd;&#x306a;&#x72b6;&#x614b;&#x306b;&#x306a;&#x3063;&#x3066;&#x3044;&#x308b;&#x3053;&#x3068;&#x304c;&#x5fc5;&#x8981;&#x3067;&#x3059;&#x3002;</p></div><div class="section"><h3>1. <a name="S2WicketWicket">S2Wicket&#x3092;Wicket&#x30d7;&#x30ed;&#x30b8;&#x30a7;&#x30af;&#x30c8;&#x306b;&#x8ffd;&#x52a0;&#x3059;&#x308b;</a><a name="a1._S2WicketWicket"></a></h3><p>S2Wicket&#x3092;&#x30bb;&#x30c3;&#x30c8;&#x30a2;&#x30c3;&#x30d7;&#x3059;&#x308b;&#x65b9;&#x6cd5;&#x3068;&#x3057;&#x3066;&#x3001;jar&#x30d5;&#x30a1;&#x30a4;&#x30eb;&#x3092;&#x76f4;&#x63a5;&#x8ffd;&#x52a0;&#x3059;&#x308b;&#x3053;&#x3068;&#x3082;&#x53ef;&#x80fd;&#x3067;&#x3059;&#x304c;&#x3001; &#x30e9;&#x30a4;&#x30d6;&#x30e9;&#x30ea;&#x306e;&#x4f9d;&#x5b58;&#x95a2;&#x4fc2;&#x304c;&#x8907;&#x96d1;&#x306a;&#x305f;&#x3081;maven2&#x3092;&#x5229;&#x7528;&#x3057;&#x3066;&#x30bb;&#x30c3;&#x30c8;&#x30a2;&#x30c3;&#x30d7;&#x3059;&#x308b;&#x3053;&#x3068;&#x3092;&#x304a;&#x3059;&#x3059;&#x3081;&#x3057;&#x307e;&#x3059;&#x3002;</p><p>S2Wicket&#x306f;&#x3001;seasar.org&#x304c;&#x63d0;&#x4f9b;&#x3059;&#x308b;maven2&#x30ea;&#x30dd;&#x30b8;&#x30c8;&#x30ea;&#x306b;&#x5404;&#x7a2e;jar&#x3092;&#x767b;&#x9332;&#x3057;&#x3066;&#x3044;&#x307e;&#x3059;&#x3002; &#x3042;&#x306a;&#x305f;&#x306e;Web&#x30a2;&#x30d7;&#x30ea;&#x30b1;&#x30fc;&#x30b7;&#x30e7;&#x30f3;&#x304c;maven2&#x3067;&#x30d7;&#x30ed;&#x30b8;&#x30a7;&#x30af;&#x30c8;&#x7ba1;&#x7406;&#x3055;&#x308c;&#x3066;&#x3044;&#x308b;&#x5834;&#x5408;&#x306f;&#x3001; pom.xml&#x30d5;&#x30a1;&#x30a4;&#x30eb;&#x306b;seasar.org&#x306e;maven2&#x30ea;&#x30dd;&#x30b8;&#x30c8;&#x30ea;&#x306e;&#x5834;&#x6240;&#x3068;S2Wicket&#x306e;&#x4f9d;&#x5b58;&#x95a2;&#x4fc2;&#x3092;&#x8a18;&#x8ff0;&#x3059;&#x308b;&#x3060;&#x3051;&#x3067;&#x3001; &#x3059;&#x3050;&#x306b;S2Wicket&#x3092;&#x4f7f;&#x7528;&#x53ef;&#x80fd;&#x306a;&#x72b6;&#x614b;&#x306b;&#x3059;&#x308b;&#x3053;&#x3068;&#x304c;&#x3067;&#x304d;&#x307e;&#x3059;&#x3002;</p><p>&#x307e;&#x305a;&#x3001;pom.xml&#x30d5;&#x30a1;&#x30a4;&#x30eb;&#x306b;seasar.org&#x304c;&#x63d0;&#x4f9b;&#x3059;&#x308b;maven2&#x30ea;&#x30dd;&#x30b8;&#x30c8;&#x30ea;&#x306e;&#x5834;&#x6240;&#x3092;&#x4ee5;&#x4e0b;&#x306e;&#x3088;&#x3046;&#x306b;&#x8a18;&#x8ff0;&#x3057;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>&lt;project ...&gt;
+    ...
+    &lt;repositories&gt;
+        ...
+        &lt;repository&gt;
+            &lt;id&gt;maven.seasar.org&lt;/id&gt;
+            &lt;name&gt;The Seasar Foundation Maven2 Repository&lt;/name&gt;
+            &lt;url&gt;http://maven.seasar.org/maven2&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+    ...
+&lt;/project&gt;</pre></div><p>&#x3055;&#x3089;&#x306b;&#x3001;S2Wicket&#x3078;&#x306e;&#x4f9d;&#x5b58;&#x95a2;&#x4fc2;&#x3092;&#x4ee5;&#x4e0b;&#x306e;&#x3088;&#x3046;&#x306b;&#x8a18;&#x8ff0;&#x3057;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>&lt;project ...&gt;
+    ...
+    &lt;dependencies&gt;
+        ...
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.seasar.wicket&lt;/groupId&gt;
+            &lt;artifactId&gt;s2wicket&lt;/artifactId&gt;
+            &lt;version&gt;1.5.0&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    ...
+&lt;/project&gt;</pre></div><p>S2Wicket&#x306f;&#x3001;S2Container&#x304a;&#x3088;&#x3073;Wicket&#x306b;&#x4f9d;&#x5b58;&#x3057;&#x3066;&#x3044;&#x308b;&#x305f;&#x3081;&#x3001;S2Wicket&#x3078;&#x306e;&#x4f9d;&#x5b58;&#x3092;pom.xml&#x306b; &#x8a18;&#x8ff0;&#x3057;maven2&#x3067;&#x30d3;&#x30eb;&#x30c9;&#x3092;&#x3059;&#x308b;&#x3060;&#x3051;&#x3067;&#x3001;S2Container&#x304a;&#x3088;&#x3073;Wicket&#x306e;&#x30e9;&#x30a4;&#x30d6;&#x30e9;&#x30ea;&#x304c;&#x3059;&#x3079;&#x3066; &#x74b0;&#x5883;&#x306b;&#x30c0;&#x30a6;&#x30f3;&#x30ed;&#x30fc;&#x30c9;&#x3055;&#x308c;&#x307e;&#x3059;&#x3002;</p><p>&#x307e;&#x305f;&#x3001;&#x3082;&#x3057;&#x3001;S2Container&#x672c;&#x4f53;&#x3060;&#x3051;&#x3067;&#x306f;&#x306a;&#x304f;s2-extension&#x3001;s2-tiger&#x3001;s2dao&#x3001;s2dao-tiger&#x3092;&#x4f7f;&#x7528;&#x3057;&#x3001; &#x30c7;&#x30fc;&#x30bf;&#x30d9;&#x30fc;&#x30b9;&#x3092;&#x4f7f;&#x7528;&#x3059;&#x308b;Web&#x30a2;&#x30d7;&#x30ea;&#x30b1;&#x30fc;&#x30b7;&#x30e7;&#x30f3;&#x3092;&#x4f5c;&#x6210;&#x3059;&#x308b;&#x5834;&#x5408;&#x306f;&#x3001;artifactId&#x3092;s2wicket&#x306e;&#x4ee3;&#x308f;&#x308a;&#x306b; s2wicket-libs&#x306b;&#x3059;&#x308b;&#x3068;&#x5fc5;&#x8981;&#x306a;&#x30e9;&#x30a4;&#x30d6;&#x30e9;&#x30ea;&#x4e00;&#x5f0f;&#x304c;&#x305d;&#x308d;&#x3063;&#x305f;&#x72b6;&#x614b;&#x3067;&#x958b;&#x767a;&#x3092;&#x59cb;&#x3081;&#x308b;&#x3053;&#x3068;&#x304c;&#x3067;&#x304d;&#x307e;&#x3059;&#x3002;</p><div class="section"><h4>&#x30ed;&#x30ae;&#x30f3;&#x30b0;API&#x306b;&#x3064;&#x3044;&#x3066;<a name="aAPI"></a></h4><p>S2Wicket&#x3067;&#x306f;&#x3001;Seasar&#x304c;&#x4f7f;&#x7528;&#x3057;&#x3066;&#x3044;&#x308b;commons-logging&#x3067;&#x306f;&#x306a;&#x304f;&#x3001;Wicket&#x304c;&#x4f7f;&#x7528;&#x3057;&#x3066;&#x3044;&#x308b; &#x3088;&#x308a;&#x5148;&#x9032;&#x7684;&#x306a;SLF4J&#x3092;&#x5229;&#x7528;&#x3057;&#x3066;&#x3044;&#x307e;&#x3059;&#x3002;&#x305d;&#x306e;&#x305f;&#x3081;&#x3001;commons-logging&#x7528;&#x306e;&#x8a2d;&#x5b9a;&#x3067;&#x306f;&#x306a;&#x304f; SLF4J&#x7528;&#x306e;&#x8a2d;&#x5b9a;&#x304c;&#x5fc5;&#x8981;&#x306b;&#x306a;&#x308b;&#x306e;&#x3067;&#x3054;&#x6ce8;&#x610f;&#x304f;&#x3060;&#x3055;&#x3044;&#x3002;&#x30ed;&#x30b0;&#x51fa;&#x529b;API&#x306b;&#x306f;Logback&#x3092;&#x4f7f;&#x7528;&#x3059;&#x308b;&#x306e;&#x304c; &#x304a;&#x3059;&#x3059;&#x3081;&#x3067;&#x3059;&#x3002;</p></div></div><div class="section"><h3>2. <a name="S2Containerweb.xml">S2Container&#x304a;&#x3088;&#x3073;web.xml&#x306e;&#x8a2d;&#x5b9a;</a><a name="a2._S2Containerweb.xml"></a></h3><p>S2Wicket&#x3092;&#x5229;&#x7528;&#x306b;&#x3059;&#x308b;&#x306b;&#x306f;&#x3001;convention.dicon&#x3001;s2container.dicon&#x3001;web.xml&#x306e; &#x8a2d;&#x5b9a;&#x304c;&#x5fc5;&#x8981;&#x3067;&#x3059;&#x3002;</p><p>S2Wicket&#x306f;S2Container2.4&#x306e;SMART Deploy&#x306b;&#x5bfe;&#x5fdc;&#x3057;&#x3066;&#x3044;&#x307e;&#x3059;&#x3002;&#x305d;&#x306e;&#x305f;&#x3081;&#x3001;Wicket &#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x306b;S2Container&#x306b;&#x767b;&#x9332;&#x3055;&#x308c;&#x305f;&#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x3092;&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;&#x3059;&#x308b;&#x306b;&#x306f;&#x3001; convention.dicon&#x306b;&#x4ee5;&#x4e0b;&#x306e;&#x8a2d;&#x5b9a;&#x3092;&#x8ffd;&#x52a0;&#x3057;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>&lt;components&gt;
+  ...
+  &lt;component class=&quot;org.seasar.framework.container.creator.WicketCreator&quot; /&gt;
+&lt;/components&gt;</pre></div><p>&#x307e;&#x305f;&#x3001;S2Wicket&#x306f;S2Container&#x306e;HOT Deploy&#x6a5f;&#x80fd;&#x3092;&#x4f7f;&#x7528;&#x305b;&#x305a;&#x306b;Wicket&#x306e;Releoading WicketFilter&#x3092;&#x4f7f;&#x7528;&#x3057;&#x3066;HOT Deploy&#x3068;&#x540c;&#x7b49;&#x306e;&#x6a5f;&#x80fd;&#x3092;&#x5b9f;&#x73fe;&#x3057;&#x3066;&#x3044;&#x307e;&#x3059;&#x3002;&#x305d;&#x306e;&#x305f;&#x3081;&#x3001; &#x7af6;&#x5408;&#x3059;&#x308b;HOT Deploy&#x306f;&#x4f7f;&#x7528;&#x3057;&#x306a;&#x3044;&#x3088;&#x3046;&#x306b;&#x3059;&#x308b;&#x5fc5;&#x8981;&#x304c;&#x3042;&#x308a;&#x307e;&#x3059;&#x3002;&#x307e;&#x305f;&#x3001;Wicket&#x306e; ReloadingWicketFilter&#x306e;&#x6a5f;&#x80fd;&#x3092;&#x4f7f;&#x7528;&#x3059;&#x308b;&#x5834;&#x5408;&#x306f;WARM deploy&#x3092;&#x5229;&#x7528;&#x3059;&#x308b;&#x65b9;&#x304c; &#x958b;&#x767a;&#x6642;&#x306e;&#x30e1;&#x30e2;&#x30ea;&#x52b9;&#x7387;&#x306e;&#x89b3;&#x70b9;&#x304b;&#x3089;&#x63a8;&#x5968;&#x3055;&#x308c;&#x307e;&#x3059;&#x3002;&#x4e00;&#x822c;&#x7684;&#x306b;&#x306f;s2container.dicon&#x306e;&#x8a18;&#x8ff0;&#x306f; &#x4ee5;&#x4e0b;&#x306e;&#x901a;&#x308a;&#x306b;&#x306a;&#x308a;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>&lt;components&gt;
+  &lt;include condition=&quot;#ENV == 'ut' || #ENV == 'it'&quot; path=&quot;warmdeploy.dicon&quot; /&gt;
+  &lt;include condition=&quot;#ENV == 'product'&quot; path=&quot;cooldeploy.dicon&quot; /&gt;
+&lt;/components&gt;</pre></div><p>&#x4ee5;&#x4e0a;&#x306e;S2Container&#x306e;&#x8a2d;&#x5b9a;&#x306b;&#x52a0;&#x3048;&#x3066;&#x3001;web.xml&#x3067;&#x3001;WicketFilter&#x306e;&#x4ee3;&#x308f;&#x308a;&#x306b;S2Wicket&#x72ec;&#x81ea;&#x306e; &#x30d5;&#x30a3;&#x30eb;&#x30bf;&#x3092;&#x4f7f;&#x7528;&#x3059;&#x308b;&#x3088;&#x3046;&#x306b;&#x8a2d;&#x5b9a;&#x3057;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>  &lt;filter&gt;
+    &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.seasar.wicket.S2WicketFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+      &lt;param-value&gt;foo.bar.YourApplication&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;</pre></div><p>&#x4ee5;&#x4e0a;&#x3067;&#x8a2d;&#x5b9a;&#x306f;&#x7d42;&#x4e86;&#x3067;&#x3059;&#x3002;</p></div><div class="section"><h3>3. <a name="a">&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;</a><a name="a3._"></a></h3><p>&#x524d;&#x9805;&#x307e;&#x3067;&#x306e;&#x8a2d;&#x5b9a;&#x3067;S2Container&#x306b;&#x3088;&#x308b;Wicket&#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x3078;&#x306e;&#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x30aa;&#x30d6;&#x30b8;&#x30a7;&#x30af;&#x30c8;&#x306e; &#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;&#x304c;&#x884c;&#x308f;&#x308c;&#x308b;&#x3088;&#x3046;&#x306b;&#x306a;&#x308a;&#x307e;&#x3059;&#x3002;</p><p>&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;&#x5148;&#x306e;&#x5bfe;&#x8c61;&#x306f;Wicket&#x306e;Component&#x30af;&#x30e9;&#x30b9;&#x3092;&#x7d99;&#x627f;&#x3059;&#x308b;&#x5168;&#x30af;&#x30e9;&#x30b9;&#x304c;&#x5bfe;&#x8c61;&#x3068;&#x306a;&#x308a;&#x307e;&#x3059;&#x3002; &#x547d;&#x540d;&#x898f;&#x7d04;&#x306b;&#x3088;&#x308b;&#x5236;&#x9650;&#x306f;&#x3042;&#x308a;&#x307e;&#x305b;&#x3093;&#x3002;</p><p>&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;&#x306e;&#x65b9;&#x6cd5;&#x306f;S2Container&#x306e;&#x6a19;&#x6e96;&#x3067;&#x3042;&#x308b;&#x3001;getter&#x304a;&#x3088;&#x3073;setter&#x3092;&#x5b9a;&#x7fa9;&#x3059;&#x308b;&#x65b9;&#x6cd5;&#x3001; &#x30d5;&#x30a3;&#x30fc;&#x30eb;&#x30c9;&#x306b;@Binding&#x30a2;&#x30ce;&#x30c6;&#x30fc;&#x30b7;&#x30e7;&#x30f3;&#x3092;&#x3064;&#x3051;&#x308b;&#x65b9;&#x6cd5;&#x304c;&#x4f7f;&#x7528;&#x3067;&#x304d;&#x307e;&#x3059;&#x3002;&#x30d7;&#x30ed;&#x30d1;&#x30c6;&#x30a3;&#x306e;&#x547d;&#x540d;&#x898f;&#x5247;&#x7b49;&#x306b; &#x3064;&#x3044;&#x3066;&#x306f;S2Container&#x6a19;&#x6e96;&#x306b;&#x6e96;&#x62e0;&#x3057;&#x307e;&#x3059;&#x3002;</p><p>&#x4f8b;&#x3048;&#x3070;&#x3001;WebPage&#x30af;&#x30e9;&#x30b9;&#x306b;&#x5bfe;&#x3057;&#x3066;S2Dao&#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x3092;&#x30a4;&#x30f3;&#x30b8;&#x30a7;&#x30af;&#x30b7;&#x30e7;&#x30f3;&#x3059;&#x308b;&#x306b;&#x306f;&#x4ee5;&#x4e0b;&#x306e;&#x3088;&#x3046;&#x306b; &#x306a;&#x308a;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>public class IndexPage extends WebPage {
+  @Binding
+  private EmployeeDao employeeDao
+
+  public IndexPage(PageParameters parameters) {
+    super(parameters);
+    
+    add(new Label(&quot;count&quot;, Integer.toString(employeeDao.count()));
+  }
+}</pre></div></div><div class="section"><h3>4. <a name="HOT_Deploy">HOT Deploy&#x306e;&#x4ee3;&#x308f;&#x308a;&#x306b;</a><a name="a4._HOT_Deploy"></a></h3><p>S2Wicket&#x3067;&#x306f;2&#x9805;&#x306b;&#x66f8;&#x3044;&#x305f;&#x3088;&#x3046;&#x306b;HOT Deploy&#x3092;&#x5229;&#x7528;&#x3067;&#x304d;&#x307e;&#x305b;&#x3093;&#x304c;&#x3001;&#x4ee3;&#x308f;&#x308a;&#x306b; Wicket&#x306e;ReloadingWicketFilter&#x306e;&#x6a5f;&#x80fd;&#x3092;&#x5229;&#x7528;&#x3059;&#x308b;&#x3053;&#x3068;&#x3067;&#x958b;&#x767a;&#x6642;&#x306b;tomcat&#x306e;&#x518d;&#x8d77;&#x52d5;&#x3092; &#x884c;&#x308f;&#x305a;&#x30af;&#x30e9;&#x30b9;&#x306e;&#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x3092;&#x884c;&#x3046;&#x3053;&#x3068;&#x304c;&#x3067;&#x304d;&#x307e;&#x3059;&#x3002;</p><p>&#x3053;&#x306e;&#x6a5f;&#x80fd;&#x3092;&#x5229;&#x7528;&#x3059;&#x308b;&#x306b;&#x306f;&#x3001;web.xml&#x306b;&#x30d5;&#x30a3;&#x30eb;&#x30bf;&#x30fc;&#x306e;&#x30d1;&#x30e9;&#x30e1;&#x30fc;&#x30bf;&#x3068;&#x3057;&#x3066;&#x3001; &#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x3092;&#x884c;&#x3046;&#x30af;&#x30e9;&#x30b9;&#x540d;&#x306e;&#x30d1;&#x30bf;&#x30fc;&#x30f3;&#x3092;reloadingClassPattern&#x3068;&#x3057;&#x3066;&#x8ffd;&#x52a0;&#x3057;&#x3001; configuration&#x3092;development&#x306b;&#x3057;&#x307e;&#x3059;&#x3002;</p><div class="source"><pre>  &lt;filter&gt;
+    &lt;filter-name&gt;s2wicketfilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.seasar.wicket.S2WicketFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+      &lt;param-value&gt;foo.bar.YourApplication&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;configuration&lt;/param-name&gt;
+      &lt;param-value&gt;development&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;reloadingClassPattern&lt;/param-name&gt;
+      &lt;param-value&gt;foo.bar.**&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;</pre></div><p>&#x307e;&#x305f;&#x3001;&#x3053;&#x306e;&#x8a2d;&#x5b9a;&#x3060;&#x3051;&#x3067;&#x306f;&#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x306e;&#x969b;&#x306b;S2Container&#x306e;&#x5168;&#x30b3;&#x30f3;&#x30dd;&#x30fc;&#x30cd;&#x30f3;&#x30c8;&#x304c; &#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x3055;&#x308c;&#x3066;&#x3057;&#x307e;&#x3046;&#x305f;&#x3081;&#x3001;S2Container&#x306e;WARM Deploy&#x6a5f;&#x80fd;&#x3092;&#x4f7f;&#x3046;&#x3053;&#x3068;&#x3092; &#x63a8;&#x5968;&#x3057;&#x307e;&#x3059;&#x3002;</p><p>&#x958b;&#x767a;&#x6642;&#x306b;&#x306f;web.xml&#x306e;configuration&#x3092;'development'&#x306b;&#x3057;&#x3001;S2Container&#x306e; env.txt&#x306e;&#x4e2d;&#x8eab;&#x3092;'ut'&#x3002;&#x516c;&#x958b;&#x6642;&#x306b;&#x306f;configuration&#x3092;'deployment'&#x306b;&#x3057;&#x3001; S2Container&#x306e;env.txt&#x306e;&#x4e2d;&#x8eab;&#x3092;'product'&#x306b;&#x3059;&#x308b;&#x306e;&#x304c;&#x3088;&#x3044;&#x3068;&#x601d;&#x3044;&#x307e;&#x3059;&#x3002;</p><div class="section"><h4>Eclipse&#x306e;WTP&#x306b;&#x3064;&#x3044;&#x3066;<a name="EclipseWTP"></a></h4><p>Eclipse&#x306e;WTP&#x3092;&#x4f7f;&#x7528;&#x3057;&#x3066;&#x3044;&#x308b;&#x3068;&#x3001;&#x4e0a;&#x8a18;&#x306e;&#x8a2d;&#x5b9a;&#x3092;&#x3057;&#x3066;&#x3082; java&#x30d5;&#x30a1;&#x30a4;&#x30eb;&#x3092;&#x4fdd;&#x5b58;&#x3059;&#x308b;&#x305f;&#x3073;&#x306b;&#x30cf;&#x30fc;&#x30c9;&#x30c7;&#x30a3;&#x30b9;&#x30af;&#x304c;&#x304c;&#x308a;&#x304c;&#x308a;&#x52d5;&#x304f;&#x3068;&#x304b;&#x3001; &#x6570;&#x79d2;&#x5f85;&#x305f;&#x306a;&#x3044;&#x3068;&#x66f4;&#x65b0;&#x3055;&#x308c;&#x306a;&#x3044;&#x3068;&#x3044;&#x3063;&#x305f;&#x3053;&#x3068;&#x304c;&#x3042;&#x308b;&#x304b;&#x3082;&#x3057;&#x308c;&#x307e;&#x305b;&#x3093;&#x3002;</p><p>Eclpse&#x306e;WTP&#x3067;&#x306f;&#x4f55;&#x3082;&#x8a2d;&#x5b9a;&#x3057;&#x306a;&#x3044;&#x3068;&#x30d5;&#x30a1;&#x30a4;&#x30eb;&#x3092;&#x66f4;&#x65b0;&#x3059;&#x308b;&#x305f;&#x3073;&#x306b;&#x3001;&#x81ea;&#x52d5;&#x7684;&#x306b; &#x30a2;&#x30d7;&#x30ea;&#x30b1;&#x30fc;&#x30b7;&#x30e7;&#x30f3;&#x5168;&#x4f53;&#x306e;&#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x304c;&#x884c;&#x308f;&#x308c;&#x307e;&#x3059;&#x3002;S2Wicket&#x3092;&#x5229;&#x7528;&#x3057;&#x306a;&#x3044;&#x5834;&#x5408;&#x306f; &#x305d;&#x308c;&#x304c;&#x6b63;&#x3057;&#x3044;&#x52d5;&#x4f5c;&#x306a;&#x306e;&#x3067;&#x3059;&#x304c;&#x3001;&#x30af;&#x30e9;&#x30b9;&#x6bce;&#x306e;&#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x3092;&#x30b5;&#x30dd;&#x30fc;&#x30c8;&#x3057;&#x3066;&#x3044;&#x308b; S2Wicket&#x3067;&#x306f;&#x7121;&#x99c4;&#x306a;&#x52d5;&#x4f5c;&#x3068;&#x306a;&#x308a;&#x307e;&#x3059;&#x3002;</p><p>S2Wicket&#x306e;&#x6a5f;&#x80fd;&#x3092;&#x6700;&#x5927;&#x9650;&#x306b;&#x6709;&#x52b9;&#x306b;&#x3059;&#x308b;&#x306b;&#x306f;&#x3001;&#x6b21;&#x306e;&#x8a2d;&#x5b9a;&#x3092;&#x884c;&#x3063;&#x3066;&#x304f;&#x3060;&#x3055;&#x3044;&#x3002;</p><ul><li>&#x30b5;&#x30fc;&#x30d0;&#x30fc;&#x306e;&#x8a2d;&#x5b9a;&#x753b;&#x9762; &#x2192; &#x516c;&#x958b;&#x306a;&#x3057;&#x3067;&#x30e2;&#x30b8;&#x30e5;&#x30fc;&#x30eb;&#x3092;&#x4f9b;&#x7d66;(serve modules without publishing)&#x3092;&#x30c1;&#x30a7;&#x30c3;&#x30af;</li><li>&#x5404;&#x30e2;&#x30b8;&#x30e5;&#x30fc;&#x30eb;&#x306e;&#x8a2d;&#x5b9a; &#x2192; &#x81ea;&#x52d5;&#x30ea;&#x30ed;&#x30fc;&#x30c9;&#x3092;&#x4f7f;&#x7528;&#x4e0d;&#x53ef;&#x306b;</li></ul></div></div></div>
+</div><!-- article -->
+
+</div><!-- contents_center -->
+
+<div id="footer">
+<address>  &copy; Copyright 
+                    <a href="http://www.seasar.org/">The Seasar Foundation and the others</a>.
+            and the others
+    
+              2011,
+        all rights reserved.
+  <a href="http://www.seasar.org">The Seasar Project</a>.
+</address>
+<div class="line"><span class="hide">spacer</span></div>
+</div><!-- footer -->
+
+</div><!-- wrapper -->
+
+</body>
+</html>
