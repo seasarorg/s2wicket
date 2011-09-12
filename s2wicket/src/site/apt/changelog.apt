@@ -2,9 +2,20 @@
 Wicket Seasar Integration Change Log Page
  ------
 Yoichiro Tanaka
-TAKEUCHI Hideyuki
+Hideyuki TAKEUCHI 
  ------
-2010/02/14
+2011/09/12
+
+リリースノート - S2Wicket - Version 1.5.0
+
+* リリース日付
+  2011/09/12
+
+* 変更点
+
+** New Feature
+
+    * Wicket1.5.0に対応（Wicket1.5.x以降に対応）
 
 リリースノート - S2Wicket - Version 1.4.5
 

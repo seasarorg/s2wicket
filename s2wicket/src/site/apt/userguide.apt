@@ -1,7 +1,7 @@
  ------
 Wicket Seasar Integration User Guide Page
  ------
-TAKEUCHI Hideyuki
+Hideyuki TAKEUCHI 
  ------
 2008/09/25
 
@@ -65,7 +65,7 @@ TAKEUCHI Hideyuki
         <dependency>
             <groupId>org.seasar.wicket</groupId>
             <artifactId>s2wicket</artifactId>
-            <version>1.4.5</version>
+            <version>1.5.0</version>
         </dependency>
     </dependencies>
     ...
