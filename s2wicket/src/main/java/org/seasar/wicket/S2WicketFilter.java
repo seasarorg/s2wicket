@@ -136,9 +136,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        if (SingletonS2ContainerFactory.hasContainer()) {
-            SingletonS2ContainerFactory.destroy();
-        }
+        // 再読み込み時にアプリケーションが破棄されるようにする 
+        destroy();
 
         // コンフィギュレーションの読み取り
         configuration =
@@ -259,15 +258,19 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             throw new EmptyRuntimeException("externalContext");
         }
 
+        final ClassLoader originalClassLoader =
+                Thread.currentThread().getContextClassLoader();
         final Object originalRequest = externalContext.getRequest();
         final Object originalResponse = externalContext.getResponse();
         try {
+            Thread.currentThread().setContextClassLoader(getClassLoader());
             externalContext.setRequest(request);
             externalContext.setResponse(response);
             super.doFilter(request, response, chain);
         } finally {
             externalContext.setRequest(originalRequest);
             externalContext.setResponse(originalResponse);
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
             invalidateSession(request);
         }
     }
