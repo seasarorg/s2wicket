@@ -276,15 +276,19 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             throw new EmptyRuntimeException("externalContext");
         }
 
+        final ClassLoader originalClassLoader =
+                Thread.currentThread().getContextClassLoader();
         final Object originalRequest = externalContext.getRequest();
         final Object originalResponse = externalContext.getResponse();
         try {
+            Thread.currentThread().setContextClassLoader(getClassLoader());
             externalContext.setRequest(request);
             externalContext.setResponse(response);
             super.doFilter(request, response, chain);
         } finally {
             externalContext.setRequest(originalRequest);
             externalContext.setResponse(originalResponse);
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
             invalidateSession(request);
         }
     }
