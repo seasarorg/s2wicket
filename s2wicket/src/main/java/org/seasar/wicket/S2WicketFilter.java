@@ -138,10 +138,12 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     /** アプリケーションのデフォルトエンコーディング */
     private String applicationEncoding;
 
+    private boolean initialized = false;
+
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
             throws ServletException {
-        // 再読み込み時にアプリケーションが破棄されるようにする 
+        // 再読み込み時にアプリケーションが確実に破棄されているようにする 
         destroy();
 
         // コンフィギュレーションの読み取り
@@ -224,12 +226,20 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                 webApplication.mountPage(debug, S2DebugPage.class);
             }
         }
+
+        initialized = true;
     }
 
     @Override
     public void destroy() {
         if (SingletonS2ContainerFactory.hasContainer()) {
             SingletonS2ContainerFactory.destroy();
+        }
+        if (initialized) {
+            ClassLoader classLoader = getClassLoader();
+            if (classLoader instanceof ReloadingClassLoader) {
+                ((ReloadingClassLoader) classLoader).destroy();
+            }
         }
         super.destroy();
     }
