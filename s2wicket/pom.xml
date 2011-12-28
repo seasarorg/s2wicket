@@ -4,7 +4,7 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket</artifactId>
-  <version>1.4.19</version>
+  <version>1.4.19.1</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -12,8 +12,8 @@
     <maven.compiler.target>1.5</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <wicket.version>1.4.19</wicket.version>
-    <s2container.version>2.4.44</s2container.version>
-    <slf4j.version>1.6.2</slf4j.version>
+    <s2container.version>2.4.45</s2container.version>
+    <slf4j.version>1.6.4</slf4j.version>
   </properties>
 
   <dependencies>
