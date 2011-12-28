@@ -1,5 +1,5 @@
 /*-
- * Copyright 2008 TAKEUCHI Hideyuki (chimerast)
+ * Copyright 2011 TAKEUCHI Hideyuki (chimerast)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.seasar.framework.container.PropertyAssembler;
  * @author TAKEUCHI Hideyuki (chimerast)
  */
 public class AutoProxyBindingAutoDef extends AutoBindingAutoDef {
-    public static final AutoBindingDef PROXY =
-            new AutoProxyBindingAutoDef("proxy");
+    public static final AutoBindingDef PROXY = new AutoProxyBindingAutoDef(
+            "proxy");
 
     public AutoProxyBindingAutoDef(String name) {
         super(name);
