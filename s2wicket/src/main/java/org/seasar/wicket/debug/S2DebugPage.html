@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>S2Wicket Debug View</title>
+<style>
+body {
+  font-size: small;
+  font-family: "Verdana", "Helvetica", "Arial", "メイリオ", "ＭＳ Ｐゴシック", sans-serif;
+}
+
+dl {
+  border: solid 1px #DDDDDD;
+  margin: 3px;
+}
+
+dt {
+  float: left;
+  width: 120px;
+  font-weight: bold;
+  padding-left: 4px;
+}
+
+dd {
+  margin-left: 120px;
+  padding-left: 4px;
+}
+
+.level0 {
+  background-color: #FFFFFF;
+}
+
+.level1 {
+  background-color: #FCFCFC;
+}
+
+.level2 {
+  background-color: #F9F9F9;
+}
+
+.level3 {
+  background-color: #F6F6F6;
+}
+
+.level4 {
+  background-color: #F3F3F3;
+}
+
+.level5 {
+  background-color: #F0F0F0;
+}
+
+.syntax {
+  color: #663399;
+}
+
+.symbol {
+  color: #336699;
+}
+</style>
+</head>
+<body>
+<h1>S2Container Component Map</h1>
+<dl class="level0">
+  <dt>env</dt>
+  <dd wicket:id="env" />
+  <wicket:container wicket:id="root" />
+  <wicket:fragment wicket:id="s2container">
+    <dt>path</dt>
+    <dd wicket:id="path" />
+    <dt>deploy mode</dt>
+    <dd wicket:id="deploymode" />
+    <dt>classloader</dt>
+    <dd wicket:id="classLoader.class.name" />
+    <dt>namespace</dt>
+    <dd wicket:id="namespace" />
+    <wicket:enclosure child="components">
+      <dt>components</dt>
+      <dd wicket:id="components">
+        <span wicket:id="autoBindingDef.name" class="syntax" />
+        <span wicket:id="instanceDef.name" class="syntax" />
+        <span wicket:id="componentName" class="symbol" />
+        : <span wicket:id="componentClass.simpleName" />
+      </dd>
+    </wicket:enclosure>
+    <wicket:enclosure child="containers">
+      <dt>child container</dt>
+      <dd>
+      <dl wicket:id="containers">
+        <wicket:container wicket:id="container" />
+      </dl>
+      </dd>
+    </wicket:enclosure>
+  </wicket:fragment>
+</dl>
+</body>
+</html>

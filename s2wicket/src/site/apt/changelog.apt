@@ -1,0 +1,124 @@
+ ------
+Wicket Seasar Integration Change Log Page
+ ------
+Yoichiro Tanaka
+Hideyuki TAKEUCHI 
+ ------
+2011/09/12
+
+リリースノート - S2Wicket - Version 1.5.0
+
+* リリース日付
+  2011/09/12
+
+* 変更点
+
+** New Feature
+
+    * Wicket1.5.0に対応（Wicket1.5.x以降に対応）
+
+リリースノート - S2Wicket - Version 1.4.5
+
+* リリース日付
+  2010/02/14
+
+* 変更点
+
+** New Feature
+
+    * Wicket1.4.5に対応（Wicket1.4.x以降に対応）
+    
+    * S2containerのSMART Deploy構成に対応
+
+Release Notes - S2Wicket - Version 1.2.1
+
+* リリース日付
+    07/04/2007
+
+* 変更点
+
+** Bug
+
+    * [WICKET-17] - misspell in web site (Interation -> Integration)
+    
+    * [WICKET-18] - fieldfilters.SeasarComponentアノテーションが自動認識されない
+    
+    * [WICKET-21] - FieldNamePatternFieldFilterにおいて，Class#getPackage()がnullを返すことが考慮されていない
+    
+    * [WICKET-22] - インタフェースを何も実装していないコンポーネントをインジェクションすると，IllegalAccessExceptionが発生する
+
+Release Notes - S2Wicket - Version 1.2.0
+
+* リリース日付
+    02/21/2007
+
+* 変更点
+
+** Bug
+
+    * [WICKET-10] - JCoverageのファイルが配布パッケージに含まれてしまう
+
+** Improvement
+
+    * [WICKET-11] - フィールドフィルタ関連の実装クラスをfieldfiltersパッケージに移動する
+
+** New Feature
+
+    * [WICKET-13] - フィールド名でインジェクション対象を判断するフィールドフィルタの作成
+
+** Task
+
+    * [WICKET-14] - バージョン番号の規約の説明ページの追加
+    
+    * [WICKET-15] - WICKET-13に対するサイトへの反映
+    
+    * [WICKET-16] - パッケージを説明するJavadocの作成
+
+Release Notes - S2Wicket - Version 1.1.1
+
+* リリース日付
+
+  2007年2月13日
+  
+* 変更点
+
+** Bug
+
+    * [WICKET-8] - SeasarComponentInjectionListenerのJavadocが間違っている
+    
+    * [WICKET-9] - WICKET-8の修正に伴うサイトへの反映
+
+Release Notes - S2Wicket - Version 1.1.0
+
+* リリース日付
+
+  2007年2月11日
+
+* 変更点
+
+** Bug
+
+    * [WICKET-1] - wicket-seasarと書かれている部分がある
+
+    * [WICKET-4] - SVNリポジトリへのリンクが間違っている
+
+    * [WICKET-7] - isSupported()がfalseを返すフィールドフィルタに対してgetLookupComponentName()が呼び出されてしまう
+
+** New Feature
+
+    * [WICKET-2] - インジェクション対象のフィールドを判断するロジックを自作できるようにする
+
+** Task
+
+    * [WICKET-3] - 変更履歴の追加
+
+    * [WICKET-5] - maven2リポジトリへ配布パッケージをアップするようにする
+
+    * [WICKET-6] - フィールドフィルタの実装に伴うサイトの修正
+
+Release Notes - S2Wicket - Version 1.0.0
+
+* リリース日付
+
+  2007年2月2日
+    
