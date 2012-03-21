@@ -32,9 +32,6 @@ import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.application.ReloadingClassLoader;
 import org.apache.wicket.protocol.http.ReloadingWicketFilter;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.IProvider;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
@@ -215,11 +212,9 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                 webApplication.getRequestCycleSettings().getResponseRequestEncoding();
 
         if (RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)) {
-            webApplication.setSessionStoreProvider(new IProvider<ISessionStore>() {
-                public ISessionStore get() {
-                    return new HttpSessionStore();
-                }
-            });
+            webApplication.getFrameworkSettings().setSerializer(
+                    new ReloadingJavaSerializer(
+                            webApplication.getApplicationKey()));
             if (debug != null) {
                 webApplication.mountPage(debug, S2DebugPage.class);
             }
