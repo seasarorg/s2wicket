@@ -154,9 +154,26 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
     <repository>
+      <id>maven-snapshot.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
+      <url>http://maven.seasar.org/maven2-snapshot</url>
+    </repository>
+    <repository>
       <id>repo.karatachi.org</id>
       <name>Karatachi Repository</name>
       <url>http://repo.karatachi.org/mvn</url>
+    </repository>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>https://repository.apache.org/content/groups/snapshots</url>
+      <layout>default</layout>
     </repository>
   </repositories>
 
