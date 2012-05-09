@@ -4,7 +4,7 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket-example</artifactId>
-  <version>1.5.5</version>
+  <version>1.5.6</version>
   <packaging>war</packaging>
 
   <properties>
@@ -129,7 +129,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>1.0-beta-7</version>
+        <version>2.2</version>
       </extension>
     </extensions>
   </build>
