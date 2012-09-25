@@ -129,6 +129,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     private String debug;
     /** Hot Deploy を行うクラスのパターン(WicketのMatcherに依存) */
     private String reloadingClassPattern;
+    /** ReloadingClassLoaderを使用するかどうか */
+    private boolean useReloadingClassLoader;
 
     /** アプリケーションのコンフィグ(DEPLOYMENT, DEVELOPMENT) */
     private RuntimeConfigurationType applicationConfigType;
@@ -138,7 +140,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
             throws ServletException {
-        // 再読み込み時にアプリケーションが確実に破棄されているようにする 
+        // 再読み込み時にアプリケーションが確実に破棄されているようにする
         destroy();
 
         // コンフィギュレーションの読み取り
@@ -148,6 +150,9 @@ public class S2WicketFilter extends ReloadingWicketFilter {
         debug = getInitParameter(filterConfig, "debug", null);
         reloadingClassPattern =
                 getInitParameter(filterConfig, "reloadingClassPattern", null);
+        useReloadingClassLoader =
+                RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)
+                        && reloadingClassPattern != null;
 
         if (logger.isInfoEnabled()) {
             logger.info("[config] configuration='{}'", configuration);
@@ -157,8 +162,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                     reloadingClassPattern);
         }
 
-        if (RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)
-                && reloadingClassPattern != null) {
+        if (useReloadingClassLoader) {
             ReloadingClassLoader.getPatterns().clear();
             // すべてのクラスが読み込まれる前に先に監視クラスを設定
             // これ以前にロードされたクラスについては監視対象から外れる
@@ -227,6 +231,15 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             SingletonS2ContainerFactory.destroy();
         }
         super.destroy();
+    }
+
+    @Override
+    protected ClassLoader getClassLoader() {
+        if (useReloadingClassLoader) {
+            return super.getClassLoader();
+        } else {
+            return Thread.currentThread().getContextClassLoader();
+        }
     }
 
     @SuppressWarnings("unchecked")
