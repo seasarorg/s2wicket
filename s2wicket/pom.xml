@@ -123,6 +123,7 @@
           <locales>ja</locales>
           <inputEncoding>UTF-8</inputEncoding>
           <outputEncoding>UTF-8</outputEncoding>
+          <outputDirectory>${basedir}/../www</outputDirectory>
         </configuration>
       </plugin>
       <plugin>

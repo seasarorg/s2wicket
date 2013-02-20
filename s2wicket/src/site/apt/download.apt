@@ -4,7 +4,7 @@ Wicket Seasar Integration Download Page
 Yoichiro Tanaka
 Hideyuki TAKEUCHI
  ------
-09/12/2011
+02/20/2013
 
 S2Wicket ダウンロード
 
@@ -17,21 +17,29 @@ S2Wicket ダウンロード
 *----------+-----------------------+--------------------------------------------------------------------------------*
 |バージョン|ファイル名             |                                                                                |
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|1.5.0     |s2wicket-1.5.0.jar     |{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.5.0/s2wicket-1.5.0.jar}ダウンロード}}|
+|6.5.0     |s2wicket-6.5.0.jar     |{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/6.5.0/s2wicket-6.5.0.jar}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|          |s2wicket-1.5.0-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.5.0/s2wicket-1.5.0-sources.jar}ダウンロード}}|
+|          |s2wicket-6.5.0-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/6.5.0/s2wicket-6.5.0-sources.jar}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|          |s2wicket-example-1.5.0.war|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.5.0/s2wicket-example-1.5.0.war}ダウンロード}}|
+|          |s2wicket-example-6.5.0.war|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/6.5.0/s2wicket-example-6.5.0.war}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|          |s2wicket-example-1.5.0-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.5.0/s2wicket-example-1.5.0-sources.jar}ダウンロード}}|
+|          |s2wicket-example-6.5.0-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/6.5.0/s2wicket-example-1.5.0-sources.jar}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|1.4.18    |s2wicket-1.4.18.ja     |{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.4.18/s2wicket-1.4.18.jar}ダウンロード}}|
+|1.5.0     |s2wicket-1.5.8.jar     |{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.5.8/s2wicket-1.5.8.jar}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|          |s2wicket-1.4.18-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.4.18/s2wicket-1.4.18-sources.jar}ダウンロード}}|
+|          |s2wicket-1.5.8-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.5.8/s2wicket-1.5.8-sources.jar}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|          |s2wicket-example-1.4.18.war|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.4.18/s2wicket-example-1.4.18.war}ダウンロード}}|
+|          |s2wicket-example-1.5.8.war|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.5.8/s2wicket-example-1.5.8.war}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
-|          |s2wicket-example-1.4.18-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.4.18/s2wicket-example-1.4.18-sources.jar}ダウンロード}}|
+|          |s2wicket-example-1.5.8-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.5.8/s2wicket-example-1.5.0-sources.jar}ダウンロード}}|
+*----------+-----------------------+--------------------------------------------------------------------------------*
+|1.4.18    |s2wicket-1.4.18.ja     |{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.4.21/s2wicket-1.4.21.jar}ダウンロード}}|
+*----------+-----------------------+--------------------------------------------------------------------------------*
+|          |s2wicket-1.4.18-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket/1.4.21/s2wicket-1.4.21-sources.jar}ダウンロード}}|
+*----------+-----------------------+--------------------------------------------------------------------------------*
+|          |s2wicket-example-1.4.18.war|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.4.21/s2wicket-example-1.4.21.war}ダウンロード}}|
+*----------+-----------------------+--------------------------------------------------------------------------------*
+|          |s2wicket-example-1.4.18-sources.jar|{{{http://maven.seasar.org/maven2/org/seasar/wicket/s2wicket-example/1.4.21/s2wicket-example-1.4.21-sources.jar}ダウンロード}}|
 *----------+-----------------------+--------------------------------------------------------------------------------*
 
 ** 過去のバージョン
