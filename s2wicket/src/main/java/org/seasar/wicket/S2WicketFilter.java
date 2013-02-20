@@ -129,18 +129,18 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     private String debug;
     /** Hot Deploy を行うクラスのパターン(WicketのMatcherに依存) */
     private String reloadingClassPattern;
+    /** ReloadingClassLoaderを使用するかどうか */
+    private boolean useReloadingClassLoader;
 
     /** アプリケーションのコンフィグ(DEPLOYMENT, DEVELOPMENT) */
     private RuntimeConfigurationType applicationConfigType;
     /** アプリケーションのデフォルトエンコーディング */
     private String applicationEncoding;
 
-    private boolean initialized = false;
-
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
             throws ServletException {
-        // 再読み込み時にアプリケーションが確実に破棄されているようにする 
+        // 再読み込み時にアプリケーションが確実に破棄されているようにする
         destroy();
 
         // コンフィギュレーションの読み取り
@@ -150,6 +150,10 @@ public class S2WicketFilter extends ReloadingWicketFilter {
         debug = getInitParameter(filterConfig, "debug", null);
         reloadingClassPattern =
                 getInitParameter(filterConfig, "reloadingClassPattern", null);
+        useReloadingClassLoader =
+                RuntimeConfigurationType.DEVELOPMENT.name().equalsIgnoreCase(
+                        configuration)
+                        && reloadingClassPattern != null;
 
         if (logger.isInfoEnabled()) {
             logger.info("[config] configuration='{}'", configuration);
@@ -196,13 +200,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
 
         // ApplicationならびにgetHomePage()で設定しているクラスがデフォルトの
         // クラスローダで読み込まれてしまうため正しく設定
-        ClassLoader previousClassLoader =
-                Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(getClassLoader());
 
         super.init(isServlet, filterConfig);
-
-        Thread.currentThread().setContextClassLoader(previousClassLoader);
 
         // 関連づけられたWebApplicationを取り出す（現状これしか方法がない？）
         WebApplication webApplication =
@@ -221,8 +220,6 @@ public class S2WicketFilter extends ReloadingWicketFilter {
                 webApplication.mountPage(debug, S2DebugPage.class);
             }
         }
-
-        initialized = true;
     }
 
     @Override
@@ -230,13 +227,16 @@ public class S2WicketFilter extends ReloadingWicketFilter {
         if (SingletonS2ContainerFactory.hasContainer()) {
             SingletonS2ContainerFactory.destroy();
         }
-        if (initialized) {
-            ClassLoader classLoader = getClassLoader();
-            if (classLoader instanceof ReloadingClassLoader) {
-                ((ReloadingClassLoader) classLoader).destroy();
-            }
-        }
         super.destroy();
+    }
+
+    @Override
+    protected ClassLoader getClassLoader() {
+        if (useReloadingClassLoader) {
+            return super.getClassLoader();
+        } else {
+            return Thread.currentThread().getContextClassLoader();
+        }
     }
 
     @SuppressWarnings("unchecked")
