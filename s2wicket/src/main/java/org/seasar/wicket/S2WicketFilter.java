@@ -140,6 +140,22 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
             throws ServletException {
+        try {
+            initInternal(isServlet, filterConfig);
+        } catch (RuntimeException e) {
+            logger.error("[init] error on initializing filter.", e);
+            throw e;
+        } catch (Error e) {
+            logger.error("[init] error on initializing filter.", e);
+            throw e;
+        } catch (ServletException e) {
+            logger.error("[init] error on initializing filter.", e);
+            throw e;
+        }
+    }
+
+    private void initInternal(final boolean isServlet, FilterConfig filterConfig)
+            throws ServletException {
         // 再読み込み時にアプリケーションが確実に破棄されているようにする
         destroy();
 
