@@ -4,12 +4,12 @@
 
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket-libs</artifactId>
-  <version>6.9.0</version>
+  <version>6.12.0</version>
   <packaging>jar</packaging>
   
   <properties>
-    <wicket.version>6.9.0</wicket.version>
-    <s2container.version>2.4.46</s2container.version>
+    <wicket.version>6.12.0</wicket.version>
+    <s2container.version>2.4.47</s2container.version>
     <s2dao.version>1.0.51</s2dao.version>
     <slf4j.version>1.7.5</slf4j.version>
   </properties>
@@ -80,18 +80,6 @@
       <id>maven-snapshot.seasar.org</id>
       <name>The Seasar Foundation Maven2 Snapshot Repository</name>
       <url>http://maven.seasar.org/maven2-snapshot</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>apache.snapshots</id>
-      <name>Apache Snapshot Repository</name>
-      <url>https://repository.apache.org/content/groups/snapshots</url>
-      <layout>default</layout>
     </repository>
   </repositories>
 
