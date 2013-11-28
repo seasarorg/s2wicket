@@ -2,20 +2,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.seasar.wicket</groupId>
+  <!-- The Basics -->
   <artifactId>s2wicket</artifactId>
-  <version>6.12.0</version>
   <packaging>jar</packaging>
-
-  <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <encoding>UTF-8</encoding>
-    <wicket.version>6.12.0</wicket.version>
-    <s2container.version>2.4.47</s2container.version>
-    <slf4j.version>1.7.5</slf4j.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.wicket</groupId>
@@ -37,7 +26,7 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
+      <version>2.5</version>
       <scope>provided</scope>
     </dependency>
 
@@ -57,150 +46,13 @@
       <version>99.0-does-not-exist</version>
     </dependency>
   </dependencies>
+  <parent>
+    <groupId>org.seasar.wicket</groupId>
+    <artifactId>s2wicket-parent</artifactId>
+    <version>6.12.0</version>
+  </parent>
 
-  <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/java</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <source>1.6</source>
-          <encoding>UTF-8</encoding>
-          <docencoding>UTF-8</docencoding>
-          <charset>UTF-8</charset>
-          <links>
-            <link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
-          </links>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-          <execution>
-            <phase>site</phase>
-            <goals>
-              <goal>javadoc</goal>
-            </goals>
-            <configuration>
-              <reportOutputDirectory>${basedir}/../www/apidocs</reportOutputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <locales>ja</locales>
-          <inputEncoding>UTF-8</inputEncoding>
-          <outputEncoding>UTF-8</outputEncoding>
-          <outputDirectory>${basedir}/../www</outputDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptors>
-            <descriptor>src/main/assembly/distribute.xml</descriptor>
-          </descriptors>
-        </configuration>
-      </plugin>
-    </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>2.2</version>
-      </extension>
-    </extensions>
-  </build>
-  <reporting />
-
-  <repositories>
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-    <repository>
-      <id>maven-snapshot.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
-      <url>http://maven.seasar.org/maven2-snapshot</url>
-    </repository>
-    <repository>
-      <id>repo.karatachi.org</id>
-      <name>Karatachi Repository</name>
-      <url>http://repo.karatachi.org/mvn</url>
-    </repository>
-  </repositories>
-
+  <!-- More Project Information -->
   <name>S2Wicket</name>
   <description>Seasar Container extension for Wicket</description>
-  <url>http://s2wicket.sandbox.seasar.org/</url>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <organization>
-    <name>The Seasar Foundation and the others</name>
-    <url>http://www.seasar.org/</url>
-  </organization>
-
-  <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket</developerConnection>
-    <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
-  </scm>
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>

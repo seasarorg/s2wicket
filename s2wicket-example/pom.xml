@@ -2,17 +2,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.seasar.wicket</groupId>
+  <!-- The Basics -->
   <artifactId>s2wicket-example</artifactId>
-  <version>6.12.0</version>
   <packaging>war</packaging>
-
-  <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <encoding>UTF-8</encoding>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.seasar.wicket</groupId>
@@ -58,111 +50,13 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <parent>
+    <groupId>org.seasar.wicket</groupId>
+    <artifactId>s2wicket-parent</artifactId>
+    <version>6.12.0</version>
+  </parent>
 
-  <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>**</include>
-        </includes>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <source>1.5</source>
-          <encoding>UTF-8</encoding>
-          <docencoding>UTF-8</docencoding>
-          <charset>UTF-8</charset>
-          <links>
-            <link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
-          </links>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptors>
-            <descriptor>src/main/assembly/distribute.xml</descriptor>
-          </descriptors>
-        </configuration>
-      </plugin>
-    </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>2.2</version>
-      </extension>
-    </extensions>
-  </build>
-
-  <repositories>
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-  </repositories>
-
+  <!-- More Project Information -->
   <name>S2Wicket Example</name>
   <description>Seasar Container extension for Wicket Example</description>
-  <url>http://s2wicket.sandbox.seasar.org/</url>
-
-  <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-example</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2wicket/trunk/s2wicket-example</developerConnection>
-    <url>http://svn.seasar.org/browse/?root=sandbox.s2wicket</url>
-  </scm>
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>
