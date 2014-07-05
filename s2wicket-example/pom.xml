@@ -21,7 +21,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.7</version>
     </dependency>
 
     <!--S2JTA,S2Txを使う場合必要 -->
@@ -53,7 +53,7 @@
   <parent>
     <groupId>org.seasar.wicket</groupId>
     <artifactId>s2wicket-parent</artifactId>
-    <version>6.12.0</version>
+    <version>6.16.0</version>
   </parent>
 
   <!-- More Project Information -->

@@ -5,7 +5,7 @@
   <!-- The Basics -->
   <groupId>org.seasar.wicket</groupId>
   <artifactId>s2wicket-parent</artifactId>
-  <version>6.12.0</version>
+  <version>6.16.0</version>
   <packaging>pom</packaging>
   <modules>
     <module>s2wicket</module>
@@ -20,10 +20,10 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <wicket.version>6.12.0</wicket.version>
+    <wicket.version>6.16.0</wicket.version>
     <s2container.version>2.4.47</s2container.version>
     <s2dao.version>1.0.51</s2dao.version>
-    <slf4j.version>1.7.5</slf4j.version>
+    <slf4j.version>1.7.7</slf4j.version>
   </properties>
 
   <!-- Build Settings -->
