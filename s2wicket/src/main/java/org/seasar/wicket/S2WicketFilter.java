@@ -119,6 +119,9 @@ public class S2WicketFilter extends ReloadingWicketFilter {
 
     // セッションクラスローダのタグ
     private static final String SESSION_LOADER = "s2wicket$loader";
+    
+    /** DEVELOPMENTモード時の古いセッション削除処理を無効にするweb.xmlの設定名 */
+    private static final String OLD_SESSION_INVALIDATION_OFF = "oldSessionInvalidationOff";
 
     /** Wicketのコンフィグ */
     private String configuration;
@@ -136,6 +139,12 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     private RuntimeConfigurationType applicationConfigType;
     /** アプリケーションのデフォルトエンコーディング */
     private String applicationEncoding;
+    
+    /**
+     * DEVELOPMENTモード時に、クラスローダが変わっていたらセッションを破棄するチェックをオフにするかの設定値。
+     * trueならばチェックを行わない（セッションは破棄されない）
+     */
+    private boolean oldSessionInvalidationOff = false;
 
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
@@ -166,6 +175,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
         debug = getInitParameter(filterConfig, "debug", null);
         reloadingClassPattern =
                 getInitParameter(filterConfig, "reloadingClassPattern", null);
+        oldSessionInvalidationOff = 
+                Boolean.valueOf(getInitParameter(filterConfig, OLD_SESSION_INVALIDATION_OFF, "false"));
         useReloadingClassLoader =
                 RuntimeConfigurationType.DEVELOPMENT.name().equalsIgnoreCase(
                         configuration)
@@ -177,6 +188,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             logger.info("[config] debug='{}'", debug);
             logger.info("[config] reloadingClassPattern='{}'",
                     reloadingClassPattern);
+            logger.info("[config] oldSessionInvalidationOff='{}'", oldSessionInvalidationOff);
         }
 
         if (RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)
@@ -254,13 +266,13 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             return Thread.currentThread().getContextClassLoader();
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        if (RuntimeConfigurationType.DEVELOPMENT == applicationConfigType) {
+        if (RuntimeConfigurationType.DEVELOPMENT == applicationConfigType && !oldSessionInvalidationOff) {
             if (request instanceof HttpServletRequest) {
                 // 旧セッションクラスローダーで読み込まれていたセッションオブジェクトの削除
                 HttpSession session =
