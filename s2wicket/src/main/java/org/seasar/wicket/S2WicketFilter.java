@@ -61,7 +61,8 @@ import org.slf4j.LoggerFactory;
  * <dd>web.xmlの初期化パラメータでreloadingClassPatternに指定したクラスが対象になります。</dd>
  * <dt>クラスリロード時の自動セッション無効化</dt>
  * <dd>クラスリロード時に全クラスローダで読み込まれたセッション上のインスタンスを破棄します。
- * クラスローダの違いによってセッションでエラーが出るのを回避します。</dd>
+ * クラスローダの違いによってセッションでエラーが出るのを回避します。<br>
+ * ただしpreventSessionInvalidationInDevModeがtrueに設定されているときにはこの動作を行いません。</dd>
  * </dl>
  * <h4>初期化パラメータ</h4>
  * <dl>
@@ -77,6 +78,10 @@ import org.slf4j.LoggerFactory;
  * ここで、指定しなければクラスの自動リロードは行われません。","区切りによる複数クラスの指定、
  * および"*"によるワイルドカード指定が可能です。また、クラスパターンの頭に"-"をつけることで、
  * リロード対象から除外することができます。通常はconvention.diconで追加したrootPackageNameを指定します。</dd>
+ * <dt>preventSessionInvalidationInDevMode</dt>
+ * <dd>Wicketのコンフィギュレーションがdevelopmentの時、
+ * S2WicketFilterはクラスローダの変更を検知するとセッション上のインスタンスを破棄しようとしますが、
+ * このオプションをtrueに設定することで、破棄しないようになります。</dd>
  * <dl>
  * <h4>web.xml例</h4>
  * 
@@ -121,7 +126,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     private static final String SESSION_LOADER = "s2wicket$loader";
     
     /** DEVELOPMENTモード時の古いセッション削除処理を無効にするweb.xmlの設定名 */
-    private static final String OLD_SESSION_INVALIDATION_OFF = "oldSessionInvalidationOff";
+    private static final String PREVENT_SESSION_INVALIDATION_IN_DEV_MODE = "preventSessionInvalidationInDevMode";
 
     /** Wicketのコンフィグ */
     private String configuration;
@@ -144,7 +149,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
      * DEVELOPMENTモード時に、クラスローダが変わっていたらセッションを破棄するチェックをオフにするかの設定値。
      * trueならばチェックを行わない（セッションは破棄されない）
      */
-    private boolean oldSessionInvalidationOff = false;
+    private boolean preventSessionInvalidationInDevMode = false;
 
     @Override
     public void init(final boolean isServlet, FilterConfig filterConfig)
@@ -175,8 +180,8 @@ public class S2WicketFilter extends ReloadingWicketFilter {
         debug = getInitParameter(filterConfig, "debug", null);
         reloadingClassPattern =
                 getInitParameter(filterConfig, "reloadingClassPattern", null);
-        oldSessionInvalidationOff = 
-                Boolean.valueOf(getInitParameter(filterConfig, OLD_SESSION_INVALIDATION_OFF, "false"));
+        preventSessionInvalidationInDevMode = 
+                Boolean.valueOf(getInitParameter(filterConfig, PREVENT_SESSION_INVALIDATION_IN_DEV_MODE, "false"));
         useReloadingClassLoader =
                 RuntimeConfigurationType.DEVELOPMENT.name().equalsIgnoreCase(
                         configuration)
@@ -188,7 +193,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
             logger.info("[config] debug='{}'", debug);
             logger.info("[config] reloadingClassPattern='{}'",
                     reloadingClassPattern);
-            logger.info("[config] oldSessionInvalidationOff='{}'", oldSessionInvalidationOff);
+            logger.info("[config] preventSessionInvalidationInDevMode='{}'", preventSessionInvalidationInDevMode);
         }
 
         if (RuntimeConfigurationType.DEVELOPMENT == RuntimeConfigurationType.valueOf(configuration)
@@ -272,7 +277,7 @@ public class S2WicketFilter extends ReloadingWicketFilter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        if (RuntimeConfigurationType.DEVELOPMENT == applicationConfigType && !oldSessionInvalidationOff) {
+        if (RuntimeConfigurationType.DEVELOPMENT == applicationConfigType && !preventSessionInvalidationInDevMode) {
             if (request instanceof HttpServletRequest) {
                 // 旧セッションクラスローダーで読み込まれていたセッションオブジェクトの削除
                 HttpSession session =
