@@ -20,8 +20,6 @@ import java.io.Serializable;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.seasar.framework.container.assembler.ProxyBindingTypeDef;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * S2Container用のProxyTargetLocator。
