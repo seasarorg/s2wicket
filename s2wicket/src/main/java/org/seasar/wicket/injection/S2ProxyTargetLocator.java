@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
 public class S2ProxyTargetLocator implements IProxyTargetLocator, Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(S2ProxyTargetLocator.class);
-
     private final Object key;
 
     /**
