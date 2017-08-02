@@ -49,7 +49,7 @@
   <parent>
     <groupId>org.seasar.wicket</groupId>
     <artifactId>s2wicket-parent</artifactId>
-    <version>6.16.1</version>
+    <version>6.16.2</version>
   </parent>
 
   <!-- More Project Information -->

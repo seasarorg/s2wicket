@@ -20,8 +20,6 @@ import java.io.Serializable;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.seasar.framework.container.assembler.ProxyBindingTypeDef;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * S2Container用のProxyTargetLocator。
@@ -33,8 +31,6 @@ import org.slf4j.LoggerFactory;
  */
 public class S2ProxyTargetLocator implements IProxyTargetLocator, Serializable {
     private static final long serialVersionUID = 1L;
-
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Object key;
 
